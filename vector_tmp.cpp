@@ -1,0 +1,22 @@
+network or host conversion for ip or port
+htons (host to network short)
+htonl (host to network long)
+ntohs (network to host short)
+ntohl (network to host long)
+
+poll / select / kqueue / epoll
+epoll_create
+epoll_ctl
+epoll_wait
+kevent
+socket
+accept
+listen
+send
+recv
+bind
+connect
+inet_addr
+setsockopt
+getsockname
+fcntl
