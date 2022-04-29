@@ -16,7 +16,9 @@ send
 recv
 bind
 connect
-inet_addr
+inet_addr() // Does work only with IPv4
 setsockopt
 getsockname
 fcntl
+
+https://beej.us/guide/bgnet/html/index-wide.html#ip-addresses-part-deux
