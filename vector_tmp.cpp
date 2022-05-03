@@ -16,7 +16,7 @@ send
 recv
 bind
 connect
-inet_addr() // Does work only with IPv4
+inet_addr() // Does work only with IPv4 and doesn't with 255.255.255.255
 setsockopt
 getsockname
 fcntl
