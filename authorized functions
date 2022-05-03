@@ -1,24 +1,86 @@
+----- structs -----
+
+struct addrinfo {
+	int              ai_flags;     // AI_PASSIVE, AI_CANONNAME, etc.
+	int              ai_family;    // AF_INET, AF_INET6, AF_UNSPEC
+	int              ai_socktype;  // SOCK_STREAM, SOCK_DGRAM
+	int              ai_protocol;  // use 0 for "any"
+	size_t           ai_addrlen;   // size of ai_addr in bytes
+	struct sockaddr *ai_addr;      // struct sockaddr_in or _in6
+	char            *ai_canonname; // full canonical hostname
+
+	struct addrinfo *ai_next;      // linked list, next node
+};
+
+struct sockaddr {
+	unsigned short    sa_family;    // address family, AF_xxx
+	char              sa_data[14];  // 14 bytes of protocol address
+};
+
+struct sockaddr_in {
+	short int          sin_family;  // Address family, AF_INET
+	unsigned short int sin_port;    // Port number
+	struct in_addr     sin_addr;    // Internet address
+	unsigned char      sin_zero[8]; // Same size as struct sockaddr
+};
+
+struct in_addr {
+	uint32_t s_addr; // that's a 32-bit int (4 bytes)
+};
+
+----- get info functions -----
+
 network or host conversion for ip or port
 htons (host to network short)
 htonl (host to network long)
 ntohs (network to host short)
 ntohl (network to host long)
 
+inet_addr() // Does work only with IPv4 and doesn't with 255.255.255.255
+getsockname
+
+! Recode getaddrinfo to simplify comprehension ?
+
+----- Setup socket functions -----
+
+socket(domain, type, protocol) PF_INET for IPv4, SOCK_STREAM for TCP, 0 / return sockfd
+setsockopt() can be usefull to reuse a port that was previously already used if relauch
+bind(sockfd, addr, len) bind to a port
+- example :
+	int sockfd;
+	struct sockaddr_in my_addr;
+
+	sockfd = socket(PF_INET, SOCK_STREAM, 0);
+
+	my_addr.sin_family = AF_INET;
+	my_addr.sin_port = htons(MYPORT);     // short, network byte order
+	my_addr.sin_addr.s_addr = inet_addr("10.12.110.57");
+	memset(my_addr.sin_zero, '\0', sizeof my_addr.sin_zero);
+
+	bind(sockfd, (struct sockaddr *)&my_addr, sizeof my_addr);
+
+----- Connect / Listen socket functions -----
+
+connect(sockfd, sockaddr, len) to connect to a remote host
+ OR
+listen(sockfd, backlog (nb of connections max)) to wait for incoming connections
+accept(sockfd, sockaddr, socklen) accept and fill the client infos
+
+----- Use socket functions -----
+
+send(sockfd, msg, len, flags)
+recv
+
+----- ????? -----
+
 poll / select / kqueue / epoll
 epoll_create
 epoll_ctl
 epoll_wait
 kevent
-socket
-accept
-listen
-send
-recv
-bind
-connect
-inet_addr() // Does work only with IPv4 and doesn't with 255.255.255.255
-setsockopt
-getsockname
 fcntl
 
-https://beej.us/guide/bgnet/html/index-wide.html#ip-addresses-part-deux
+
+https://beej.us/guide/bgnet/html/index-wide.html#sendrecv
+
+https://www.geeksforgeeks.org/socket-programming-cc/
