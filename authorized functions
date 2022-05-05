@@ -37,7 +37,6 @@ ntohs (network to host short)
 ntohl (network to host long)
 
 inet_addr() // Does work only with IPv4 and doesn't with 255.255.255.255
-getsockname
 
 ! Recode getaddrinfo to simplify comprehension ?
 
@@ -68,8 +67,10 @@ accept(sockfd, sockaddr, socklen) accept and fill the client infos
 
 ----- Use socket functions -----
 
-send(sockfd, msg, len, flags)
-recv
+send(sockfd, msg, len, flags) returns nb of bytes sent / need to send in many packages of 1K for example
+recv(sockfd, buf, len, flags) returns nb of bytes red, if 0 = closed connection
+close(sockfd) stop sending and receiving datas and free fd
+getsockname(sockfd, sockaddr, namelen) to know the name of the socket ? For what ??
 
 ----- ????? -----
 
@@ -78,9 +79,12 @@ epoll_create
 epoll_ctl
 epoll_wait
 kevent
-fcntl
+fcntl(sockfd, cmd, arg) to set the socket to be non-block or async
 
 
-https://beej.us/guide/bgnet/html/index-wide.html#sendrecv
+https://beej.us/guide/bgnet/html/index-wide.html#client-server-background
 
 https://www.geeksforgeeks.org/socket-programming-cc/
+
+https://www.postman.com/
+To send requests to the server easily
