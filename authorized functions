@@ -44,19 +44,20 @@ inet_addr() // Does work only with IPv4 and doesn't with 255.255.255.255
 
 socket(domain, type, protocol) PF_INET for IPv4, SOCK_STREAM for TCP, 0 / return sockfd
 setsockopt() can be usefull to reuse a port that was previously already used if relauch
+fcntl(sockfd, cmd, arg) to set the socket to be non-blocking or async
 bind(sockfd, addr, len) bind to a port
-- example :
-	int sockfd;
-	struct sockaddr_in my_addr;
-
-	sockfd = socket(PF_INET, SOCK_STREAM, 0);
-
-	my_addr.sin_family = AF_INET;
-	my_addr.sin_port = htons(MYPORT);     // short, network byte order
-	my_addr.sin_addr.s_addr = inet_addr("10.12.110.57");
-	memset(my_addr.sin_zero, '\0', sizeof my_addr.sin_zero);
-
-	bind(sockfd, (struct sockaddr *)&my_addr, sizeof my_addr);
++ example :
++	int sockfd;
++	struct sockaddr_in my_addr;
++
++	sockfd = socket(PF_INET, SOCK_STREAM, 0);
++
++	my_addr.sin_family = AF_INET;
++	my_addr.sin_port = htons(MYPORT);     // short, network byte order
++	my_addr.sin_addr.s_addr = inet_addr("10.12.110.57");
++	memset(my_addr.sin_zero, '\0', sizeof my_addr.sin_zero);
++
++	bind(sockfd, (struct sockaddr *)&my_addr, sizeof my_addr);
 
 ----- Connect / Listen socket functions -----
 
@@ -65,24 +66,29 @@ connect(sockfd, sockaddr, len) to connect to a remote host
 listen(sockfd, backlog (nb of connections max)) to wait for incoming connections
 accept(sockfd, sockaddr, socklen) accept and fill the client infos
 
+----- Multiplexing fds -----
+
+poll
+select
+
+epoll
+epoll_create
+epoll_ctl
+epoll_wait
+
+kqueue
+kevent
+
 ----- Use socket functions -----
 
 send(sockfd, msg, len, flags) returns nb of bytes sent / need to send in many packages of 1K for example
 recv(sockfd, buf, len, flags) returns nb of bytes red, if 0 = closed connection
 close(sockfd) stop sending and receiving datas and free fd
+fork()
 getsockname(sockfd, sockaddr, namelen) to know the name of the socket ? For what ??
 
------ ????? -----
 
-poll / select / kqueue / epoll
-epoll_create
-epoll_ctl
-epoll_wait
-kevent
-fcntl(sockfd, cmd, arg) to set the socket to be non-block or async
-
-
-https://beej.us/guide/bgnet/html/index-wide.html#client-server-background
+https://beej.us/guide/bgnet/html/index-wide.html#poll
 
 https://www.geeksforgeeks.org/socket-programming-cc/
 
