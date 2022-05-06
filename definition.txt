@@ -1,0 +1,89 @@
+loopback address:
+	ipv4 = 127.0.0.1
+ 	ipv6 = ::1
+	special adress means establish a connection to myself.
+
+
+----- Grande ligne pour un server web -------
+
+# 1 # Accepting and buffering multiple connections
+
+# 2 # Parsing an HTTP request line	(p 169)
+
+	If you send a request that the web server doesn't support, then the server should respond
+	with a 400 Bad Request code.	
+
+	- GET is used when the client wants to download a resource.
+	
+	- POST is used when the client needs to send information to the server. Your web
+	browser typically uses a POST request when you submit an online form, for
+	example. A POST request will typically cause a web server to change its state
+	somehow. A web server could send an email, update a database, or change a file
+	in response to a POST request
+
+	- DELETE is used to request that the web server should delete a document or
+	resource. Again, in practice, DELETE is rarely used. POST is commonly used to
+	communicate web server updates of all types
+
+
+	request format:
+		- Each line of an HTTP message ends with a carriage return followed by a newline character: \r\n
+		- The web client must send a blank line after the HTTP request header : \r\n\r\n
+	
+		ex:
+			GET /page1.htm HTTP/1.1		//request line
+			User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
+			Accept-Language: en-US
+			Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+			Accept-Encoding: gzip, deflate
+			Host: example.com
+			Connection: Keep-Alive
+
+		request line: GET /page1.htm HTTP/1.1	
+			- three part separate by space
+			- type (ici GET)
+			- document path ( /page1.htm)
+			- protocol (HTTP/1.1)
+
+		header field: name followed by a colon and then its value.
+	
+
+
+
+
+
+# 3 # Formatting an HTTP response
+
+	response format: (page 172)
+
+		ex:
+			HTTP/1.1 200 OK
+			Cache-Control: max-age=604800
+			Content-Type: text/html; charset=UTF-8
+			Date: Fri, 14 Dec 2018 16:46:09 GMT
+			Etag: "1541025663+gzip"
+			Expires: Fri, 21 Dec 2018 16:46:09 GMT
+			Last-Modified: Fri, 09 Aug 2013 23:54:35 GMT
+			Server: ECS (ord/5730)
+			Vary: Accept-Encoding
+			X-Cache: HIT
+			Content-Length: 1270
+			<!doctype html>
+			<html>
+			<head>
+				<title>Example Domain</title>
+			..
+
+		status line :
+			- protocol version (HTTP/1.1)
+			- response code (200) ou (404)
+			- response code description (OK) ou (Page not found)
+
+
+	list file extension (p200)
+
+
+
+
+# 4 # Serving a file
+# 5 # Security considerations
