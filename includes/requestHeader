@@ -1,13 +1,88 @@
 
 MESSAGE FORMAT: https://www.rfcreader.com/#rfc7230_line856
-HTTP-message   = start-line
+
+SP = space
+CRLF = empty line
+
+-----------------------------------------------------------
+
+HTTP-message   = start-line :  = request-line or status-line
 				*( header-field CRLF )
 				CRLF // empty line
 				[ message-body ]
 
+-----------------------------------------------------------
 
 Parsing:
 
-	start-line into structure
-	header field into hash table by field name
-	parse data for message body.
+	start-line: into structure
+	header field: into hash table by field name until the empty line.
+	message body: parse data if a message is expected.
+
+ 	A recipient MUST parse an HTTP message as a sequence of octets
+
+	A sender MUST NOT send whitespace between the start-line and the
+	first header field.
+
+-----------------------------------------------------------
+
+----- Request-line: -----
+
+  	= method SP request-target SP HTTP-version CRLF
+
+	request-method: [RFC7231 section 4]
+	[
+		GET:
+		Transfer a current representation of the target resource.
+		sending a body in a GET request : rejection of the request.
+
+
+		POST:
+		 Perform resource-specific processing on the request payload.
+		    o  Providing a block of data, such as the fields entered into an HTML
+				form, to a data-handling process;
+
+			o  Posting a message to a bulletin board, newsgroup, mailing list,
+				blog, or similar group of articles;
+
+			o  Creating a new resource that has yet to be identified by the
+				origin server; and
+
+			o  Appending data to a resource's existing representation(s).
+
+
+		DELETE:
+		Remove all current representations of the target ressource.
+	]
+
+-----------------------------------------------------------
+
+	request-target: [RFC 7230 5.3]
+	[
+			=	origin-form 
+			/ absolute-form
+					// authority-form : only used for CONNECT
+					// asterisk-form: only used for a server-wide OPTIONS request
+
+		--- origin-form    = absolute-path [ "?" query ]
+			If the target URI's path component is empty, the client MUST send "/" as the path within
+			ex:          
+				GET /where?q=now HTTP/1.1
+				Host: www.example.org
+
+
+		---	absolute-form  = absolute-URI
+			ex:
+				GET http://www.example.org/pub/WWW/TheProject.html HTTP/1.1
+	]
+
+-----------------------------------------------------------
+
+	HTTP-version:
+	[
+
+
+	]
+
+
+-----------------------------------------------------------
