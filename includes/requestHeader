@@ -1,0 +1,13 @@
+
+MESSAGE FORMAT: https://www.rfcreader.com/#rfc7230_line856
+HTTP-message   = start-line
+				*( header-field CRLF )
+				CRLF // empty line
+				[ message-body ]
+
+
+Parsing:
+
+	start-line into structure
+	header field into hash table by field name
+	parse data for message body.
