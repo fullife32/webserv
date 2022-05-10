@@ -108,22 +108,77 @@ Request hearder field
    +-------------------+--------------------------+
    | Header Field Name | Defined in...            |
    +-------------------+--------------------------+
-   | Cache-Control     | Section 5.2 of [RFC7234] |
-   | Expect            | Section 5.1.1            |
-   | Host              | Section 5.4 of [RFC7230] |
-   | Max-Forwards      | Section 5.1.2            |
-   | Pragma            | Section 5.4 of [RFC7234] |
-   | Range             | Section 3.1 of [RFC7233] |
-   | TE                | Section 4.3 of [RFC7230] |
+   | Cache-Control     | Section 5.2 of [RFC7234] | https://www.rfcreader.com/#rfc7234_line924
+   | Expect            | Section 5.1.1            | https://www.rfcreader.com/#rfc7231_line1508
+   | Host              | Section 5.4 of [RFC7230] | https://www.rfcreader.com/#rfc7230_line1970
+   | Max-Forwards      | Section 5.1.2            | https://www.rfcreader.com/#rfc7231_line1620
+   | Pragma            | Section 5.4 of [RFC7234] |	https://www.rfcreader.com/#rfc7234_line1271
+   | Range             | Section 3.1 of [RFC7233] | https://www.rfcreader.com/#rfc7233_line265
+   | TE                | Section 4.3 of [RFC7230] | https://www.rfcreader.com/#rfc7230_line1743
    +-------------------+--------------------------+
 
 
-	Cache-Control:
+	Cache-Control: https://www.imperva.com/learn/performance/cache-control/
+
+	
 
 	Expect:
 		Expect  = "100-continue" only.
 		A server that receives an Expect field-value other than 100-continue
-		MAY respond with a 417 (Expectation Failed) status code to indicate
-		that the unexpected expectation cannot be met.
+			MAY respond with a 417 (Expectation Failed) status code to indicate
+			that the unexpected expectation cannot be met.
+		A 100-continue expectation informs recipients that the client is
+			about to send a (presumably large) message body in this request and
+			wishes to receive a 100 (Continue) interim response if the
+			request-line and header fields are not sufficient to cause an
+			immediate success, redirect, or error response.
+
+		 A server that receives a 100-continue expectation in an HTTP/1.0
+      request MUST ignore that expectation.
 
 
+	Host:
+		Host = uri-host [ ":" port ]
+		A client MUST send a Host header field in all HTTP/1.1 request
+   		messages even if the request-target is in the absolute-form
+
+		   For example, a GET request to the origin server for
+			<http://www.example.org/pub/WWW/> would begin with:
+
+				GET /pub/WWW/ HTTP/1.1
+				Host: www.example.org
+		response:
+		 400 (Bad Request) status code to any
+			HTTP/1.1 request message that lacks a Host header field and to any
+			request message that contains more than one Host header field or a
+			Host header field with an invalid field-value.
+
+
+
+	Max-Forwards: /// IGNORE for us
+		The "Max-Forwards" header field provides a mechanism with the TRACE
+			(Section 4.3.8) and OPTIONS (Section 4.3.7) request methods
+		A recipient MAY ignore a Max-Forwards header field received with any
+			other request methods.
+
+
+	Pragma:
+		 When the Cache-Control header field is not present in a request,
+  		 caches MUST consider the no-cache request.
+		ex:
+			Cache-Control: max-age=30
+			Pragma: no-cache
+		will constrain HTTP/1.1 caches to serve a response no older than 30 seconds
+
+
+	Range: /// j'ai rien compris ///
+		only for GET, ignore sinon.
+	 	An origin server MUST ignore a Range header field that contains a
+   			range unit it does not understand.
+
+
+
+	TE: /// j'ai pas compris non plus ///
+
+
+-----------------------------------------------------------
