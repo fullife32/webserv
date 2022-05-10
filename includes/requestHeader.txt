@@ -1,9 +1,11 @@
+-----------------------------------------------------------
 
 MESSAGE FORMAT: https://www.rfcreader.com/#rfc7230_line856
 
 SP = space
 CRLF = empty line
 
+-----------------------------------------------------------
 -----------------------------------------------------------
 
 HTTP-message   = start-line :  = request-line or status-line
@@ -24,6 +26,7 @@ Parsing:
 	A sender MUST NOT send whitespace between the start-line and the
 	first header field.
 
+-----------------------------------------------------------
 -----------------------------------------------------------
 
 ----- Request-line: -----
@@ -50,14 +53,26 @@ Parsing:
 
 			o  Appending data to a resource's existing representation(s).
 
+			(RFC 7231 Section 3.1.4.2)
+
+			response:
+				 206 (Partial Content)
+				 304 (Not Modified)
+				 416 (Range Not Satisfiable)
+				 201 (Created)
+
 
 		DELETE:
 		Remove all current representations of the target ressource.
+		this method is similar to the rm command in UNIX.
+			response:
+				 202 (Accepted) status code
+				 204 (No Content)
+				 200 (OK) 
 	]
 
------------------------------------------------------------
 
-	request-target: [RFC 7230 5.3]
+---- request-target: -----	[RFC 7230 5.3]
 	[
 			=	origin-form 
 			/ absolute-form
@@ -86,3 +101,29 @@ Parsing:
 
 
 -----------------------------------------------------------
+
+
+Request hearder field
+
+   +-------------------+--------------------------+
+   | Header Field Name | Defined in...            |
+   +-------------------+--------------------------+
+   | Cache-Control     | Section 5.2 of [RFC7234] |
+   | Expect            | Section 5.1.1            |
+   | Host              | Section 5.4 of [RFC7230] |
+   | Max-Forwards      | Section 5.1.2            |
+   | Pragma            | Section 5.4 of [RFC7234] |
+   | Range             | Section 3.1 of [RFC7233] |
+   | TE                | Section 4.3 of [RFC7230] |
+   +-------------------+--------------------------+
+
+
+	Cache-Control:
+
+	Expect:
+		Expect  = "100-continue" only.
+		A server that receives an Expect field-value other than 100-continue
+		MAY respond with a 417 (Expectation Failed) status code to indicate
+		that the unexpected expectation cannot be met.
+
+
