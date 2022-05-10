@@ -119,8 +119,32 @@ Request hearder field
 
 
 	Cache-Control: https://www.imperva.com/learn/performance/cache-control/
+		The "Cache-Control" header field is used to specify directives for
+   			caches along the request/response chain.
+		A cache MUST obey the requirements of the Cache-Control directives
+  			 defined in this section. 
+		- Cache-Control   = 1#cache-directive
+	    - cache-directive = token [ "=" ( token / quoted-string ) ]
 
-	
+
+
+		Cache-directive: [RFC 7234 5.2.1 : https://www.rfcreader.com/#rfc7234_line956]
+
+		definition: delta-seconds = 1*DIGIT [https://www.rfcreader.com/#rfc7234_line169)
+		The delta-seconds rule specifies a non-negative integer, representing
+		time in seconds.
+
+			max-age =  delta-seconds
+				The "max-age" request directive indicates that the client is
+				unwilling to accept a response whose age is greater than the
+				specified number of seconds.
+
+			max-stale = delta-second
+			min-fresh = delta-seconds
+			no-cache
+			no-store 
+			....
+
 
 	Expect:
 		Expect  = "100-continue" only.

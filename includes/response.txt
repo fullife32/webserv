@@ -1,0 +1,3 @@
+status-line : https://www.rfcreader.com/#rfc7230_line969
+
+  status-line = HTTP-version SP status-code SP reason-phrase CRLF
