@@ -45,9 +45,6 @@ ntohl (network to host long)
 
 inet_addr() // Does work only with IPv4 and doesn't with 255.255.255.255
 
-Use getaddrinfo instead - https://beej.us/guide/bgnet/html/index-wide.html#getaddrinfoprepare-to-launch
-freeaddrinfo(addrinfo)
-
 
 ----- Setup socket functions ----- https://beej.us/guide/bgnet/html/index-wide.html#system-calls-or-bust
 
@@ -118,3 +115,10 @@ https://www.geeksforgeeks.org/socket-programming-cc/
 
 https://www.postman.com/
 To send requests to the server easily
+
+https://www.digitalocean.com/community/tutorials/understanding-nginx-server-and-location-block-selection-algorithms
+https://nginx.org/en/docs/dirindex.html
+How nginx works
+
+https://github.com/solaldunckel/webserv
+For config file
