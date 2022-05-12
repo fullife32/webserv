@@ -33,3 +33,5 @@ Configuration file
 		* Your server should work with one CGI (php-CGI, Python, and so forth).
 You must provide some configuration files and default basic files to test and
 demonstrate every feature works during evaluation
+
+https://www.nginx.com/resources/wiki/start/topics/examples/server_blocks/
