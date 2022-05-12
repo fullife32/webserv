@@ -1,0 +1,22 @@
+01234567890123456789012345678901234567890123456789012345678901234567890123456789
+
+Do default error pages with link to return to home page with a customize message
+and original message of the error.
+
+If got time create personal stylised pages.
+
+Common errors:
+-400
+-404
+
+-503
+-504
+
+Return an error if multiple servers on the same port or work for the first
+server ?
+
+
+/test
+
+img.jpg
+book.pdf
