@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/31 17:38:13 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/03 13:52:39 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/13 13:21:17 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,9 @@ vpath %.hpp $(foreach dir, $(INC_DIR)/, $(dir):)
 # ----------------- #
 
 all:		$(NAME)
+
+nginx:		
+			cd docker_nginx_tester && docker build -t nginx_test . && docker run -ti -p80:80 nginx_test bash
 
 $(OBJ_DIR)%.o: %.cpp $(HEADERS)
 			@mkdir -p $(OBJ_DIR)
