@@ -30,7 +30,7 @@ private:
 	int				_sockfd;
 	int				_yes;
 	t_serverBlock	_block;
-	
+
 public:
 	serverSocket(std::string ip, std::string port) {
 		_block.ipAddr = ip;
