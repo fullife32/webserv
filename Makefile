@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/31 17:38:13 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/13 13:21:17 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/13 15:56:21 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,11 @@ NAME 	= webserv
 # ----------------- #
 INC_DIR	=	includes \
 
-INCLUDE	=	
+INCLUDE	=	ImessageHTTP.hpp \
+			RequestHTTP.hpp \
+			ResponseHTTP.hpp \
+			Server.hpp \
+			ServerConfig.hpp
 						
 
 
@@ -31,9 +35,9 @@ HEADERS 	=	$(foreach dir, $(INC_DIR), $(wildcard $(dir)/*.hpp) )
 # Sources
 # ----------------- #
 
-SRC_DIR		=	sources/
+SRC_DIR		=	srcs/
 
-SRC			= 
+SRC			= main.cpp
 
 
 
