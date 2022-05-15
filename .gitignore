@@ -1,2 +1,4 @@
+docker/
+start.sh
 .vscode
 test_virg
