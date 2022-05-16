@@ -76,10 +76,10 @@ public:
 		will redirect, to a function that handles http request for the first
 		case, or to a function that handles https response for the second case.
 	*/
-	int	watchEvents(ServerSocket sockets) {
+	int	watchEvents(ServerSocket &sockets) {
 		for (int i = 0; i < _nbReady; i++) {
 			if (_events[i].data.fd == sockets.getFd()) {
-				if (_events[i].events != EPOLLIN)
+				if (!_events[i].events & EPOLLIN)
 					std::cout << "Fail occured in watchEvents" << std::endl;
 				else
 					sockets.addClient(this);

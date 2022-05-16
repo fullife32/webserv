@@ -3,8 +3,6 @@
 #include "ParseConfig.hpp"
 #include "Multiplex.hpp"
 
-int	plexSocket(ServerSocket socket);
-
 /*
 	Starting by gathering config file infos, then creating each socket
 	associated with a server block and the multiplexing everything (adding an

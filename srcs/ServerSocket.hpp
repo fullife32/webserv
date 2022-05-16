@@ -30,14 +30,14 @@ private:
 	int							_fd;
 	int							_yes;
 	epoll_event					_event;
-	ServerBlock					_block;
+	ServerBlock					&_block;
 	std::vector<ClientSocket>	_clients;
 
 public:
 	/*
 		The constructor create the socket and make it listen.
 	*/
-	ServerSocket(ServerBlock block) : _block(block) {
+	ServerSocket(ServerBlock &block) : _block(block) {
 		_yes = 1;
 		_event.events = EPOLLIN;
 		_createSocket();
