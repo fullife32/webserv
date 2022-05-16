@@ -9,53 +9,50 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <unistd.h>
+#include "parseConfig.hpp"
+#include <sys/epoll.h>
 
-// Move all of this ------------
-typedef struct s_serverBlock {
-	std::string			ipAddr;
-	std::string			listen;
-	// std::string server_name;
-	// std::vector<std::string[2]> listen;
-	// std::vector<std::string> index;
-	// list of serverLoc;
-}				t_serverBlock;
-
-typedef struct s_serverLoc {
-	/* data */
-}				t_serverLoc;
-// -----------------------------
-
-class serverSocket {
+class serverSocket : public serverBlock {
 private:
 	int				_sockfd;
 	int				_yes;
-	t_serverBlock	_block;
+	epoll_event		_ev;
+	serverBlock		_block;
 
 public:
-	serverSocket(std::string ip, std::string port) {
-		_block.ipAddr = ip;
-		_block.listen = port;
+	serverSocket(serverBlock block) : _block(block) {
 		_yes = 1;
+		_ev.events = EPOLLIN;
+		// _ev.data.fd = fill here corresponding sockfd for a client event
 		_createSocket();
+		showInfos();
 		_setOpts();
 		_bindSocket();
 		_listenSocket();
-		showInfos();
 	}
-	~serverSocket() {
-		std::cout << "Closing socket: " << _sockfd << std::endl;
-		if (_sockfd != -1)
-			close(_sockfd);
-	}
-	// serverSocket( serverSocket const &other );
-	// serverSocket &operator=( serverSocket const &other );
+	~serverSocket() {}
+
 	void	showInfos() {
 		std::cout << std::endl << "---------- Infos Socket ----------" << std::endl;
 		std::cout << "sockfd: " << _sockfd << std::endl;
 		std::cout << "yes: " << _yes << std::endl;
-		std::cout << "block.ip_addr: " << _block.ipAddr << std::endl;
-		std::cout << "block.listen: " << _block.listen << std::endl;
+		std::cout << "block.ip_addr: " << _block.getIp() << std::endl;
+		std::cout << "block.listen: " << _block.getPort() << std::endl;
 		std::cout << "----------------------------------" << std::endl << std::endl;
+	}
+
+	int	getSockfd() const {
+		return _sockfd;
+	}
+	epoll_event	*getEv() {
+		return &_ev;
+	}
+	uint32_t	getEvent() {
+		return _ev.events;
+	}
+	void		close() {
+		if (_sockfd != -1)
+			::close(_sockfd);
 	}
 
 private:
@@ -80,8 +77,8 @@ private:
 		struct sockaddr_in sin;
 
 		sin.sin_family = AF_INET;
-		sin.sin_port = htons(atoi(_block.listen.c_str()));
-		sin.sin_addr.s_addr = inet_addr(_block.ipAddr.c_str());
+		sin.sin_port = htons(atoi(_block.getPort().c_str()));
+		sin.sin_addr.s_addr = inet_addr(_block.getIp().c_str());
 		if (bind(this->_sockfd, (struct sockaddr *)&sin, sizeof(sin)) == -1) {
 			std::cout << "Fail binding with the socket: " << _sockfd << std::endl;
 			exit(1);
