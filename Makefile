@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/31 17:38:13 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/16 19:24:23 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/16 21:24:39 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,8 +43,7 @@ SRC			= 	ParseRequest.cpp \
 				RequestHTTP.cpp \
 				multiplex.cpp \
 				utils.cpp \
-				main.cpp 
-
+				main_testRequest.cpp 
 
 
 
@@ -79,7 +78,7 @@ nginx:
 
 $(OBJ_DIR)%.o: %.cpp $(HEADERS)
 			@mkdir -p $(OBJ_DIR)
-			echo "\033[32mCompilation of ... $(foreach file, $< , $(notdir $<))\033[0m"
+			@echo "\033[32mCompilation of ... $(foreach file, $< , $(notdir $<))\033[0m"
 			@$(CC) $(CFLAG) $(IFLAG) -o $@ -c $< 
 
 $(NAME):	$(OBJ)

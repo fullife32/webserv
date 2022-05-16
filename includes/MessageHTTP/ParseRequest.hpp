@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/16 19:54:58 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/16 22:11:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,7 @@
 # include "RequestHTTP.hpp"
 
 # define NEWLINE				"\n"
-# define HEADER_SEPARATOR		"\r\n"
-# define HEADER_SEPARATOR_SIZE	2
-# define MESSAGE_END			"\r\n\r\n"
+# define MESSAGE_END			"\n\n"
 
 namespace WS
 {
@@ -27,7 +25,8 @@ namespace WS
 class ParseRequest
 {
 
-	private:
+	private: // make private
+	public:
 		std::string				m_data;
 		std::string				m_header;
 		std::string				m_body;
@@ -39,6 +38,7 @@ class ParseRequest
 
 	public:
 
+		ParseRequest();
 		ParseRequest(std::string	data);
 		~ParseRequest();
 
@@ -49,6 +49,7 @@ class ParseRequest
 
 
 	private:
+	public:
 		RequestLine					m_formated_RequestLine();	// formate la premiere ligne requestline 
 		std::vector<std::string> &	m_splitRequestLine();		// split la premiere ligne par space ( )
 		std::vector<std::string> &	m_getHeader();				// recupere le header en liste de string (split par \n)

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/16 19:55:18 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/16 22:26:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ struct HTTPversion
 	std::string		name;
 	int				major_version;
 	int				minor_version;
+
+	// void	formatedVersion(std::string version);
 };
 
 /*
