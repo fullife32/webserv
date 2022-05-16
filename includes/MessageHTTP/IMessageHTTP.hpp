@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/13 15:01:03 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/16 19:55:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,18 +74,18 @@ class IMessageHTTP
 {
 
 	protected:
-		StartLine								start_line;
-		std::map < std::string, std::string > 	header_fields;
-		std::vector<std::string>				body;
+		StartLine								m_start_line;
+		std::map < std::string, std::string > 	m_header_fields;
+		std::string								m_body;
 
 
 	public:
 		// constructor
-		IMessageHTTP();
-		IMessageHTTP(const IMessageHTTP & copy);
+		IMessageHTTP() {};
+		// IMessageHTTP(const IMessageHTTP & copy);
 
 		// destructor
-		virtual ~IMessageHTTP();
+		virtual ~IMessageHTTP() {};
 
 
 		// operator

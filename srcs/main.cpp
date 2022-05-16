@@ -1,5 +1,5 @@
-#include <iostream>
-#include "serverSocket.hpp"
+#include "Webserv.hpp"
+
 
 int	plexSocket(serverSocket socket);
 
@@ -23,8 +23,12 @@ int	main(int ac, char **av) {
 			std::cout << "epoll_wait failed" << std::endl;
 			break;
 		}
-		std::cout << "Finished waiting" << std::endl;
-		std::cout << serverTest.getEvent() << std::endl;
+		if (ready > 1)
+		{
+			std::cout << "Finished waiting" << std::endl;
+			std::cout << serverTest.getEvent() << std::endl;
+
+		}	
 	}
 	serverTest.close();
 }

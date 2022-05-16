@@ -11,6 +11,9 @@
 #include <unistd.h>
 #include "parseConfig.hpp"
 #include <sys/epoll.h>
+#include <unistd.h>
+#include <stdlib.h>
+
 
 class serverSocket : public serverBlock {
 private:
@@ -65,7 +68,7 @@ private:
 		std::cout << "Socket successfully created with fd: " << this->_sockfd << std::endl;
 	}
 	void	_setOpts() {
-		int	ret;
+		// int	ret;
 
 		if (setsockopt(this->_sockfd, SOL_SOCKET, SO_REUSEADDR, &this->_yes, sizeof(int)) == -1) {
 			std::cout << "Fail setting options for socket: " << _sockfd << std::endl; // throw exceptions instead

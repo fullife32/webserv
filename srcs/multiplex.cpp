@@ -1,6 +1,7 @@
-#include "serverSocket.hpp"
+
 #include <iostream>
 #include <sys/epoll.h>
+#include "Webserv.hpp"
 
 int	plexSocket(serverSocket socket) {
 	int	epfd;
