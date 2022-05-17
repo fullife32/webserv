@@ -1,4 +1,14 @@
-
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/05/17 17:53:19 by rotrojan          #+#    #+#              #
+#    Updated: 2022/05/17 18:01:14 by rotrojan         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
 include settings.mk
 
@@ -6,6 +16,7 @@ OBJS = $(SRCS:%.cpp=$(OBJS_DIR)/%.o)
 DEPENDENCIES = $(OBJS:%.o=%.d)
 LDFLAGS = $(LIBS:%=-L lib%)
 LDLIBS = $(LIBS:%=-l%)
+INCLUDES_DIR = $(shell find $(INC_DIR) -type d)
 CXXFLAGS += -MMD -MP
 MAKEFLAGS += --no-print-directory
 
