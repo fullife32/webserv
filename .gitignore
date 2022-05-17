@@ -2,5 +2,5 @@ docker/
 start.sh
 .vscode
 test_virg
-obj/
+.objs/
 webserv

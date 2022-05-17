@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 14:50:22 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 16:30:42 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <string>
 # include <vector>
 # include <map>
-#include "usefull.hpp"
+#include "utils.hpp"
 #include <iostream>
 
 namespace WS {

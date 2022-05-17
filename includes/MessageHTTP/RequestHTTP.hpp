@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 16:09:23 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 16:31:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 #include "IMessageHTTP.hpp"
 #include <iostream>
-#include "usefull.hpp"
+#include "utils.hpp"
 
 namespace WS {
 

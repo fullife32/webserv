@@ -6,12 +6,12 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 16:08:52 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 16:32:30 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ParseRequest.hpp"
-#include "usefull.hpp"
+#include "utils.hpp"
 #include <iostream>
 
 namespace WS {
