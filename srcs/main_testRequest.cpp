@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/16 22:23:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 14:49:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,32 +48,35 @@ int main(int ac, char **argv)
 
 	/// TESTING SplitString
 
-	std::vector<std::string> split = splitString(request.m_data, "\n\n");
+	// std::vector<std::string> split = splitString(request.m_data, "\n\n");
 
-	int i = 0;
-	for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); i++, it++)
-		std::cout << i << " " <<  *it << std::endl;
+	// for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); i++, it++)
+	// 	std::cout << i << " " <<  *it << std::endl;
 
 
 	/// TESTING ParseRequest::m_separateHeaderBody()
 
-	request.m_separateHeaderBody();
+	// request.m_separateHeaderBody();
 
-	std::cout << "HEADER : " << std::endl << request.m_header << std::endl;
-	std::cout << "BODY : " << request.m_body.size() << std::endl << request.m_body << std::endl;
+	// std::cout << "HEADER : " << std::endl << request.m_header << std::endl;
+	// std::cout << "BODY : " << request.m_body.size() << std::endl << request.m_body << std::endl;
 	
 
 	// test formated_RequestLine
-	WS::RequestLine					requestline;
-	std::vector<std::string>	split_first_line;
+	// WS::RequestLine					requestline;
+// 	std::vector<std::string>	split_first_line;
 	
-	split = splitString(request.m_header, NEWLINE);
+// 	split = splitString(request.m_header, NEWLINE);
 
-	for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); i++, it++)
-		std::cout << i << " " <<  *it << std::endl;
+// 	for (std::vector<std::string>::iterator it = split.begin(); it != split.end(); i++, it++)
+// 		std::cout << i << " " <<  *it << std::endl;
 
-	split_first_line = splitString(split[0], " ");
+// 	split_first_line = splitString(split[0], " ");
 
-for (std::vector<std::string>::iterator it = split_first_line.begin(); it != split_first_line.end(); i++, it++)
-		std::cout << i << " " <<  *it << std::endl;
+// for (std::vector<std::string>::iterator it = split_first_line.begin(); it != split_first_line.end(); i++, it++)
+// 		std::cout << i << " " <<  *it << std::endl;
+
+	WS::RequestHTTP		final_request = request.getFormated_RequestHTTP();
+
+	final_request.debug_print_Message();
 }

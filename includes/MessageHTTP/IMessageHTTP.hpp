@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/16 22:26:18 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 14:50:22 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <string>
 # include <vector>
 # include <map>
+#include "usefull.hpp"
+#include <iostream>
 
 namespace WS {
 
@@ -30,7 +32,9 @@ struct HTTPversion
 	int				major_version;
 	int				minor_version;
 
-	// void	formatedVersion(std::string version);
+	HTTPversion();
+	HTTPversion(std::string	version);
+	~HTTPversion();
 };
 
 /*
@@ -96,7 +100,25 @@ class IMessageHTTP
 
 		// functions
 
+		// debug
 
+		
+		virtual void	debug_print_startline() = 0;
+		void	debug_print_Message()
+		{
+			debug_print_startline();
+			
+			std::cout << "Header :" << std::endl;
+			// printMap<std::string>(m_header_fields);
+			std::map<std::string, std::string>::const_iterator	it;
+
+			for (it = m_header_fields.begin(); it != m_header_fields.end(); it++)
+				std::cout << "key=" << (*it).first << " value=" << (*it).second << std::endl;
+
+			std::cout << "Body :" << std::endl;
+			std::cout << m_body << std::endl;
+
+		}
 
 
 }; // end class IMessageHTTP

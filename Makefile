@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/31 17:38:13 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/16 21:24:39 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/17 12:42:57 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ SRC_DIR		=	srcs srcs/MessageHTTP
 
 SRC			= 	ParseRequest.cpp \
 				RequestHTTP.cpp \
+				IMessageHTTP.cpp \
 				multiplex.cpp \
 				utils.cpp \
 				main_testRequest.cpp 

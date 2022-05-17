@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/16 22:11:55 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 16:08:37 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include "IMessageHTTP.hpp"
 # include "RequestHTTP.hpp"
 
-# define NEWLINE				"\n"
-# define MESSAGE_END			"\n\n"
+# define NEWLINE	"\n"
+# define EMPTY_LINE	"\n\n"
 
 namespace WS
 {
@@ -30,11 +30,6 @@ class ParseRequest
 		std::string				m_data;
 		std::string				m_header;
 		std::string				m_body;
-		std::string::iterator	m_header_begin; // NOPE finallement
-		std::string::iterator	m_header_end;
-		std::string::iterator	m_body_begin;
-		std::string::iterator	m_body_end;
-
 
 	public:
 
@@ -49,16 +44,10 @@ class ParseRequest
 
 
 	private:
-	public:
-		RequestLine					m_formated_RequestLine();	// formate la premiere ligne requestline 
-		std::vector<std::string> &	m_splitRequestLine();		// split la premiere ligne par space ( )
-		std::vector<std::string> &	m_getHeader();				// recupere le header en liste de string (split par \n)
-		std::string &				m_getBody();				// recupere le body seul
-		void						m_separateHeaderBody();
-
-		// void						m_settingUpIterators();		// sépare avec les itérateurs le body du header
-
-
+	
+		void								m_separateHeaderBody(); // separe les datas dans m_header et m_body
+		std::map<std::string, std::string> 	m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
+		RequestLine							m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
 
 
 }; // end class
