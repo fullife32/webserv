@@ -29,7 +29,7 @@ class ServerSocket {
 private:
 	int							_fd;
 	int							_yes;
-	epoll_event					_event;
+	epoll_event					_event; // remove this and apply in when added in epoll only
 	ServerBlock					&_block;
 	std::vector<ClientSocket>	_clients;
 
