@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/17 16:37:30 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/17 18:02:05 by rotrojan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ LIBS =
 OBJS_DIR = .objs
 
 # The file where make will look for all the header files
-INCLUDES_DIR = includes includes/MessageHTTP
+INC_DIR = includes
 
 # The C++ compiler
 CXX = clang++
@@ -44,15 +44,3 @@ CXXFLAGS = -Wall -Wextra -std=c++98 -pedantic
 # The characters and the length of the progress bar will adjust automatically
 PROGRESS_BAR = -------------------------------------------------------------------
 FILLING_CHAR = \#
-
-
-# IMessageHTTP.hpp \
-# ParseRequest.hpp \
-# RequestHTTP.hpp \
-# ResponseHTTP.hpp \
-# ClientSocket.hpp \
-# Multiplex.hpp \
-# ParseConfig.hpp \
-# ServerSocket.hpp \
-# utils.hpp \
-# Webserv.hpp \
