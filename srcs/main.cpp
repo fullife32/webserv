@@ -1,34 +1,29 @@
-#include "Webserv.hpp"
+#include <iostream>
+#include "ServerSocket.hpp"
+#include "ParseConfig.hpp"
+#include "Multiplex.hpp"
 
-
-int	plexSocket(serverSocket socket);
-
+/*
+	Starting by gathering config file infos, then creating each socket
+	associated with a server block and the multiplexing everything (adding an
+	event list and waiting for all of them at the same time).
+*/
 int	main(int ac, char **av) {
-	int	epfd; //don't forget to close it
-
 	if (ac != 3) {
 		std::cout << "./webserv ip port" << std::endl;
 		return 1;
 	}
-	serverBlock		datas(av[1], av[2]);
-	serverSocket	serverTest(datas);
 
-	epfd = plexSocket(serverTest);
-	while(1) {
-		int ready;
-		epoll_event waitList;
-		waitList.events = EPOLLIN;
-		ready = epoll_wait(epfd, &waitList, 10, -1);
-		if (ready == -1) {
-			std::cout << "epoll_wait failed" << std::endl;
-			break;
-		}
-		if (ready > 1)
-		{
-			std::cout << "Finished waiting" << std::endl;
-			std::cout << serverTest.getEvent() << std::endl;
+	ServerBlock		datas(av[1], av[2]); // not finished
+	ServerSocket	serverTest(datas);
+	Multiplex		plex;
 
-		}	
+	plex.addToPoll(serverTest.getFd(), serverTest.getEvent());  //loop through all server sockets
+	for (;;) {
+		serverTest.showInfos();
+		if (plex.waitPlex() == -1)
+			exit(1); // don't exit
+		plex.watchEvents(serverTest);
 	}
 	serverTest.close();
 }
