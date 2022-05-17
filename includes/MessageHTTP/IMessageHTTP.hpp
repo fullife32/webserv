@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 16:30:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 18:18:08 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ class IMessageHTTP
 		StartLine								m_start_line;
 		std::map < std::string, std::string > 	m_header_fields;
 		std::string								m_body;
+		std::map<int, std::string>				m_error;
 
 
 	public:
@@ -101,9 +102,8 @@ class IMessageHTTP
 		// functions
 
 		// debug
-
-		
 		virtual void	debug_print_startline() = 0;
+
 		void	debug_print_Message()
 		{
 			debug_print_startline();

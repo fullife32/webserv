@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 16:08:37 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 18:18:32 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,16 @@ class ParseRequest
 		RequestLine							m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
 
 
+		// class parsingRequestException : public std::exception
+		// {
+		// private:
+		// 	int		m_error;
+		// public:
+		// 	parsingRequestException(int	error)
+		// 	:m_error(error)
+		// 	{};
+		// 	~parsingRequestException();
+		// };
 }; // end class
 
 } // end namespace

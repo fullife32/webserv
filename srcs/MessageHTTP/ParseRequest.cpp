@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 16:32:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/17 18:26:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,8 @@ RequestLine 		ParseRequest::m_formated_RequestLine(const std::string & startline
 	std::vector<std::string>	split;
 	
 	split = splitString(startline, " ");
+	if (split.size() != 3)
+			std::cerr << "THROW EXCEPTION 400 BAD REQUEST" << std::endl;		///// throw si pas de : dans les header fields
 	requestline.method = split[0];
 	requestline.target = split[1];
 	requestline.version = HTTPversion(split[2]);
