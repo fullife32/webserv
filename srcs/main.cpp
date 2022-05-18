@@ -18,12 +18,12 @@ int	main(int ac, char **av) {
 	ServerSocket	serverTest(datas);
 	Multiplex		plex;
 
-	plex.addToPoll(serverTest.getFd(), serverTest.getEvent());  //loop through all server sockets
+	plex.addToPoll(serverTest.getFd());  //loop through all server sockets
 	for (;;) {
 		serverTest.showInfos();
 		if (plex.waitPlex() == -1)
 			exit(1); // don't exit
 		plex.watchEvents(serverTest);
 	}
-	serverTest.close();
+	serverTest.closeSocket();
 }
