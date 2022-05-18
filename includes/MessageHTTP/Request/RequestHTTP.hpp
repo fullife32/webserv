@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 16:31:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/18 15:35:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,7 @@
 
 namespace WS {
 
-enum RequestMethod
-{
-	GET,
-	POST,
-	DELETE,
-	PUT,	/////
-	HEAD,
-	CONNECT,
-	OPTIONS,
-	TRACE
-};
+
 
 
 class RequestHTTP : public IMessageHTTP
@@ -51,12 +41,12 @@ class RequestHTTP : public IMessageHTTP
 		RequestHTTP &	operator=(const RequestHTTP & other);
 
 		// functions
+		RequestMethod	getMethod() const;
+
 
 		// set
 		void			setRequestLine(const RequestLine & requestLine);
-		void			setBody(const std::string & body);
-		void			setHeaderFields(const std::map<std::string, std::string> & headerFields);
-
+		
 
 
 

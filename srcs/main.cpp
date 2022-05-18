@@ -27,3 +27,25 @@ int	main(int ac, char **av) {
 	}
 	serverTest.close();
 }
+
+
+/*
+
+	SETUP RESPONSE:
+
+	while recv => reception
+		parseRequest.append(buffer from recv)
+	try
+	{
+		RequestHTTP = parseRequest.formated_request;
+		formated responseHTTP
+	}
+	catch exception 
+	{
+		int	errorStatus;
+
+		formated responseHTTP for error status
+		send(response)
+	}
+	send(response)
+*/

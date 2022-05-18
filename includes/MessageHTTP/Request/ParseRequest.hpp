@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 18:18:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/18 17:53:34 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,23 @@ class ParseRequest
 		void								m_separateHeaderBody(); // separe les datas dans m_header et m_body
 		std::map<std::string, std::string> 	m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
 		RequestLine							m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
+		RequestMethod						m_formated_RequestMethod(const std::string & methodWord);
 
 
-		// class parsingRequestException : public std::exception
-		// {
-		// private:
-		// 	int		m_error;
-		// public:
-		// 	parsingRequestException(int	error)
-		// 	:m_error(error)
-		// 	{};
-		// 	~parsingRequestException();
-		// };
+
+		class SyntaxException : public std::exception
+		{
+		private:
+			int		m_error;
+		
+		public:
+			 SyntaxException(int	error);
+		
+			virtual const char * what() const throw();
+			int					getError() const ;
+		};
+
+		
 }; // end class
 
 } // end namespace

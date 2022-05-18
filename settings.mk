@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/17 18:25:01 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/18 16:15:17 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ NAME = webserv
 # The list of the all the sources, because $(wildcard *.c) is too dangerous
 SRCS =	main_testRequest.cpp \
 		IMessageHTTP.cpp \
+		IMessageStruct.cpp \
 		ParseRequest.cpp \
 		RequestHTTP.cpp \
 		multiplex.cpp \
@@ -33,7 +34,7 @@ LIBS =
 OBJS_DIR = .objs
 
 # The file where make will look for all the header files
-INCLUDES_DIR = includes includes/MessageHTTP
+INCLUDES_DIR = includes
 
 # The C++ compiler
 CXX = clang++

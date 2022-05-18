@@ -6,70 +6,29 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 18:18:08 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/18 15:42:16 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IMESSAGEHTTP_HPP
 # define IMESSAGEHTTP_HPP
 
+# include "IMessageStruct.hpp"
 # include <string>
 # include <vector>
 # include <map>
-#include "utils.hpp"
-#include <iostream>
+
+#include "utils.hpp" // debug
+#include <iostream>	// debug
 
 namespace WS {
 
-/*
-**	HTTP version = HTTP-name "/" DIGIT "." DIGIT
-**	HTTP-name   = %x48.54.54.50 ; "HTTP", case-sensitive
-*/
-
-struct HTTPversion
+enum RequestMethod
 {
-	std::string		name;
-	int				major_version;
-	int				minor_version;
-
-	HTTPversion();
-	HTTPversion(std::string	version);
-	~HTTPversion();
+	GET,
+	POST,
+	DELETE
 };
-
-/*
-** status-code    = 3DIGIT voir code erreur potentiellement une std::mqp <int, string> avec toute la liste d'erreur et 
-** le reason_phrase correspondante ou ENUM ou define ??
-*/
-
-struct	StatusCode
-{
-	int				code;
-	std::string 	*reason_phrase; // pointeur sur std::map<int, sting> status code error ? ou enum de code ?
-};
-
-/*
-** Start line
-*/
-
-struct StartLine
-{
-	HTTPversion		version;
-};
-
-
-struct RequestLine : public StartLine
-{
-	std::string		target; // URL
-	std::string		method; // ACTIONS : GET, POST, DELETE
-};
-
-
-struct StatusLine : public StartLine
-{
-	StatusCode		status;	
-};
-
 
 /*
 ** Interface pour les Request et Response.
@@ -100,6 +59,12 @@ class IMessageHTTP
 
 
 		// functions
+		
+		
+		//set
+		void			setBody(const std::string & body);
+		void			setHeaderFields(const std::map<std::string, std::string> & headerFields);
+
 
 		// debug
 		virtual void	debug_print_startline() = 0;
@@ -117,7 +82,6 @@ class IMessageHTTP
 
 			std::cout << "Body :" << std::endl;
 			std::cout << m_body << std::endl;
-
 		}
 
 

@@ -1,0 +1,9 @@
+wikipedia GET
+HTTP/1.1 400 Bad Request
+Server: nginx/1.14.2
+Date: Wed, 18 May 2022 12:20:26 GMT
+Content-Type: text/html
+Content-Length: 173
+Connection: close
+
+
