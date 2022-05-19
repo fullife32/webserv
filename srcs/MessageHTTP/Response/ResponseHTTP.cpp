@@ -6,14 +6,24 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 15:34:21 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:09:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResponseHTTP.hpp"
 
+/*
+	POUR LES METHOD : 405 NOT ALLOWED que ce soit une methode qui n'est pas autorisee
+	ou qu'elle n'existe pas.
+
+
+*/
+
 namespace WS
 {
+
+
+
 
 	ResponseHTTP::ResponseHTTP()
 	: AMessageHTTP(),
@@ -31,8 +41,12 @@ namespace WS
 
 	void	ResponseHTTP::m_minimalHeaderFields()
 	{
-		// m_header_fields[]
+		 m_header_fields["Date"] = getStringTime();
+		 m_header_fields["Server"] = "Webserv"; //////////
 	}
+
+
+
 
 
 

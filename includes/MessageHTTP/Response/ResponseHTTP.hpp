@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 11:55:49 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:08:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@
 #include "AMessageHTTP.hpp"
 
 namespace WS {
+
+
+enum RequestMethod
+{
+	GET,
+	POST,
+	DELETE
+};
+
 
 class ResponseHTTP : public AMessageHTTP
 {

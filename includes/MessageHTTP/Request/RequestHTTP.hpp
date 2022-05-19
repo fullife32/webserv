@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 11:59:14 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:14:10 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,24 +30,23 @@ class RequestHTTP : public AMessageHTTP
 
 	public:
 
-		// constructor
+	/* constructor ------------------------------------------------ */
 		RequestHTTP();
 		RequestHTTP(const RequestHTTP & copy);
 
-		// destructor
+	/* destructor  ------------------------------------------------ */
 		virtual ~RequestHTTP();
 
-		// operator
+	/* operator    ------------------------------------------------ */
 		RequestHTTP &	operator=(const RequestHTTP & other);
 
-		// functions
+	/* get / set    ------------------------------------------------ */
 		RequestMethod	getMethod() const;
-
-
-		// set
 		void			setRequestLine(const RequestLine & requestLine);
 		
+		
 
+	/* functions    ------------------------------------------------ */
 
 
 		// debug

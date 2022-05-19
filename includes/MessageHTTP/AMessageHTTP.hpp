@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 11:59:06 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:12:33 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,6 @@
 
 namespace WS {
 
-enum RequestMethod
-{
-	GET,
-	POST,
-	DELETE
-};
 
 /*
 ** Interface pour les Request et Response.
@@ -42,28 +36,43 @@ class AMessageHTTP
 		StartLine								m_startLine;
 		std::map <std::string, std::string> 	m_header_fields;
 		std::string								m_body;
-		std::map <int, std::string>				m_error;
 
 
 	public:
-		// constructor
+	/* constructor ------------------------------------------------ */
 		AMessageHTTP() {};
 		// AMessageHTTP(const AMessageHTTP & copy);
 
-		// destructor
+	/* destructor  ------------------------------------------------ */
 		virtual ~AMessageHTTP() {};
 
 
-		// operator
+	/* operator    ------------------------------------------------ */
 		AMessageHTTP &	operator=(const AMessageHTTP & other);
 
 
-		// functions
-		
-		
-		//set
+	/* set		    ------------------------------------------------ */
 		void			setBody(const std::string & body);
 		void			setHeaderFields(const std::map<std::string, std::string> & headerFields);
+
+
+	/* functions    ------------------------------------------------ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 		// debug

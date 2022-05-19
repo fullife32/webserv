@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 10:44:09 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:11:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@
 namespace WS
 {
 
+enum RequestMethod
+{
+	GET,
+	POST,
+	DELETE
+};
+
 class ParseRequest
 {
 
@@ -33,15 +40,18 @@ class ParseRequest
 
 	public:
 
+	/* constructor ------------------------------------------------ */
 		ParseRequest();
 		ParseRequest(std::string	data);
+
+	/* destructor  ------------------------------------------------ */
 		~ParseRequest();
 
 
-		std::string &				append(const std::string & str); // pour recuperer la requete entiere ( buffer)
-		RequestHTTP 				getFormated_RequestHTTP(); // fonction qui va appeler toutes les autres pour
-									// fabriquer une RequestHTTP  throw une exception si probleme de parsing
-
+	/* functions    ------------------------------------------------ */
+		std::string &	append(const std::string & str); // pour recuperer la requete entiere ( buffer)
+		RequestHTTP 	getFormated_RequestHTTP(); // fonction qui va appeler toutes les autres pour
+						// fabriquer une RequestHTTP  throw une exception si probleme de parsing
 
 	private:
 	
