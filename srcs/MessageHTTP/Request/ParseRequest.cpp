@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 11:59:51 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 15:33:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,10 @@ RequestHTTP 	ParseRequest::getFormated_RequestHTTP()
 
 /*
 ** Separate Header from Body
+		find separation empty line between header and body request
+		it can be the end of file and body will be empty
+
+		throw exception if empty line is not found (400: Bad Request)
 */
 
 void			ParseRequest::m_separateHeaderBody()
@@ -93,6 +97,11 @@ void			ParseRequest::m_separateHeaderBody()
 
 /*
 ** get first line of Header
+		formated the first line of Request Header :
+		Method SP URL SP HTTPversion
+
+		for now HTTPversion is facultatif
+		throw exception (400 Bad Request)
 */
 
 RequestLine 		ParseRequest::m_formated_RequestLine(const std::string & startline)
@@ -100,9 +109,11 @@ RequestLine 		ParseRequest::m_formated_RequestLine(const std::string & startline
 	RequestLine					requestline;
 	std::vector<std::string>	split;
 	
+	// voir ISSUE: rendre obligatoire ou non le HTTP
 	split = splitString(startline, " ");
 	if (split.size() < 2 || split.size() > 3)
 		throw ParseRequest::SyntaxException(400);
+
 	requestline.method = split[0];
 	requestline.target = split[1];
 	if (split.size() == 3)
@@ -112,6 +123,8 @@ RequestLine 		ParseRequest::m_formated_RequestLine(const std::string & startline
 
 /*
 **	get all header fields by separate each line of headerSplit by ':'
+		iterate each line of Header and create a map of < string, string >
+		corresponding to < HeaderFileds, HeaderFileds value >
 */
 
 std::map<std::string, std::string>	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & headerSplit)

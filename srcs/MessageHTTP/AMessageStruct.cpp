@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 10:47:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 15:32:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 
 namespace WS 
 {
-
-
 		HTTPversion::HTTPversion()
 		: name(), major_version(), minor_version()
 		{}
@@ -28,6 +26,8 @@ namespace WS
 		
 	bool	HTTPversion::formatedVersion(const std::string & version)
 	{
+
+		// voir si obligatoire ou pas
 		if (version.empty() == true)
 			return false;
 		size_t	found_slash = version.find("/");
