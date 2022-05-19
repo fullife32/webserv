@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 16:31:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/18 17:46:10 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:29:41 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ enum e_error
 	RESPONSE_NO_CONTENT				= 204
 };
 
-
-
 class ResponseError
 {
 
@@ -53,6 +51,7 @@ class ResponseError
 		error[RESPONSE_NON_AUTH_INFOS] = S_RESPONSE_NON_AUTH_INFOS;
 		error[RESPONSE_NO_CONTENT] = S_RESPONSE_NO_CONTENT;
 	}
+
 
 	std::string &	operator[](int n_err)
 	{

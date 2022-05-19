@@ -6,13 +6,13 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/18 17:55:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:59:51 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ParseRequest.hpp"
-#include "IMessageStruct.hpp"
-#include "utils.hpp"
+#include "AMessageStruct.hpp"
+#include "Utils.hpp"
 #include <iostream>
 
 namespace WS {
@@ -29,7 +29,7 @@ ParseRequest::ParseRequest(std::string	data)
 	: m_data(data)
 {
 	if (data.empty())
-		std::cerr << "throw 400 BAD REQUEST" << std::endl; /// TRHOW ?
+		throw ParseRequest::SyntaxException(400);
 }
 
 
@@ -86,7 +86,7 @@ void			ParseRequest::m_separateHeaderBody()
 	size_t		separation = m_data.find(EMPTY_LINE);
 	
 	if (separation == std::string::npos)
-	throw ParseRequest::SyntaxException(400);
+		throw ParseRequest::SyntaxException(400);
 	m_header = std::string(&m_data[0], &m_data[separation]);
 	m_body =   std::string(&m_data[separation + 2], &m_data[m_data.size()]);
 }
@@ -147,7 +147,7 @@ m_error(error)
 
 const char *	ParseRequest::SyntaxException::what() const throw ()
 {
-	return "400";
+	return "400"; // MAYBE CAN BE ERROR_MESSAGE FOR ERROR GLOBAL RESPONSE
 }
 
 int				ParseRequest::SyntaxException::getError() const

@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserv.hpp                                        :+:      :+:    :+:   */
+/*   Print.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/16 15:09:20 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 13:18:05 by lvirgini         ###   ########.fr       */
+/*   Created: 2022/05/16 18:58:49 by lvirgini          #+#    #+#             */
+/*   Updated: 2022/05/19 11:54:29 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+#ifndef PRINT_HPP
+# define PRINT_HPP
 
-# include "AMessageHTTP.hpp"
-# include "RequestHTTP.hpp"
-# include "ResponseHTTP.hpp"
-# include "ServerSocket.hpp"
-# include "ParseRequest.hpp"
-# include "Utils.hpp"
-# include <unistd.h>
+# include <vector>
+# include <map>
 
-# endif
+template <class T>
+void	printMap(const std::map<T, T> & map);
+
+
+template <class T>
+void	printVector(const std::vector<T> & vec);
+
+#endif

@@ -1,24 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserv.hpp                                        :+:      :+:    :+:   */
+/*   AMessageHTTP.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/16 15:09:20 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 13:18:05 by lvirgini         ###   ########.fr       */
+/*   Created: 2022/05/19 10:33:50 by lvirgini          #+#    #+#             */
+/*   Updated: 2022/05/19 10:37:57 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+#include "AMessageHTTP.hpp"
 
-# include "AMessageHTTP.hpp"
-# include "RequestHTTP.hpp"
-# include "ResponseHTTP.hpp"
-# include "ServerSocket.hpp"
-# include "ParseRequest.hpp"
-# include "Utils.hpp"
-# include <unistd.h>
+namespace WS 
+{
 
-# endif
+	void	AMessageHTTP::setBody(const std::string & body)
+	{
+		m_body = body;
+	}
+
+	void	AMessageHTTP::setHeaderFields(const std::map<std::string, std::string> & headerFields)
+	{
+		m_header_fields = headerFields;
+	}
+
+} // end namespace

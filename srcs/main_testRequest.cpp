@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 17:46:56 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 13:18:34 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,25 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <cstring>
+#include <ctime>
 
 #define BUFFER_SIZE	32
 #define DEBUG_WEBSERV
 
 int main(int ac, char **argv)
 {
+
+
+	getStringTime();
+	return (0);
+
+
+
+
+
+
+
+
 
 	char	buf[BUFFER_SIZE];
 	int 	fd;
@@ -45,7 +58,14 @@ int main(int ac, char **argv)
 		memset(buf, '\0', BUFFER_SIZE);
 	} while (size_read > 0);
 	
-	WS::RequestHTTP		final_request = request.getFormated_RequestHTTP();
+	try
+	{
+		WS::RequestHTTP		final_request = request.getFormated_RequestHTTP();
+		final_request.debug_print_Message();
+	}
+	catch (WS::ParseRequest::SyntaxException & e)
+	{
+		std::cerr << "error = " << e.getError() << " " << e.what() << std::endl;
+	}
 
-	final_request.debug_print_Message();
 }

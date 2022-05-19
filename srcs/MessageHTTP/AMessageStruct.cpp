@@ -1,22 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IMessageStruct.cpp                                 :+:      :+:    :+:   */
+/*   AMessageStruct.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/18 15:48:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 10:47:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "IMessageStruct.hpp"
+#include "AMessageStruct.hpp"
 #include <iostream>
 #include <cstdlib>
 
 namespace WS 
 {
 
+
+		HTTPversion::HTTPversion()
+		: name(), major_version(), minor_version()
+		{}
+
+		HTTPversion::~HTTPversion()
+		{}
+
+		
 	bool	HTTPversion::formatedVersion(const std::string & version)
 	{
 		if (version.empty() == true)

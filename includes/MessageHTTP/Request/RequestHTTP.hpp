@@ -6,27 +6,27 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/18 15:35:44 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:59:14 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUESTHTTP_HPP
 # define REQUESTHTTP_HPP
 
-#include "IMessageHTTP.hpp"
+#include "AMessageHTTP.hpp"
 #include <iostream>
-#include "utils.hpp"
+#include "Utils.hpp"
 
 namespace WS {
 
 
 
 
-class RequestHTTP : public IMessageHTTP
+class RequestHTTP : public AMessageHTTP
 {
 
 	private:
-		RequestLine							m_start_line;
+		RequestLine							m_startLine;
 
 	public:
 
@@ -53,11 +53,11 @@ class RequestHTTP : public IMessageHTTP
 		// debug
 		virtual void	debug_print_startline()
 		{
-			HTTPversion	*v = &m_start_line.version;
+			HTTPversion	*v = &m_startLine.version;
 
 			std::cout << "HTTPversion = " << v->name << " " << v->major_version << "." << v->minor_version << std::endl;
-			std::cout << "URL = " << m_start_line.target << std::endl;
-			std::cout << "method = " << m_start_line.method << std::endl;
+			std::cout << "URL = " << m_startLine.target << std::endl;
+			std::cout << "method = " << m_startLine.method << std::endl;
 		}
 
 }; // end class RequestHTTP

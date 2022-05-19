@@ -1,24 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IMessageHTTP.hpp                                   :+:      :+:    :+:   */
+/*   AMessageHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/18 15:42:16 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:59:06 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IMESSAGEHTTP_HPP
-# define IMESSAGEHTTP_HPP
+#ifndef AMessageHTTP_HPP
+# define AMessageHTTP_HPP
 
-# include "IMessageStruct.hpp"
+# include "AMessageStruct.hpp"
 # include <string>
 # include <vector>
 # include <map>
 
-#include "utils.hpp" // debug
+#include "Utils.hpp" // debug
 #include <iostream>	// debug
 
 namespace WS {
@@ -35,27 +35,27 @@ enum RequestMethod
 */
 
 
-class IMessageHTTP 
+class AMessageHTTP 
 {
 
 	protected:
-		StartLine								m_start_line;
-		std::map < std::string, std::string > 	m_header_fields;
+		StartLine								m_startLine;
+		std::map <std::string, std::string> 	m_header_fields;
 		std::string								m_body;
-		std::map<int, std::string>				m_error;
+		std::map <int, std::string>				m_error;
 
 
 	public:
 		// constructor
-		IMessageHTTP() {};
-		// IMessageHTTP(const IMessageHTTP & copy);
+		AMessageHTTP() {};
+		// AMessageHTTP(const AMessageHTTP & copy);
 
 		// destructor
-		virtual ~IMessageHTTP() {};
+		virtual ~AMessageHTTP() {};
 
 
 		// operator
-		IMessageHTTP &	operator=(const IMessageHTTP & other);
+		AMessageHTTP &	operator=(const AMessageHTTP & other);
 
 
 		// functions
@@ -85,7 +85,7 @@ class IMessageHTTP
 		}
 
 
-}; // end class IMessageHTTP
+}; // end class AMessageHTTP
 
 } // end namespace
 

@@ -6,14 +6,14 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/18 17:53:34 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 10:44:09 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSEREQUEST_HPP
 # define PARSEREQUEST_HPP
 
-# include "IMessageHTTP.hpp"
+# include "AMessageHTTP.hpp"
 # include "RequestHTTP.hpp"
 
 # define NEWLINE	"\n"
@@ -52,6 +52,8 @@ class ParseRequest
 
 
 
+	public:
+	
 		class SyntaxException : public std::exception
 		{
 		private:

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   IMessageStruct.hpp                                 :+:      :+:    :+:   */
+/*   AMessageStruct.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/18 15:54:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 10:45:39 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ namespace WS {
 		int				major_version;
 		int				minor_version;
 
+		HTTPversion();
+		~HTTPversion();
 		bool	formatedVersion(const std::string & version);
 	};
 

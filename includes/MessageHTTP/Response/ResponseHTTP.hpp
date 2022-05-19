@@ -6,38 +6,44 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/16 15:14:46 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/19 11:55:49 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEHTTP_HPP
 # define RESPONSEHTTP_HPP
 
-#include "IMessageHTTP.hpp"
+#include "AMessageHTTP.hpp"
 
 namespace WS {
 
-class ResponseHTTP : public IMessageHTTP
+class ResponseHTTP : public AMessageHTTP
 {
 
 	private:
-		StatusLine			start_line;
+		StatusLine			m_startLine;
 
 	public:
 
-		// constructor
+	/* constructor ------------------------------------------------ */
 		ResponseHTTP();
 		ResponseHTTP(const ResponseHTTP & copy);
 
-		// destructor
+	/* destructor  ------------------------------------------------ */
 		virtual ~ResponseHTTP();
 
-		// operator
+
+	/* operator    ------------------------------------------------ */
 		ResponseHTTP &	operator=(const ResponseHTTP & other);
 
-		// functions
 
 
+	/* functions    ------------------------------------------------ */
+
+	private:
+
+		void	m_minimalHeaderFields();
+		
 
 
 

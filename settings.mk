@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/18 16:15:17 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/19 11:58:40 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,13 +15,14 @@ NAME = webserv
 
 # The list of the all the sources, because $(wildcard *.c) is too dangerous
 SRCS =	main_testRequest.cpp \
-		IMessageHTTP.cpp \
-		IMessageStruct.cpp \
+		AMessageHTTP.cpp \
+		AMessageStruct.cpp \
 		ParseRequest.cpp \
 		RequestHTTP.cpp \
 		multiplex.cpp \
-		utils.cpp \
-
+		Split.cpp \
+		DateFormat.cpp \
+		Print.cpp \
 
 # The file where make will look for all the sources (in addition to the root
 # directory of the Makefile)
@@ -47,7 +48,7 @@ PROGRESS_BAR = -----------------------------------------------------------------
 FILLING_CHAR = \#
 
 
-# IMessageHTTP.hpp \
+# AMessageHTTP.hpp \
 # ParseRequest.hpp \
 # RequestHTTP.hpp \
 # ResponseHTTP.hpp \
