@@ -27,29 +27,15 @@ private:
 	Socket &operator=( Socket const &other );
 
 public:
-	// int		getFd() const {
-	// 	return m_fd;
-	// }
-	class SocketFail : public std::exception {
-		int	m_flag;
-		// char *error_msg[] = {
-		// 	"Socket creation failed",
-		// 	"Socket options failed",
-		// 	"Socket bind failed",
-		// 	"Socket listen failed"
-		// };
-
-		public:
-			SocketFail(int flag) : m_flag(flag) {}
-			virtual const char*	what() const throw() {
-				return "Socket failed";
-			}
-	};
-
-	void	closeSocket() {
+	void	closeSocket( void ) {
 		if (m_fd != -1)
 			close(m_fd);
 	}
+
+	int	getFd( void ) const {
+		return (m_fd);
+	}
+
 };
 
 #endif

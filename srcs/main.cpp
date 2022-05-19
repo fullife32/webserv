@@ -1,7 +1,7 @@
 #include <iostream>
 #include "ServerSocket.hpp"
 #include "ParseConfig.hpp"
-#include "Multiplex.hpp"
+//#include "Multiplex.hpp"
 
 /*
 	Starting by gathering config file infos, then creating each socket
@@ -14,16 +14,33 @@ int	main(int ac, char **av) {
 		return 1;
 	}
 
-	ServerBlock		datas(av[1], av[2]); // not finished
-	ServerSocket	serverTest(datas);
-	Multiplex		plex;
+	std::vector<ServerConf>		confs; // not finished
+	std::vector<ServerSocket>	servers;
+	ServerConf test(av[1], av[2]);
 
-	plex.addToPoll(serverTest.getFd());  //loop through all server sockets
-	for (;;) {
-		serverTest.showInfos();
-		if (plex.waitPlex() == -1)
-			exit(1); // don't exit
-		plex.watchEvents(serverTest);
+	confs.push_back(test);
+	for (std::vector<ServerConf>::iterator it = confs.begin(), ite = confs.end(); it != ite; ++it) {
+		int fd = -1;
+		try {
+			fd = ServerSocket::createSocket();
+			ServerSocket::setOpts(fd);
+			std::cout << inet_addr((*it).getIp()) << std::endl;
+			ServerSocket::bindSocket(fd, *it);
+			ServerSocket::listenSocket(fd);
+		} catch (std::exception const &except) {
+			if (fd != -1)
+				close(fd);
+			std::cerr << except.what() << std::endl;
+		}
 	}
-	serverTest.closeSocket();
+	// Multiplex		plex;
+
+	// plex.addToPoll(serverTest.getFd());  //loop through all server sockets
+	// for (;;) {
+		// serverTest.showInfos();
+		// if (plex.waitPlex() == -1)
+			// exit(1); // don't exit
+		// plex.watchEvents(serverTest);
+	// }
+	// serverTest.closeSocket();
 }

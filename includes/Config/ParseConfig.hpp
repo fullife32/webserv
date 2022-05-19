@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/18 11:14:54 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/19 17:46:49 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ public:
 	// LocBlock &operator=( LocBlock const &other );
 };
 
-class ServerBlock {
+class ServerConf {
 	std::string	_ipAddr;
 	std::string	_listen;
 	// std::string server_name;
@@ -38,11 +38,11 @@ class ServerBlock {
 	// std::vector<std::string> index;
 	// list of LocBlock;
 public:
-	ServerBlock() {}
-	ServerBlock(std::string ip, std::string port) : _ipAddr(ip), _listen(port) {}
-	~ServerBlock() {}
-	// ServerBlock( ServerBlock const &other );
-	// ServerBlock &operator=( ServerBlock const &other );
+	ServerConf() {}
+	ServerConf(std::string ip, std::string port) : _ipAddr(ip), _listen(port) {}
+	~ServerConf() {}
+	// ServerConf( ServerConf const &other );
+	// ServerConf &operator=( ServerConf const &other );
 
 	const char *getIp() const {
 		return _ipAddr.c_str();
