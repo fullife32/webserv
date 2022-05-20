@@ -11,18 +11,18 @@
 	client socket, to send and recv packages. It basically contains its fd, the
 	client datas received with accept() and the events waited.
 */
-class ClientSocket : public Socket {
+class Client : public Socket {
 private:
 	sockaddr_storage 	m_cli;
 	socklen_t			m_size;
 
 public:
-	ClientSocket( int fd, sockaddr_storage cli, socklen_t m_size ) : Socket(fd), m_cli(cli) {}
-	~ClientSocket() {}
+	Client( int fd, sockaddr_storage cli, socklen_t m_size ) : Socket(fd), m_cli(cli) {}
+	~Client() {}
 
 private:
-	ClientSocket( ClientSocket const &other );
-	ClientSocket &operator=( ClientSocket const &other );
+	Client( Client const &other );
+	Client &operator=( Client const &other );
 
 public:
 	int	getFd() const {

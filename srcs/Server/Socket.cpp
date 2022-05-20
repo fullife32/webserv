@@ -3,18 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 17:09:58 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/19 17:32:21 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/05/20 15:40:24 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <Socket.hpp>
+#include "Socket.hpp"
 
 Socket::Socket( int fd ): m_fd(fd) {}
 
+Socket::~Socket() {}
 
-Socket::~Socket() {
-	close(fd);
+void	Socket::closeSocket( void ) {
+	if (m_fd != -1)
+		close(m_fd);
+}
+
+int	const Socket::getFd( void ) const {
+	return m_fd;
 }

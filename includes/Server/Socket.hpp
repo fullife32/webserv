@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sys/epoll.h>
 #include <cstdlib>
+#include <unistd.h>
 
 #define CREATE_FAIL 0
 #define OPTION_FAIL 1
@@ -19,22 +20,16 @@ protected:
 	const int	m_fd;
 
 public:
-	Socket(int fd) : m_fd(fd) {}
-	~Socket() {}
+	Socket( int fd );
+	~Socket();
 
 private:
 	Socket( Socket const &other );
 	Socket &operator=( Socket const &other );
 
 public:
-	void	closeSocket( void ) {
-		if (m_fd != -1)
-			close(m_fd);
-	}
-
-	int	getFd( void ) const {
-		return (m_fd);
-	}
+	void	closeSocket( void );
+	int	const getFd( void ) const;
 
 };
 
