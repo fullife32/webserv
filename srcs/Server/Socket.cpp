@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 17:09:58 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/20 15:40:24 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/20 18:01:17 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,6 @@ void	Socket::closeSocket( void ) {
 		close(m_fd);
 }
 
-int	const Socket::getFd( void ) const {
+int Socket::getFd( void ) const {
 	return m_fd;
 }

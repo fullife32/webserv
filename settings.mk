@@ -6,7 +6,7 @@
 #    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/20 16:13:22 by eassouli         ###   ########.fr        #
+#    Updated: 2022/05/20 18:02:50 by eassouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,6 +18,7 @@ SRCS =	main.cpp		\
 		Socket.cpp \
 		Server.cpp \
 		Multiplex.cpp \
+		Client.cpp \
 		IMessageHTTP.cpp \
 		ParseRequest.cpp \
 		RequestHTTP.cpp \

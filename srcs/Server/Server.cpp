@@ -66,30 +66,3 @@ void	Server::listenSocket( int const fd ) {
 	if (listen(fd, LISTEN_LEN) == -1)
 		throw Server::SocketFail(LISTEN_FAIL);
 }
-
-// int		Server::addClient() {
-	// sockaddr_storage	cli;
-	// socklen_t			size; // use it !
-	// int					newFd;
-
-	// size = sizeof(cli);
-	// newFd = accept(m_fd, (struct sockaddr *)&cli, &size);
-	// if (newFd == -1)
-		// std::cerr << "Fail adding new client" << std::endl;
-	// else {
-		// Client newClient(newFd, cli, size);
-		// m_clients.push_back(newClient);
-		// std::cout << "Successfully added client: " << newClient.getFd() << std::endl;
-		// // recv();
-	// }
-	// return newFd;
-// }
-
-// int		Server::getClientFd( int const fd ) const {
-	// std::vector<Client>::const_iterator it;
-	// for (it = m_clients.begin(); it != m_clients.end(); ++it) {
-		// if ((*it).getFd() == fd)
-			// return (*it).getFd();
-	// }
-	// return -1;
-// }

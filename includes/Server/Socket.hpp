@@ -29,7 +29,7 @@ private:
 
 public:
 	void	closeSocket( void );
-	int	const getFd( void ) const;
+	int		getFd( void ) const;
 
 };
 

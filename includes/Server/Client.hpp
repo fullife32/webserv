@@ -17,17 +17,25 @@ private:
 	socklen_t			m_size;
 
 public:
-	Client( int fd, sockaddr_storage cli, socklen_t m_size ) : Socket(fd), m_cli(cli) {}
-	~Client() {}
+	Client( int fd, sockaddr_storage cli, socklen_t size );
+	Client( Client const &other );
+	~Client();
 
 private:
-	Client( Client const &other );
+	Client();
 	Client &operator=( Client const &other );
 
 public:
-	int	getFd() const {
-		return m_fd;
-	}
+
+	static Client	acceptClient( int fdServer );
+
+	class ClientFail : public std::exception {
+	public:
+		ClientFail() { }
+		virtual const char	*what() const throw() {
+			return "Client create failed";
+		}
+	};
 };
 
 #endif
