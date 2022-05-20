@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:09:20 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 13:18:05 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 11:06:08 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "ResponseHTTP.hpp"
 # include "ServerSocket.hpp"
 # include "ParseRequest.hpp"
+# include "ErrorMessage.hpp"
 # include "Utils.hpp"
 # include <unistd.h>
 

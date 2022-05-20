@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 15:37:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 12:02:37 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ ParseRequest::ParseRequest(std::string	data)
 	: m_data(data)
 {
 	if (data.empty())
-		throw ParseRequest::SyntaxException(400);
+		throw MessageErrorException(400);
 }
 
 
@@ -64,7 +64,7 @@ RequestHTTP 	ParseRequest::getFormated_RequestHTTP()
 
 	split = splitString(m_header, NEWLINE);
 	if (split.size() == 0)
-		throw ParseRequest::SyntaxException(400);
+		throw MessageErrorException(400);
 
 	request.setRequestLine(m_formated_RequestLine(split[0]));
 	split.erase(split.begin());
@@ -90,7 +90,7 @@ void			ParseRequest::m_separateHeaderBody()
 	size_t		separation = m_data.find(EMPTY_LINE);
 	
 	if (separation == std::string::npos)
-		throw ParseRequest::SyntaxException(400);
+		throw MessageErrorException(400);
 	m_header = std::string(&m_data[0], &m_data[separation]);
 	m_body =   std::string(&m_data[separation + 2], &m_data[m_data.size()]);
 }
@@ -112,7 +112,7 @@ RequestLine 		ParseRequest::m_formated_RequestLine(const std::string & startline
 	// voir ISSUE: rendre obligatoire ou non le HTTP
 	split = splitString(startline, " ");
 	if (split.size() < 2 || split.size() > 3)
-		throw ParseRequest::SyntaxException(400);
+		throw MessageErrorException(400);
 
 	requestline.method = split[0];
 	requestline.target = split[1];
@@ -141,31 +141,12 @@ std::map<std::string, std::string>	ParseRequest::m_formated_HeaderFields(const s
 		line = *it;
 		found = line.find(":");
 		if (found == std::string::npos)
-			throw ParseRequest::SyntaxException(400);
+			throw MessageErrorException(400);
 		key = std::string(&line[0], &line[found]);
 		value = std::string(&line[found + 1], &line[line.size()]);
 		map[key] = value;
 	}
 	return map;
-}
-
-/* -------------------------------------------------------------------------- */
-/*                               Exception                                    */
-/* -------------------------------------------------------------------------- */
-
-ParseRequest::SyntaxException::SyntaxException(int error)
-: std::exception(),
-m_error(error)
-{}
-
-const char *	ParseRequest::SyntaxException::what() const throw ()
-{
-	return "400"; // MAYBE CAN BE ERROR_MESSAGE FOR ERROR GLOBAL RESPONSE
-}
-
-int				ParseRequest::SyntaxException::getError() const
-{
-	return m_error;
 }
 
 } // end namespace

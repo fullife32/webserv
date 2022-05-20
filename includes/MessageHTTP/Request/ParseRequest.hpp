@@ -6,14 +6,13 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 17:11:18 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 10:41:37 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSEREQUEST_HPP
 # define PARSEREQUEST_HPP
 
-# include "AMessageHTTP.hpp"
 # include "RequestHTTP.hpp"
 
 # define NEWLINE	"\n"
@@ -22,12 +21,6 @@
 namespace WS
 {
 
-enum RequestMethod
-{
-	GET,
-	POST,
-	DELETE
-};
 
 class ParseRequest
 {
@@ -60,23 +53,6 @@ class ParseRequest
 		RequestLine							m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
 		RequestMethod						m_formated_RequestMethod(const std::string & methodWord);
 
-
-
-	public:
-	
-		class SyntaxException : public std::exception
-		{
-		private:
-			int		m_error;
-		
-		public:
-			 SyntaxException(int	error);
-		
-			virtual const char * what() const throw();
-			int					getError() const ;
-		};
-
-		
 }; // end class
 
 } // end namespace

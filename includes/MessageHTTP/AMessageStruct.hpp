@@ -6,21 +6,32 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 10:45:39 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 12:01:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef IMESSAGESTRUCT_HPP
 # define IMESSAGESTRUCT_HPP
 
+# include "ErrorMessage.hpp"
 # include <string>
 
 namespace WS {
 
-/*
-**	HTTP version = HTTP-name "/" DIGIT "." DIGIT
-**	HTTP-name   = %x48.54.54.50 ; "HTTP", case-sensitive
-*/
+
+	enum RequestMethod
+	{
+		GET,
+		POST,
+		DELETE
+	};
+
+
+	/* HTTPversion  ------------------------------------------------ */
+	/*
+		HTTP version = HTTP-name "/" DIGIT "." DIGIT
+		HTTP-name   = %x48.54.54.50 ; "HTTP", case-sensitive
+	*/
 
 	struct HTTPversion
 	{
@@ -30,14 +41,17 @@ namespace WS {
 
 		HTTPversion();
 		~HTTPversion();
-		bool	formatedVersion(const std::string & version);
+		
+		void	formatedVersion(const std::string & version);
 	};
 
 
-/*
-** status-code    = 3DIGIT voir code erreur potentiellement une std::mqp <int, string> avec toute la liste d'erreur et 
-** le reason_phrase correspondante ou ENUM ou define ??
-*/
+	/* Status Code  ------------------------------------------------ */
+	/*
+		status-code = 3DIGIT
+		voir code erreur potentiellement une std::mqp <int, string> avec toute la liste d'erreur et 
+		le reason_phrase correspondante ou ENUM ou define ??
+	*/
 
 	struct	StatusCode
 	{
@@ -46,9 +60,7 @@ namespace WS {
 	};
 
 
-/*
-** Start line
-*/
+	/* Start Line ------------------------------------------------ */
 
 	struct StartLine
 	{
