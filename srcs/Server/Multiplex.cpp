@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 18:49:35 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/20 19:23:11 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,34 +62,43 @@ int	Multiplex::waitPlex() {
 
 void	Multiplex::handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients ) {
 	for (int i = 0; i < m_nbReady; i++) {
-		std::map<int, Server>::iterator itServ = servers.find(m_events[i].data.fd);
-		if (itServ != servers.end()) {
-			if (!(m_events[i].events & EPOLLIN))
-				continue;
-			else {
-				try {
-					Client	tmpClient(Client::acceptClient(itServ->second.getFd()));
-					clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
-					addClientToPoll(clients.rbegin()->second);
-					std::cout << "Coucou je suis nouveau ici, voici mon fd: " << clients.rbegin()->second.getFd() << std::endl;
-				} catch(std::exception &except) {
-					std::cerr << except.what() << std::endl; // check to change to cerr not cout
-				}
-			}
-		}
-		// else {
-		// 	std::map<int, Client>::iterator itCli = clients.find(m_events[i].data.fd);
-		// 	if (itCli != clients.end()) {
-		// 		if (m_events[i].events & EPOLLIN) {
-
-		// 		}
-		// 		else if (m_events[i].events & EPOLLOUT) {
-
-		// 		}
-		// 	}
-		// }
+		handleServer(i, servers, clients);
+		handleClients(i, clients);
 	}
 	freeEvents();
+}
+
+void	Multiplex::handleServer( int i, std::map<int, Server> &servers, std::map<int, Client> &clients ) {
+	std::map<int, Server>::iterator it = servers.find(m_events[i].data.fd);
+	if (it != servers.end()) {
+		if (!(m_events[i].events & EPOLLIN)) // secure client too
+			std::cerr << "Ghost event in server: " << it->second.getFd() << std::endl; // return error ?
+		else {
+			try {
+				Client	tmpClient(Client::acceptClient(it->second.getFd(), it->second));
+				clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
+				addClientToPoll(clients.rbegin()->second);
+				std::cout << "Coucou je suis nouveau ici, voici mon fd: " << clients.rbegin()->second.getFd() << std::endl;
+			} catch(std::exception &except) {
+				std::cerr << except.what() << std::endl; // check to change to cerr not cout
+			}
+		}
+	}
+}
+
+void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
+	std::map<int, Client>::iterator it = clients.find(m_events[i].data.fd);
+	if (it != clients.end()) {
+		if (m_events[i].events & EPOLLIN) {
+			std::cout << "Ciao, je me casse !: " << it->second.getFd() << std::endl;
+			epoll_ctl(m_fd, it->second.getFd(), EPOLL_CTL_DEL, 0); // put in function kick
+			it->second.closeSocket();
+			clients.erase(it);
+		}
+		else if (m_events[i].events & EPOLLOUT) {
+
+		}
+	}
 }
 
 void	Multiplex::freeEvents() {
@@ -100,6 +109,5 @@ void	Multiplex::freeEvents() {
 void	Multiplex::closePlex() { // delete everything before closing
 	if (m_fd != -1)
 		close(m_fd);
-	if (m_events != NULL)
-		delete [] m_events;
+	freeEvents();
 }

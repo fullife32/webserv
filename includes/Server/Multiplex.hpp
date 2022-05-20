@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Multiplex.hpp                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
+/*   Updated: 2022/05/20 19:34:25 by eassouli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MULTIPLEX_HPP
 # define MULTIPLEX_HPP
 
@@ -35,6 +47,8 @@ public:
 	void	addClientToPoll( Client &client ) const;
 	int		waitPlex();
 	void	handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients );
+	void	handleServer( int i, std::map<int, Server> &servers, std::map<int, Client> &clients );
+	void	handleClients( int i, std::map<int, Client> &clients );
 	void	freeEvents();
 	void	closePlex();
 
