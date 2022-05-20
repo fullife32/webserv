@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 18:13:42 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/20 18:49:35 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	Multiplex::addServersToPoll( std::map<int, Server> &servers ) const {
 			throw Multiplex::PlexFail(); // change message
 		event.events = EPOLLIN;
 		event.data.fd = it->second.getFd();
-		if (epoll_ctl(m_fd, EPOLL_CTL_ADD, it->second.getFd(), &event) == -1)
+		if (epoll_ctl(m_fd, EPOLL_CTL_ADD, it->second.getFd(), &event) == -1) // check error uninitialised byte(s)
 			throw Multiplex::PlexFail(); // change message
 	}
 }
@@ -42,7 +42,7 @@ void	Multiplex::addClientToPoll( Client &client ) const {
 		throw Multiplex::PlexFail(); // change message
 	event.events = EPOLLIN;
 	event.data.fd = client.getFd();
-	if (epoll_ctl(m_fd, EPOLL_CTL_ADD, client.getFd(), &event) == -1)
+	if (epoll_ctl(m_fd, EPOLL_CTL_ADD, client.getFd(), &event) == -1) // check error uninitialised byte(s)
 		throw Multiplex::PlexFail(); // change message
 }
 
@@ -62,13 +62,13 @@ int	Multiplex::waitPlex() {
 
 void	Multiplex::handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients ) {
 	for (int i = 0; i < m_nbReady; i++) {
-		std::map<int, Server>::iterator it = servers.find(m_events[i].data.fd);
-		if (it != servers.end()) {
+		std::map<int, Server>::iterator itServ = servers.find(m_events[i].data.fd);
+		if (itServ != servers.end()) {
 			if (!(m_events[i].events & EPOLLIN))
 				continue;
 			else {
 				try {
-					Client	tmpClient(Client::acceptClient(it->second.getFd()));
+					Client	tmpClient(Client::acceptClient(itServ->second.getFd()));
 					clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
 					addClientToPoll(clients.rbegin()->second);
 					std::cout << "Coucou je suis nouveau ici, voici mon fd: " << clients.rbegin()->second.getFd() << std::endl;
@@ -78,15 +78,26 @@ void	Multiplex::handleEvents( std::map<int, Server> &servers, std::map<int, Clie
 			}
 		}
 		// else {
-		// 	if (sockets.getClientFd(m_events[i].data.fd) == -1)
-		// 		std::cout << "Fail finding client after epoll wait" << std::endl;
-		// 	else
-		// 		std::cout << "Coucou !" << std::endl;
+		// 	std::map<int, Client>::iterator itCli = clients.find(m_events[i].data.fd);
+		// 	if (itCli != clients.end()) {
+		// 		if (m_events[i].events & EPOLLIN) {
+
+		// 		}
+		// 		else if (m_events[i].events & EPOLLOUT) {
+
+		// 		}
+		// 	}
+		// }
 	}
-	// this->freeEvents();
+	freeEvents();
 }
 
-void Multiplex::closePlex() { // delete everything before closing
+void	Multiplex::freeEvents() {
+	if (m_events)
+		delete [] m_events;
+}
+
+void	Multiplex::closePlex() { // delete everything before closing
 	if (m_fd != -1)
 		close(m_fd);
 	if (m_events != NULL)
