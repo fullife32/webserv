@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 17:09:20 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:32:57 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@
 
 namespace WS
 {
-
-
-
 
 	ResponseHTTP::ResponseHTTP()
 	: AMessageHTTP(),
@@ -45,6 +42,12 @@ namespace WS
 		 m_header_fields["Server"] = "Webserv"; //////////
 	}
 
+
+
+	void	ResponseHTTP::m_parseMethod()
+	{
+		switch (m_startLine.)
+	}
 
 
 

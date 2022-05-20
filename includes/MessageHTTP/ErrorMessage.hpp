@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 15:14:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:03:32 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 #define S_STATUS_PAYMENT_REQUIRED		"Payment Required"				// 402
 #define S_STATUS_FORBIDDEN				"Forbidden"						// 403
 #define S_STATUS_NOT_FOUND				"Not Found"						// 404
-#define S_STATUS_MOETHOD_NOT_ALLOWED	"Method Not Allowed"			// 405
+#define S_STATUS_METHOD_NOT_ALLOWED		"Method Not Allowed"			// 405
 #define S_STATUS_NOT_ACCEPTABLE			"Not Acceptable"				// 406
 #define S_STATUS_PROXY_AUTHENTICATION_REQUIRED	"Proxy Authentication Required" // 407
 #define S_STATUS_REQUEST_TIMEOUT		"Request Timeout"				// 408
@@ -85,7 +85,7 @@ enum e_statusCode
 	STATUS_PAYMENT_REQUIRED			= 402,
 	STATUS_FORBIDDEN				= 403,
 	STATUS_NOT_FOUND				= 404,
-	STATUS_MOETHOD_NOT_ALLOWED		= 405,
+	STATUS_METHOD_NOT_ALLOWED		= 405,
 	STATUS_NOT_ACCEPTABLE			= 406,
 	STATUS_PROXY_AUTHENTICATION_REQUIRED = 407,
 	STATUS_REQUEST_TIMEOUT			= 408,
@@ -109,7 +109,6 @@ enum e_statusCode
 	
 class MessageErrorException : public std::exception
 {
-
 	private:
 		const int							m_current_error;
 
@@ -117,20 +116,15 @@ class MessageErrorException : public std::exception
 		static std::map<int, std::string> 	m_errors;
 
 	/* constructor ------------------------------------------------ */
-
 		MessageErrorException(int	error);
 
-	/* functions    ------------------------------------------------ */
+	/* functions    ----------------------------------------------- */
 		int				getError() const throw() ;
 		std::string		getMappedError() const throw() ;
-	
-		
 };
 
 
 std::map <int, std::string>		init_mapError()  throw() ;
-
-// std::map <int, std::string>		MessageErrorException::m_errors
 
 }
 

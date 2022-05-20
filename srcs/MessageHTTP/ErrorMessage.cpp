@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:42:57 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 15:13:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:03:03 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,6 @@ MessageErrorException::MessageErrorException(int error)
 	if (m_errors.empty())
 		m_errors= init_mapError();
 }
-
-// const char *	MessageErrorException::what() const throw ()
-// {
-
-// 	// std::string		res = m_errors[m_current_error];
-
-
-// 	// return res.data(); // MAYBE CAN BE ERROR_MESSAGE FOR ERROR GLOBAL RESPONSE
-// }
 
 int				MessageErrorException::getError() const throw ()
 {
@@ -74,7 +65,7 @@ std::map <int, std::string>		init_mapError()  throw()
 	error[STATUS_PAYMENT_REQUIRED]		= S_STATUS_PAYMENT_REQUIRED;		// 402
 	error[STATUS_FORBIDDEN]				= S_STATUS_FORBIDDEN;				// 403	
 	error[STATUS_NOT_FOUND]				= S_STATUS_NOT_FOUND;				// 404
-	error[STATUS_MOETHOD_NOT_ALLOWED]	= S_STATUS_MOETHOD_NOT_ALLOWED;		// 405
+	error[STATUS_METHOD_NOT_ALLOWED]	= S_STATUS_METHOD_NOT_ALLOWED;		// 405
 	error[STATUS_NOT_ACCEPTABLE]		= S_STATUS_NOT_ACCEPTABLE;			// 406
 	error[STATUS_PROXY_AUTHENTICATION_REQUIRED]	= S_STATUS_PROXY_AUTHENTICATION_REQUIRED; // 407
 	error[STATUS_REQUEST_TIMEOUT]		= S_STATUS_REQUEST_TIMEOUT;			// 408
@@ -98,9 +89,11 @@ std::map <int, std::string>		init_mapError()  throw()
 	return error;
 }
 
-std::map <int, std::string>		WS::MessageErrorException::m_errors= init_mapError();
 
 
+/* --- Init static map for error [status Code] = reason phrase ---------------- */
+
+std::map <int, std::string>		WS::MessageErrorException::m_errors = init_mapError();
 
 
 } // end namespace

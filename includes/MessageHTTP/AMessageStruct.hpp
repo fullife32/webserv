@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 12:01:44 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:07:52 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 namespace WS {
 
 
-	enum RequestMethod
+	enum e_RequestMethod
 	{
-		GET,
+		GET = 0,
 		POST,
 		DELETE
 	};
@@ -31,6 +31,8 @@ namespace WS {
 	/*
 		HTTP version = HTTP-name "/" DIGIT "." DIGIT
 		HTTP-name   = %x48.54.54.50 ; "HTTP", case-sensitive
+
+		isSupportedVersion() is only 1.1 for our Webserv
 	*/
 
 	struct HTTPversion
@@ -43,6 +45,7 @@ namespace WS {
 		~HTTPversion();
 		
 		void	formatedVersion(const std::string & version);
+		bool	isSupportedVersion();
 	};
 
 
