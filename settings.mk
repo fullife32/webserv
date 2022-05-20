@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/20 10:43:27 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/20 17:23:08 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ SRCS =	main_testRequest.cpp \
 		AMessageStruct.cpp \
 		ParseRequest.cpp \
 		RequestHTTP.cpp \
+		ResponseHTTP.cpp \
 		multiplex.cpp \
 		Split.cpp \
 		ErrorMessage.cpp \

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:03:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:42:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ enum e_statusCode
 	STATUS_BAD_GATEWAY				= 502,
 	STATUS_SERVICE_UNVAILABLE		= 503,
 	STATUS_GATEWAY_TIMEOUT			= 504,
-	STATUS_HTTPVERSION_NOT_SUPPORTED = 505
+	STATUS_HTTPVERSION_NOT_SUPPORTED= 505
 };
 	
 class MessageErrorException : public std::exception

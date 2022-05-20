@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 12:17:59 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 17:17:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int main(int ac, char **argv)
 	{
 		WS::RequestHTTP		final_request = request.getFormated_RequestHTTP();
 		final_request.debug_print_Message();
+		WS::ResponseHTTP		response(final_request);
 	}
 	catch (WS::MessageErrorException & e)
 	{

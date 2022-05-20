@@ -6,14 +6,15 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:10:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 17:21:35 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEHTTP_HPP
 # define RESPONSEHTTP_HPP
 
-#include "AMessageHTTP.hpp"
+#include "ResponseHTTP.hpp"
+#include "RequestHTTP.hpp"
 
 namespace WS {
 
@@ -27,7 +28,7 @@ class ResponseHTTP : public AMessageHTTP
 	public:
 
 	/* constructor ------------------------------------------------ */
-		ResponseHTTP();
+		ResponseHTTP(const RequestHTTP & request);
 		ResponseHTTP(const ResponseHTTP & copy);
 
 	/* destructor  ------------------------------------------------ */
@@ -40,9 +41,9 @@ class ResponseHTTP : public AMessageHTTP
 
 	/* set		    ------------------------------------------------ */
 	void		setRequestMethod(int method);
+	
+	
 	/* functions    ------------------------------------------------ */
-
-
 
 	private:
 
@@ -54,9 +55,14 @@ class ResponseHTTP : public AMessageHTTP
 		void	m_method_DELETE();
 
 
+	// DEBUG
+	public:
+		virtual void	debug_print_startline()
+		{
+			HTTPversion	*v = &m_startLine.version;
 
-
-
+			std::cout << "HTTPversion = " << v->name << " " << v->major_version << "." << v->minor_version << std::endl;
+		}
 }; // end class RequestHTTP
 
 

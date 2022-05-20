@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:08:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 17:47:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class RequestHTTP : public AMessageHTTP
 			std::cout << "URL = " << m_startLine.target << std::endl;
 			std::cout << "method = " << m_startLine.method << std::endl;
 		}
+
 
 }; // end class RequestHTTP
 

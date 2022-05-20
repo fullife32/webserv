@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:09:29 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 16:45:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ RequestHTTP 	ParseRequest::getFormated_RequestHTTP()
 	split.erase(split.begin());
 	request.setHeaderFields(m_formated_HeaderFields(split));
 	request.setBody(m_body);
-	request.setRequestMethod(m_formated_RequestMethod());
 	
 	return request;
 }

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:07:52 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 17:51:32 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,17 @@
 # include "ErrorMessage.hpp"
 # include <string>
 
+
+# define METHOD_GET			"GET"
+# define METHOD_POST		"POST"	
+# define METHOD_DELETE		"DELETE"
+# define METHOD_HEAD		"HEAD"
+# define METHOD_PUT			"PUT"
+# define METHOD_CONNECT		"CONNECT"
+# define METHOD_OPTIONS		"OPTIONS"
+# define METHOD_TRACE		"TRACE"
+
+
 namespace WS {
 
 
@@ -23,7 +34,12 @@ namespace WS {
 	{
 		GET = 0,
 		POST,
-		DELETE
+		DELETE,
+		HEAD,
+		PUT,
+		CONNECT,
+		OPTIONS,
+		TRACE
 	};
 
 
