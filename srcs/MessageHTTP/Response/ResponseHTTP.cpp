@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 18:27:08 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/20 18:42:09 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ namespace WS
 
 
 
-
+	/*
+		Set the minimals Header Fields needed for an answer.
+	*/
 	void	ResponseHTTP::m_minimalHeaderFields()
 	{
 		 m_header_fields["Date"] = getStringTime();
@@ -45,7 +47,10 @@ namespace WS
 	}
 
 
-
+	/*
+		Setup the Method and Parse to the corresponding functions
+		throw an exception if Method is not Allowed
+	*/
 	void	ResponseHTTP::m_parseMethod()
 	{
 		switch (m_method)
