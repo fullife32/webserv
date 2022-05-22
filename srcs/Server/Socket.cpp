@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserv.hpp                                        :+:      :+:    :+:   */
+/*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/16 15:09:20 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/22 15:28:52 by lvirgini         ###   ########.fr       */
+/*   Created: 2022/05/19 17:09:58 by rotrojan          #+#    #+#             */
+/*   Updated: 2022/05/22 15:35:57 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+#include "Socket.hpp"
 
-# include "ParseRequest.hpp"
-# include "AMessageHTTP.hpp"
-# include "RequestHTTP.hpp"
-# include "ResponseHTTP.hpp"
-# include "ErrorMessage.hpp"
-# include "Server.hpp"
-# include "utils.hpp"
-# include <unistd.h>
+Socket::Socket( int fd ): m_fd(fd) {}
 
-# endif
+Socket::~Socket() {}
+
+void	Socket::closeSocket( void ) {
+	if (m_fd != -1)
+		close(m_fd);
+}
+
+int Socket::getFd( void ) const {
+	return m_fd;
+}

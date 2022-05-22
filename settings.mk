@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/20 17:23:08 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/22 15:32:39 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,10 @@ SRCS =	main_testRequest.cpp \
 		ErrorMessage.cpp \
 		DateFormat.cpp \
 		Print.cpp \
+		Socket.cpp \
+		Server.cpp \
+		Multiplex.cpp \
+		Client.cpp \
 
 
 # The file where make will look for all the sources (in addition to the root
@@ -37,7 +41,7 @@ LIBS =
 OBJS_DIR = .objs
 
 # The file where make will look for all the header files
-INCLUDES_DIR = includes
+INC_DIR = includes
 
 # The C++ compiler
 CXX = clang++
