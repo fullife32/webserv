@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 17:21:35 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/22 18:48:42 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,29 @@
 
 #include "ResponseHTTP.hpp"
 #include "RequestHTTP.hpp"
+#include <string>
+#include <sstream>
 
 namespace WS {
 
 class ResponseHTTP : public AMessageHTTP
 {
+	/*
+		protected variables herited from AMessageHTTP:
+
+		StartLine								m_startLine;
+		std::map <std::string, std::string> 	m_header_fields;
+		std::string								m_body;
+		static	std::map <std::string, int>		m_methods;
+	*/
 
 	private:
+
 		StatusLine			m_startLine;
 		int					m_method;
+		// std::stringstream	m_dataResponse;
+		std::string			m_dataResponse;
+		size_t				m_send;	
 		
 	public:
 
@@ -45,11 +59,16 @@ class ResponseHTTP : public AMessageHTTP
 	
 	/* functions    ------------------------------------------------ */
 
+		void	clear();
+		void	send(size_t	begin, size_t size);
+
 	private:
 
 		void	m_minimalHeaderFields();
-		void	m_parseMethod();
+		void	m_formatedResponse();
 
+
+		void	m_parseMethod();
 		void	m_method_GET();
 		void	m_method_POST();
 		void	m_method_DELETE();
@@ -63,8 +82,10 @@ class ResponseHTTP : public AMessageHTTP
 
 			std::cout << "HTTPversion = " << v->name << " " << v->major_version << "." << v->minor_version << std::endl;
 		}
-}; // end class RequestHTTP
 
+
+
+}; // end class RequestHTTP
 
 } // end namespace
 

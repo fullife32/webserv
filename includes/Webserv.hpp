@@ -13,13 +13,18 @@
 #ifndef WEBSERV_HPP
 # define WEBSERV_HPP
 
+
+// Server
+# include "Server.hpp"
+
+
+// Message HTTP
 # include "ParseRequest.hpp"
 # include "AMessageHTTP.hpp"
 # include "RequestHTTP.hpp"
 # include "ResponseHTTP.hpp"
 # include "ErrorMessage.hpp"
-# include "Server.hpp"
-# include "utils.hpp"
+
 # include <unistd.h>
 
 # endif

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 15:29:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/22 18:11:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 
 namespace WS 
 {
+
+	/* HTTPversion  ------------------------------------------------ */
+
 	HTTPversion::HTTPversion()
 	: name(), major_version(), minor_version()
 	{}
@@ -50,5 +53,32 @@ namespace WS
 			return false;
 		return true;
 	}
+
+	void	HTTPversion::clear()
+	{
+		name.clear();
+		major_version = 0;
+		minor_version = 0;
+	}
+
+
+	/* Start Line ------------------------------------------------ */
+
+	void	RequestLine::clear()
+	{
+		version.clear();
+		target.clear();
+		method.clear();
+	}
+
+
+	void	StatusLine::clear()
+	{
+		version.clear();
+		status.code = 0;
+		status.reasonPhrase = NULL;
+	}
+
+
 
 } // end namespace

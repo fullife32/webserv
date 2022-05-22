@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 17:51:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/22 18:29:13 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 # include "ErrorMessage.hpp"
 # include <string>
 
+# define SERVER_NAME		"Webserv"
+# define SP					" "
+# define START_LINE_HTTP_VERSION "HTTP/1.1"
 
 # define METHOD_GET			"GET"
 # define METHOD_POST		"POST"	
@@ -62,6 +65,7 @@ namespace WS {
 		
 		void	formatedVersion(const std::string & version);
 		bool	isSupportedVersion();
+		void	clear();
 	};
 
 
@@ -69,13 +73,13 @@ namespace WS {
 	/*
 		status-code = 3DIGIT
 		voir code erreur potentiellement une std::mqp <int, string> avec toute la liste d'erreur et 
-		le reason_phrase correspondante ou ENUM ou define ??
+		le reasonPhrase correspondante ou ENUM ou define ??
 	*/
 
 	struct	StatusCode
 	{
 		int				code;
-		std::string 	*reason_phrase; // pointeur sur std::map<int, sting> status code error ? ou enum de code ?
+		std::string 	*reasonPhrase; // pointeur sur std::map<int, sting> status code error ? ou enum de code ?
 	};
 
 
@@ -84,6 +88,7 @@ namespace WS {
 	struct StartLine
 	{
 		HTTPversion		version;
+
 	};
 
 
@@ -91,12 +96,16 @@ namespace WS {
 	{
 		std::string		target; // URL
 		std::string		method; // ACTIONS : GET, POST, DELETE
+
+		void	clear();
 	};
 
 
 	struct StatusLine : public StartLine
 	{
 		StatusCode		status;	
+	
+		void	clear();
 	};
 
 } //end namespace

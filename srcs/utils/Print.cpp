@@ -26,10 +26,10 @@ void	printVector(const std::vector<T> & vec)
 
 
 
-template <class T>
-void	printMap(const std::map<T, T> & map)
+template <class T, class U>
+void	printMap(const std::map<T, U> & map)
 {
-	typename std::map<T, T>::const_iterator	it;
+	typename std::map<T, U>::const_iterator	it;
 
 	for (it = map.begin(); it != map.end(); it++)
 		std::cout << "key=" << (*it).first << " value=" << (*it).second << std::endl;

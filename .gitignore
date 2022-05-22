@@ -1,11 +1,8 @@
 docker/
 start.sh
-<<<<<<< HEAD
 .vscode
 test_virg
 .objs/
-=======
 *.o
 *.d
->>>>>>> 8958c0f2b11e5e70152a8e5e184d1fa71571eb12
 webserv

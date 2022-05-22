@@ -24,6 +24,14 @@ namespace WS {
 
 class RequestHTTP : public AMessageHTTP
 {
+	/*
+		protected variables herited from AMessageHTTP:
+
+		StartLine								m_startLine;
+		std::map <std::string, std::string> 	m_header_fields;
+		std::string								m_body;
+		static	std::map <std::string, int>		m_methods;
+	*/
 
 	private:
 		RequestLine							m_startLine;
