@@ -3,4 +3,6 @@ start.sh
 .vscode
 test_virg
 .objs/
+*.o
+*.d
 webserv

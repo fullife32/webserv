@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserv.hpp                                        :+:      :+:    :+:   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/16 15:09:20 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/22 14:55:02 by lvirgini         ###   ########.fr       */
+/*   Created: 2022/05/16 18:58:49 by lvirgini          #+#    #+#             */
+/*   Updated: 2022/05/17 16:31:15 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERV_HPP
-# define WEBSERV_HPP
+#ifndef UTILS_HPP
+# define UTILS_HPP
 
-# include "ParseRequest.hpp"
-# include "AMessageHTTP.hpp"
-# include "RequestHTTP.hpp"
-# include "ResponseHTTP.hpp"
-# include "ErrorMessage.hpp"
-# include "Server.hpp"
-# include "Socket.hpp"
-# include "Client.hpp"
-# include "Multiplex.hpp"
-# include "utils.hpp"
-# include <unistd.h>
+std::vector<std::string> 		splitString(const std::string & str, const std::string & separator);
 
-# endif
+
+/*
+** Printer
+*/
+
+template <class T>
+void	printMap(const std::map<T, T> & map);
+
+
+template <class T>
+void	printVector(const std::vector<T> & vec);
+
+#endif
