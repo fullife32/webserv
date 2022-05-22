@@ -20,7 +20,6 @@ SRCS =	main_testRequest.cpp \
 		ParseRequest.cpp \
 		RequestHTTP.cpp \
 		ResponseHTTP.cpp \
-		multiplex.cpp \
 		Split.cpp \
 		ErrorMessage.cpp \
 		DateFormat.cpp \
@@ -49,15 +48,3 @@ CXXFLAGS = -Wall -Wextra -std=c++98 -pedantic
 # The characters and the length of the progress bar will adjust automatically
 PROGRESS_BAR = -------------------------------------------------------------------
 FILLING_CHAR = \#
-
-
-# AMessageHTTP.hpp \
-# ParseRequest.hpp \
-# RequestHTTP.hpp \
-# ResponseHTTP.hpp \
-# ClientSocket.hpp \
-# Multiplex.hpp \
-# ParseConfig.hpp \
-# ServerSocket.hpp \
-# utils.hpp \
-# Webserv.hpp \
