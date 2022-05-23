@@ -24,17 +24,6 @@ Server::~Server() {}
 
 /* --- Public functions --- */
 
-void	Server::showInfos() {
-	std::cout << std::endl << "---------- Infos Socket ----------" << std::endl;
-	std::cout << "sockfd: " << m_fd << std::endl;
-	std::cout << "conf.ip_addr: " << m_conf.getIp() << std::endl;
-	std::cout << "conf.listen: " << m_conf.getPort() << std::endl;
-	// std::cout << "clients:" << std::endl;
-	// for (std::vector<Client>::iterator it = m_clients.begin() ; it != m_clients.end(); ++it)
-		// std::cout << "fd: " << it->getFd() << std::endl;
-	// std::cout << "----------------------------------" << std::endl << std::endl;
-}
-
 int	Server::createSocket() {
 	int fd;
 

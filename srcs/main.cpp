@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/23 15:27:58 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:52:06 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int ac, char **av) {
 	std::vector<ServerConf>		confs; // not finished
 	std::map<int, Server>		servers;
 	std::map<int, Client>		clients;
-	ServerConf 					test(av[1], av[2]);
+	ServerConf					test(av[1], av[2]);
 
 	confs.push_back(test);
 	for (std::vector<ServerConf>::iterator it = confs.begin(), ite = confs.end(); it != ite; ++it) {
@@ -56,7 +56,7 @@ int	main(int ac, char **av) {
 
 	try {
 		plex.createPlex();
-		plex.addServersToPoll(servers);  //loop through all server sockets
+		plex.addServersToPoll(servers);
 	} catch (std::exception const &except) {
 		for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
 			it->second.closeSocket();
@@ -65,7 +65,6 @@ int	main(int ac, char **av) {
 	}
 
 	for (;;) {
-		// serverTest.showInfos();
 		if (plex.waitPlex() == -1)
 			break;
 		plex.handleEvents(servers, clients);

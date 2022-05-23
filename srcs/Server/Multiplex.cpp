@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/23 15:27:57 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:38:11 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	Multiplex::createPlex() {
 	m_fd = epoll_create1(0); //FD_CLOEXEC if need to close after exec
 	if (m_fd == -1)
 		throw Multiplex::PlexFail();
+	std::cout << m_fd << ": epoll list created" << std::endl;
 }
 
 void	Multiplex::addServersToPoll( std::map<int, Server> &servers ) const {

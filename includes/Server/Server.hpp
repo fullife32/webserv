@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/23 14:22:02 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:43:25 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ private:
 	Server &operator=( Server const &other );
 
 public:
-	void	showInfos(); // debug
-
 	static int	createSocket();
 	static void	setOpts( int const fd );
 	static void	bindSocket( int const fd, ServerConf const &conf ); // Careful 255.255.255.255
