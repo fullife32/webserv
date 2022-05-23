@@ -66,3 +66,7 @@ void	Server::listenSocket( int const fd ) {
 	if (listen(fd, LISTEN_LEN) == -1)
 		throw Server::SocketFail(LISTEN_FAIL);
 }
+
+ServerConf const	&Server::getConf() const {
+	return m_conf;
+}

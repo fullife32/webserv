@@ -6,15 +6,18 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 19:23:11 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:27:57 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Multiplex.hpp"
 
-Multiplex::Multiplex() : m_fd(-1) { }
+Multiplex::Multiplex() : m_fd(-1), m_nbReady(0), m_events(NULL) { }
 
-Multiplex::~Multiplex() { }
+Multiplex::~Multiplex() {
+	freeEvents();
+	closePlex();
+}
 
 void	Multiplex::createPlex() {
 	m_fd = epoll_create1(0); //FD_CLOEXEC if need to close after exec
@@ -28,6 +31,7 @@ void	Multiplex::addServersToPoll( std::map<int, Server> &servers ) const {
 
 		if (it->second.getFd() == -1)
 			throw Multiplex::PlexFail(); // change message
+		memset(&event, 0, sizeof(event));
 		event.events = EPOLLIN;
 		event.data.fd = it->second.getFd();
 		if (epoll_ctl(m_fd, EPOLL_CTL_ADD, it->second.getFd(), &event) == -1) // check error uninitialised byte(s)
@@ -40,6 +44,7 @@ void	Multiplex::addClientToPoll( Client &client ) const {
 
 	if (client.getFd() == -1)
 		throw Multiplex::PlexFail(); // change message
+	memset(&event, 0, sizeof(event));
 	event.events = EPOLLIN;
 	event.data.fd = client.getFd();
 	if (epoll_ctl(m_fd, EPOLL_CTL_ADD, client.getFd(), &event) == -1) // check error uninitialised byte(s)
@@ -49,12 +54,12 @@ void	Multiplex::addClientToPoll( Client &client ) const {
 int	Multiplex::waitPlex() {
 	m_events = new epoll_event[MAXEVENTS];
 	if (m_events == NULL) {
-		std::cout << "new failed in waitPlex" << std::endl;
+		std::cerr << "new failed in waitPlex" << std::endl;
 		return -1;
 	}
 	m_nbReady = epoll_wait(m_fd, m_events, MAXEVENTS, EPOLL_TIMEOUT);
 	if (m_nbReady == -1) {
-		std::cout << "epoll_wait failed" << std::endl;
+		std::cerr << "epoll_wait failed" << std::endl;
 		return -1;
 	}
 	return m_nbReady;
@@ -78,7 +83,9 @@ void	Multiplex::handleServer( int i, std::map<int, Server> &servers, std::map<in
 				Client	tmpClient(Client::acceptClient(it->second.getFd(), it->second));
 				clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
 				addClientToPoll(clients.rbegin()->second);
-				std::cout << "Coucou je suis nouveau ici, voici mon fd: " << clients.rbegin()->second.getFd() << std::endl;
+				// Debug
+				std::cout << clients.rbegin()->second.getFd() << ": coucou je suis nouveau ici !" << std::endl;
+				//
 			} catch(std::exception &except) {
 				std::cerr << except.what() << std::endl; // check to change to cerr not cout
 			}
@@ -90,8 +97,13 @@ void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
 	std::map<int, Client>::iterator it = clients.find(m_events[i].data.fd);
 	if (it != clients.end()) {
 		if (m_events[i].events & EPOLLIN) {
-			std::cout << "Ciao, je me casse !: " << it->second.getFd() << std::endl;
-			epoll_ctl(m_fd, it->second.getFd(), EPOLL_CTL_DEL, 0); // put in function kick
+			epoll_event	event;
+
+			// Debug
+			std::cout << it->second.getFd() << ": ciao, je me casse !" << std::endl;
+			//
+			memset(&event, 0, sizeof(event));
+			epoll_ctl(m_fd, it->second.getFd(), EPOLL_CTL_DEL, &event); // put in function kick
 			it->second.closeSocket();
 			clients.erase(it);
 		}

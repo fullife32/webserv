@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 19:34:41 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:27:58 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 int	main(int ac, char **av) {
 	if (ac != 3) { // change to 2
-		std::cout << "Error: ./webserv ip port" << std::endl;
+		std::cerr << "Error: ./webserv ip port" << std::endl;
 		return 1;
 	}
 
@@ -38,10 +38,17 @@ int	main(int ac, char **av) {
 			Server::bindSocket(fd, *it);
 			Server::listenSocket(fd);
 			servers.insert(std::make_pair(fd, Server(fd, (*it))));
+			// Debug
+			Server	tmp = servers.rbegin()->second;
+			std::cout << tmp.getFd() << ": server started on " << tmp.getConf().getIp() << ":" << tmp.getConf().getPort() << std::endl;
+			//
 		} catch (std::exception const &except) {
 			if (fd != -1)
-				close(fd); // free, close and exit ???
+				close(fd);
+			for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
+				it->second.closeSocket();
 			std::cerr << except.what() << std::endl;
+			return 1;
 		}
 	}
 
@@ -51,8 +58,10 @@ int	main(int ac, char **av) {
 		plex.createPlex();
 		plex.addServersToPoll(servers);  //loop through all server sockets
 	} catch (std::exception const &except) {
-		plex.closePlex();
-		std::cerr << except.what() << std::endl; // free and close ???
+		for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
+			it->second.closeSocket();
+		std::cerr << except.what() << std::endl;
+		return 1;
 	}
 
 	for (;;) {
@@ -64,5 +73,4 @@ int	main(int ac, char **av) {
 
 	for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
 		it->second.closeSocket();
-	plex.closePlex();
 }

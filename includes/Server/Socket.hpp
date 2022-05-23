@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:27 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 19:34:28 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 13:06:24 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define SOCKET_HPP
 
 #include <iostream>
-#include <sys/epoll.h>
 #include <cstdlib>
+#include <sys/epoll.h>
 #include <unistd.h>
 
 #define CREATE_FAIL 0
@@ -36,6 +36,7 @@ public:
 	~Socket();
 
 private:
+	Socket();
 	Socket( Socket const &other );
 	Socket &operator=( Socket const &other );
 

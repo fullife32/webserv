@@ -6,21 +6,22 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 19:34:25 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 14:38:40 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MULTIPLEX_HPP
 # define MULTIPLEX_HPP
 
-#include "Server.hpp"
+#include <cstring>
 #include <iostream>
-#include <sys/epoll.h>
-#include <stdlib.h>
 #include <map>
+#include <stdlib.h>
+#include <sys/epoll.h>
 #include "Client.hpp"
+#include "Server.hpp"
 
-#define MAXEVENTS 64
+#define MAXEVENTS 8
 
 /*
 	This class create an epoll list and have functions to add a new socket to
