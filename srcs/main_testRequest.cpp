@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 17:17:53 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:31:12 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@
 #include <fcntl.h>
 #include <cstring>
 #include <ctime>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 
-#define BUFFER_SIZE	32
+#define BUFFER_SIZE	2
 #define DEBUG_WEBSERV
 
 int main(int ac, char **argv)
@@ -28,8 +31,23 @@ int main(int ac, char **argv)
 	char	buf[BUFFER_SIZE];
 	int 	fd;
 	int		size_read;
-	WS::ParseRequest	request;
+	WS::ParseRequest	parserRequest;
+	WS::RequestHTTP		request;
+	WS::ResponseHTTP	response;
 	
+	// char *	t = "HTTP 1.1 coucou wesh coco\n";
+
+	// for (size_t i = 0; i < strlen(t); i+= BUFFER_SIZE)
+	// {
+	// 	if (i + BUFFER_SIZE > strlen(t))
+	// 		write(1, &t[i], strlen(t) - i);
+	// 	else
+	// 		write(1, &t[i], BUFFER_SIZE);
+	// 	std::cout << std::endl;
+		
+	// }
+	// return (0);
+
 
 	if (ac != 2)
 		return (0);
@@ -44,19 +62,23 @@ int main(int ac, char **argv)
 	{
 		size_read = read(fd, &buf, BUFFER_SIZE - 1);
 		if (size_read != -1)
-			request.append(buf);
+			parserRequest.append(buf);
 		memset(buf, '\0', BUFFER_SIZE);
 	} while (size_read > 0);
 	
 	try
 	{
-		WS::RequestHTTP		final_request = request.getFormated_RequestHTTP();
-		final_request.debug_print_Message();
-		WS::ResponseHTTP		response(final_request);
+		request.buildRequest(parserRequest);
+		response.buildResponse(request);
 	}
 	catch (WS::MessageErrorException & e)
 	{
 		std::cerr << "error = " << e.getError() << " " << e.getMappedError() << std::endl;
+	}
+
+	for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 3)
+	{
+		std::cout << response.getNextSend(3) << std::endl;
 	}
 
 }

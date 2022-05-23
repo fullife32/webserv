@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 18:23:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:27:45 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ namespace WS
 		: AMessageHTTP(copy),
 		m_startLine(copy.m_startLine)
 	{
-		m_methods.begin();
+		m_methods.begin(); ///
 	}
 
 	RequestHTTP::~RequestHTTP()
@@ -33,7 +33,12 @@ namespace WS
 
 
 
-
+	void	RequestHTTP::buildRequest(ParseRequest & parser)
+	{
+		m_startLine = parser.getRequestLine();
+		m_header_fields = parser.getHeaderFields();
+		m_body = parser.getBody();
+	}
 
 
 

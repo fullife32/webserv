@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:45:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:35:15 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,16 @@ std::string &	ParseRequest::append(const std::string & str)
 }
 
 
+/* -------------------------------------------------------------------------- */
+
 /*
 ** After completely receive request : formated the requestHTTP
 **	separate body and header
 ** formated the requestHeader in a requestLine
 */
 
-RequestHTTP 	ParseRequest::getFormated_RequestHTTP()
+void	ParseRequest::m_prepareRequestBuilding()
 {
-	RequestHTTP					request;
 	std::vector<std::string>	split;
 
 	m_separateHeaderBody();
@@ -65,13 +66,32 @@ RequestHTTP 	ParseRequest::getFormated_RequestHTTP()
 	split = splitString(m_header, NEWLINE);
 	if (split.size() == 0)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-
-	request.setRequestLine(m_formated_RequestLine(split[0]));
-	split.erase(split.begin());
-	request.setHeaderFields(m_formated_HeaderFields(split));
-	request.setBody(m_body);
 	
-	return request;
+	m_formated_RequestLine(split[0]);
+	split.erase(split.begin());
+	m_formated_HeaderFields(split);
+}
+
+
+RequestLine	ParseRequest::getRequestLine()
+{
+	if (m_header.empty())
+		m_prepareRequestBuilding();
+	return(m_requestLine);
+	
+}
+std::string	ParseRequest::getBody()
+{
+	if (m_header.empty())
+		m_prepareRequestBuilding();
+	return (m_body);
+}
+		
+std::map<std::string, std::string>	ParseRequest::getHeaderFields()
+{
+	if (m_header.empty())
+		m_prepareRequestBuilding();
+	return (m_headerFields);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -91,34 +111,30 @@ void			ParseRequest::m_separateHeaderBody()
 	
 	if (separation == std::string::npos)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	m_header = std::string(&m_data[0], &m_data[separation]);
 	m_body =   std::string(&m_data[separation + 2], &m_data[m_data.size()]);
+	m_header = std::string(&m_data[0], &m_data[separation]);
 }
 
 /*
-** get first line of Header
+	 get first line of Header
 		formated the first line of Request Header :
 		Method SP URL SP HTTPversion
 
 		for now HTTPversion is facultatif
 		throw exception (400 Bad Request)
 */
-
-RequestLine 		ParseRequest::m_formated_RequestLine(const std::string & startline)
+void 		ParseRequest::m_formated_RequestLine(const std::string & startline)
 {
-	RequestLine					requestline;
 	std::vector<std::string>	split;
 	
-	// voir ISSUE: rendre obligatoire ou non le HTTP
 	split = splitString(startline, " ");
 	if (split.size() < 2 || split.size() > 3)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
 
-	requestline.method = split[0];
-	requestline.target = split[1];
+	m_requestLine.method = split[0];
+	m_requestLine.target = split[1];
 	if (split.size() == 3)
-		requestline.version.formatedVersion(split[2]);
-	return (requestline);
+		m_requestLine.version.formatedVersion(split[2]);
 }
 
 /*
@@ -126,14 +142,12 @@ RequestLine 		ParseRequest::m_formated_RequestLine(const std::string & startline
 		iterate each line of Header and create a map of < string, string >
 		corresponding to < HeaderFileds, HeaderFileds value >
 */
-
-std::map<std::string, std::string>	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & headerSplit)
+void	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & headerSplit)
 {
 	size_t				found;
 	std::string			key;
 	std::string			value;
 	std::string			line;
-	std::map<std::string, std::string>			map;
 	std::vector<std::string>::const_iterator	it = headerSplit.begin();
 
 	for (; it != headerSplit.end(); it++)
@@ -144,9 +158,8 @@ std::map<std::string, std::string>	ParseRequest::m_formated_HeaderFields(const s
 			throw MessageErrorException(STATUS_BAD_REQUEST);
 		key = std::string(&line[0], &line[found]);
 		value = std::string(&line[found + 1], &line[line.size()]);
-		map[key] = value;
+		m_headerFields[key] = value;
 	}
-	return map;
 }
 
 } // end namespace

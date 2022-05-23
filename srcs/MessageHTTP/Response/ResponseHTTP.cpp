@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/22 18:48:48 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:43:15 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,22 @@ namespace WS
 	/*
 		Construct a response from a requestHTTP
 	*/
+	ResponseHTTP::ResponseHTTP()
+		: AMessageHTTP(),
+		m_startLine(),
+		m_method(0),
+		m_dataResponse(),
+		m_it_send(),
+		m_chunk(0)
+	{}
+
 
 	ResponseHTTP::ResponseHTTP(const RequestHTTP & request)
 		: AMessageHTTP(),
-		m_startLine(),
-		m_method(request.getMethod())
+		m_startLine()
 	{
-		m_minimalHeaderFields();
-		m_parseMethod();
+		buildResponse(request);
 	}
-
-
 
 
 	ResponseHTTP::ResponseHTTP(const ResponseHTTP & copy)
@@ -51,20 +56,33 @@ namespace WS
 	{
 		if (this != &other)
 		{
+			clear();
 			m_startLine = other.m_startLine;
 			m_header_fields = other.m_header_fields;
 			m_body = other.m_body;
 			m_method = other.m_method;
-			m_dataResponse = other.m_dataResponse;
-			m_send = other.m_send;
+			m_dataResponse <<other.m_dataResponse;
+			m_chunk = other.m_chunk;
 		}
 		return *this;
 	}
 
 
+	void	ResponseHTTP::buildResponse(const RequestHTTP & request)
+	{
+		clear();
+		m_minimalHeaderFields();
+		m_method = request.getMethod();
+		m_parseMethod();
+		m_formatedResponse();
+
+
+	}
+
+
 	void	ResponseHTTP::clear()
 	{
-		m_send = 0;
+		m_chunk = 0;
 		m_method = 0;
 		m_startLine.clear();
 		m_body.clear();
@@ -72,6 +90,8 @@ namespace WS
 		m_dataResponse.clear();
 
 	}
+
+
 
 	/*
 		Set the minimals Header Fields needed for an answer.
@@ -114,22 +134,75 @@ namespace WS
 	}
 
 
+
 	void	ResponseHTTP::m_formatedResponse()
 	{
-		m_dataResponse.append(START_LINE_HTTP_VERSION);
-		m_dataResponse.append(SP);
-		m_dataResponse.append(std::string(m_startLine.status.code));
-		m_dataResponse.append(SP);
-		m_dataResponse.append(m_startLine.status.reasonPhrase);
+		m_dataResponse << START_LINE_HTTP_VERSION << SP << m_startLine.status.code << SP << m_startLine.status.reasonPhrase;
+		// std::cout << m_dataResponse.gcount() << std::endl;
+		// std::cout <<  m_dataResponse.str().length() << std::endl;
+		// std::cout <<  m_dataResponse.str() << std::endl;
+
+		// std::cout << this->getNextSend(2) << std::endl;
+	
 	}
 
-	// void	ResponseHTTP::m_buildHeader()
-	// {
+	size_t		ResponseHTTP::size() const
+	{
+		return m_dataResponse.str().size();
+	}
 
 
-	// 	// header << START_LINE_HTTP_VERSION << SP << m_startLine.status.code << SP << m_startLine.status.reasonPhrase;
-	// }
+	char *	ResponseHTTP::getNextChunk(size_t BufferSize)
+	{
+
+	}
+
+		// write(1, m_dataResponse.str().data(), 2);
+
+		// m_dataResponse.seekp(0);
+
+		// std::cout << m_dataResponse.str() << std::endl;
+
+		// m_dataResponse.seekp(5);
+
+
+		// std::cout << m_dataResponse.str() << std::endl;
+
+		// return (std::string());
+
+
+		
+		// if (m_chunk == 0)
+		// 	m_it_send = m_dataResponse.str().begin();
+		
+		// std::string		toSend(m_it_send, m_it_send + BufferSize);
+		// m_it_send += BufferSize;
+		// m_chunk += BufferSize;
+		// std::cout << *m_it_send << std::endl;
+		// return (toSend);
+	
+	
+		// if (m_chunk == 0)
+		// 	ptr = m_dataResponse.str().at(0);
+
+		// std::string
+	
+	
+	}
+
+
+
+
 
 } // end namespace
 
 
+
+	// void	ResponseHTTP::m_formatedResponse()
+	// {
+	// 	m_dataResponse.append(START_LINE_HTTP_VERSION);
+	// 	m_dataResponse.append(SP);
+	// 	m_dataResponse.append(std::string(m_startLine.status.code));
+	// 	m_dataResponse.append(SP);
+	// 	m_dataResponse.append(m_startLine.status.reasonPhrase);
+	// }

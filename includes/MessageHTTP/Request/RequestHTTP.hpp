@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 17:47:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:28:09 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 # define REQUESTHTTP_HPP
 
 #include "AMessageHTTP.hpp"
-#include <iostream>
+#include "ParseRequest.hpp"
 #include "Utils.hpp"
+
+#include <iostream>
 
 namespace WS {
 
 
-
+class ParseRequest;
 
 class RequestHTTP : public AMessageHTTP
 {
@@ -51,6 +53,7 @@ class RequestHTTP : public AMessageHTTP
 	/* get / set    ------------------------------------------------ */
 		int				getMethod() const;
 		void			setRequestLine(const RequestLine & requestLine);
+		void			buildRequest(ParseRequest & parser);
 		
 		
 

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:08:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/23 15:35:52 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,18 @@
 namespace WS
 {
 
+	class RequestHTTP;
 
 class ParseRequest
 {
 
 	private: // make private
 	public:
-		std::string				m_data;
-		std::string				m_header;
-		std::string				m_body;
-
+		std::string							m_data;
+		std::string							m_header;
+		std::string							m_body;
+		RequestLine							m_requestLine;
+		std::map<std::string, std::string>	m_headerFields;
 	public:
 
 	/* constructor ------------------------------------------------ */
@@ -43,16 +45,20 @@ class ParseRequest
 
 	/* functions    ------------------------------------------------ */
 		std::string &	append(const std::string & str); // pour recuperer la requete entiere ( buffer)
-		RequestHTTP 	getFormated_RequestHTTP(); // fonction qui va appeler toutes les autres pour
-						// fabriquer une RequestHTTP  throw une exception si probleme de parsing
+
+		RequestLine		getRequestLine();
+		std::string		getBody();
+		std::map<std::string, std::string>	getHeaderFields();
+
 
 	private:
 	
-		void								m_separateHeaderBody(); // separe les datas dans m_header et m_body
-		std::map<std::string, std::string> 	m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
-		RequestLine							m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
-		int									m_formated_RequestMethod(const std::string & methodWord);
-
+		void			m_prepareRequestBuilding();
+		void			m_separateHeaderBody(); // separe les datas dans m_header et m_body
+		void			m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
+		void			m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
+		//void			m_formated_RequestMethod(const std::string & methodWord);
+	
 }; // end class
 
 } // end namespace
