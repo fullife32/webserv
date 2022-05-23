@@ -1,9 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Socket.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/20 19:34:27 by eassouli          #+#    #+#             */
+/*   Updated: 2022/05/23 13:06:24 by eassouli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SOCKET_HPP
 # define SOCKET_HPP
 
 #include <iostream>
-#include <sys/epoll.h>
 #include <cstdlib>
+#include <sys/epoll.h>
+#include <unistd.h>
 
 #define CREATE_FAIL 0
 #define OPTION_FAIL 1
@@ -19,37 +32,18 @@ protected:
 	const int	m_fd;
 
 public:
-	Socket(int fd) : m_fd(fd) {}
-	~Socket() {}
+	Socket( int fd );
+	~Socket();
 
 private:
+	Socket();
 	Socket( Socket const &other );
 	Socket &operator=( Socket const &other );
 
 public:
-	// int		getFd() const {
-	// 	return m_fd;
-	// }
-	class SocketFail : public std::exception {
-		int	m_flag;
-		// char *error_msg[] = {
-		// 	"Socket creation failed",
-		// 	"Socket options failed",
-		// 	"Socket bind failed",
-		// 	"Socket listen failed"
-		// };
+	void	closeSocket( void );
+	int		getFd( void ) const;
 
-		public:
-			SocketFail(int flag) : m_flag(flag) {}
-			virtual const char*	what() const throw() {
-				return "Socket failed";
-			}
-	};
-
-	void	closeSocket() {
-		if (m_fd != -1)
-			close(m_fd);
-	}
 };
 
 #endif

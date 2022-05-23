@@ -1,29 +1,75 @@
-#include <iostream>
-#include "ServerSocket.hpp"
-#include "ParseConfig.hpp"
-#include "Multiplex.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
+/*   Updated: 2022/05/23 16:18:59 by eassouli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/*
-	Starting by gathering config file infos, then creating each socket
-	associated with a server block and the multiplexing everything (adding an
-	event list and waiting for all of them at the same time).
-*/
+#include <iostream>
+#include <map>
+#include "Server.hpp"
+#include "ServerConf.hpp"
+#include "Multiplex.hpp"
+#include "Client.hpp"
+
 int	main(int ac, char **av) {
-	if (ac != 3) {
-		std::cout << "./webserv ip port" << std::endl;
+	if (ac != 3) { // change to 2
+		std::cerr << "Error: ./webserv ip port" << std::endl;
 		return 1;
 	}
 
-	ServerBlock		datas(av[1], av[2]); // not finished
-	ServerSocket	serverTest(datas);
-	Multiplex		plex;
+	std::vector<ServerConf>		confs; // not finished
+	std::map<int, Server>		servers;
+	std::map<int, Client>		clients;
+	ServerConf					test(av[1], av[2]);
 
-	plex.addToPoll(serverTest.getFd());  //loop through all server sockets
-	for (;;) {
-		serverTest.showInfos();
-		if (plex.waitPlex() == -1)
-			exit(1); // don't exit
-		plex.watchEvents(serverTest);
+	confs.push_back(test);
+	for (std::vector<ServerConf>::iterator it = confs.begin(), ite = confs.end(); it != ite; ++it) {
+		int fd = -1;
+
+		try {
+			fd = Server::createSocket();
+			Server::setOpts(fd);
+			Server::bindSocket(fd, *it);
+			Server::listenSocket(fd);
+			servers.insert(std::make_pair(fd, Server(fd, (*it))));
+			// Debug
+			Server	tmp = servers.rbegin()->second;
+			std::cout << tmp.getFd() << ": server started on " << tmp.getConf().getIp() << ":" << tmp.getConf().getPort() << std::endl;
+			//
+		} catch (std::exception const &except) {
+			if (fd != -1)
+				close(fd);
+			for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
+				it->second.closeSocket();
+			std::cerr << except.what() << std::endl;
+			return 1;
+		}
 	}
-	serverTest.closeSocket();
+
+	Multiplex	plex;
+
+	try {
+		plex.createPlex();
+		plex.addServersToPoll(servers);
+	} catch (std::exception const &except) {
+		for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
+			it->second.closeSocket();
+		std::cerr << except.what() << std::endl;
+		return 1;
+	}
+
+	for (;;) {
+		if (plex.waitPlex() == -1)
+			break;
+		plex.handleEvents(servers, clients);
+	}
+
+	for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
+		it->second.closeSocket();
 }

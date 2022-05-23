@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ParseConfig.hpp                                    :+:      :+:    :+:   */
+/*   ServerConf.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/19 16:21:25 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 16:18:36 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,36 +59,39 @@ struct s_server {
 
 // when get one info check if exist or if default possible like cgi folder or autoindex
 
-
-class ParseConfig {
+class ServerConf {
 	std::string	_ipAddr;
 	std::string	_listen;
-	// std::string server_name;
-	// std::vector<std::string[2]> listen;
-	// std::vector<std::string> index;
-	ParseConfig() {}
-	ParseConfig( ParseConfig const &other );
-	ParseConfig &operator=( ParseConfig const &other );
 public:
-	ParseConfig( std::string configPath ) {}
-	~ParseConfig() {}
+	ServerConf() {}
+	ServerConf(std::string ip, std::string port) : _ipAddr(ip), _listen(port) {}
+	~ServerConf() {}
+	// ServerConf( ServerConf const &other );
+	// ServerConf &operator=( ServerConf const &other );
+
+	const char *getIp() const {
+		return _ipAddr.c_str();
+	}
+	int	getPort() const {
+		return atoi(_listen.c_str());
+	}
 };
 
 #endif
 
-server {
-	// server_name default;
-	listen localhost:80 default
-	location /truc {
-		no right
-	}
-}
+// server {
+// 	// server_name default;
+// 	listen localhost:80 default
+// 	location /truc {
+// 		no right
+// 	}
+// }
 
-server {
-	// server_name google.com;
-	listen localhost:80;
+// server {
+// 	// server_name google.com;
+// 	listen localhost:80;
 	
-	location /truc {
-		all rights
-	}
-}
+// 	location /truc {
+// 		all rights
+// 	}
+// }

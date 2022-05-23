@@ -1,2 +1,5 @@
 docker/
 start.sh
+*.o
+*.d
+webserv
