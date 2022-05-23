@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/23 15:43:25 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 16:20:29 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
-#include "ParseConfig.hpp"
+#include "ServerConf.hpp"
 #include "Socket.hpp"
 
 #define LISTEN_LEN 1024

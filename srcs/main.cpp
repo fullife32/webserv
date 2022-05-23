@@ -6,14 +6,14 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/23 15:52:06 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/23 16:20:19 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <map>
 #include "Server.hpp"
-#include "ParseConfig.hpp"
+#include "ServerConf.hpp"
 #include "Multiplex.hpp"
 #include "Client.hpp"
 
