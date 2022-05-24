@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/23 16:20:19 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 11:41:47 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ int	main(int ac, char **av) {
 		plex.handleEvents(servers, clients);
 	}
 
+	for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
+		it->second.closeSocket();
 	for (std::map<int, Server>::iterator it = servers.begin(), ite = servers.end(); it != ite; ++it)
 		it->second.closeSocket();
 }

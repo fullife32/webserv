@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/23 14:38:40 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 11:57:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,26 +30,35 @@
 */
 class Multiplex {
 private:
+
 	int			m_fd;
 	int			m_nbReady;
 	epoll_event	*m_events;
 
 public:
+
 	Multiplex();
 	~Multiplex();
 
 private:
+
 	Multiplex( Multiplex const &other );
 	Multiplex &operator=( Multiplex const &other );
 	
 public:
+
 	void	createPlex();
-	void	addServersToPoll( std::map<int, Server> &servers ) const;
-	void	addClientToPoll( Client &client ) const;
 	int		waitPlex();
 	void	handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients );
+
+	void	addServersToPoll( std::map<int, Server> &servers ) const;
 	void	handleServer( int i, std::map<int, Server> &servers, std::map<int, Client> &clients );
+
+	void	addClientToPoll( Client &client ) const;
 	void	handleClients( int i, std::map<int, Client> &clients );
+	void	changeClientEvent( Client &client, int newEvent ) const;
+	void	deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator it );
+
 	void	freeEvents();
 	void	closePlex();
 

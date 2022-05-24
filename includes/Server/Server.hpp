@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/23 16:20:29 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 11:25:42 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,22 @@ class Multiplex;
 */
 class Server : public Socket {
 private:
+	
 	const ServerConf	&m_conf;
 
 public:
+	
 	Server( int const fd, ServerConf const &conf );
 	Server( Server const &other );
 	~Server();
 
 private:
+	
 	Server();
 	Server &operator=( Server const &other );
 
 public:
+	
 	static int	createSocket();
 	static void	setOpts( int const fd );
 	static void	bindSocket( int const fd, ServerConf const &conf ); // Careful 255.255.255.255
