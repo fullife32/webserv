@@ -6,22 +6,23 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/23 18:19:45 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 18:20:59 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerConf.hpp"
 
-ServerConf::ServerConf() { }
-
-ServerConf::ServerConf(std::string ip, std::string port) : _ipAddr(ip), _listen(port) {}
+ServerConf::ServerConf(std::string ip, std::string port)
+: _ipAddr(ip), _listen(port) {}
 
 ServerConf::~ServerConf() { }
 
-int	ServerConf::checkFile( std::string filePath ) {
-	int	fd;
-
-	// check extension
-	throw ServerConf::ConfFail();
-	return fd;
+void	ServerConf::openFile( std::string filePath, std::ifstream &ifs ) {
+	ifs.open(filePath.c_str(), std::ifstream::in);
+	if (ifs.eof()) {
+		throw ServerConf::ConfFail(); // Empty file
+	}
+	else if (!ifs.good()) {
+		throw ServerConf::ConfFail(); // Impossible to open the file
+	}
 }

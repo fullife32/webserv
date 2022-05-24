@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 12:46:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 19:06:00 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "ServerConf.hpp"
 #include "Multiplex.hpp"
 #include "Client.hpp"
+#include "utils.hpp"
 
 int	main(int ac, char **av) {
 	if (ac != 2) {
@@ -23,19 +24,31 @@ int	main(int ac, char **av) {
 		return 1;
 	}
 
-	// ServerConf	test(av[1], av[2]);
-	// confs.push_back(test);
-
 	std::vector<ServerConf>	confs;
+	std::ifstream	ifs;
 
 	try {
-		int	fd;
-		
-		fd = ServerConf::checkFile(av[1]);
+		char	buf[256];
+
+		ServerConf::openFile(av[1], ifs);
+		while (ifs.good()) {
+			std::vector<std::string>	tokens;
+
+			ifs.getline(buf, 256, '\n');
+			tokens = splitString(std::string(buf), " \n\t\v\b\r\f\a");
+		}
+		ifs.close();
 	} catch (ServerConf::ConfFail const &except) {
+		if (ifs.is_open())
+			ifs.close();
 		std::cerr << except.what() << std::endl;
 		return 1;
 	}
+	if (confs.empty()) {
+		std::cerr << "Error: No server block found in file" << std::endl;
+		return 1;
+	}
+
 
 	std::map<int, Server>	servers;
 

@@ -6,13 +6,14 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 12:47:02 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 17:57:23 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSE_CONFIG_HPP
 # define PARSE_CONFIG_HPP
 
+#include <iostream>
 #include <string>
 #include <cstdlib>
 #include <vector>
@@ -42,7 +43,7 @@ private:
 	ServerConf &operator=( ServerConf const &other );
 
 public:
-	static int	checkFile( std::string filePath );
+	static void	openFile( std::string filePath, std::ifstream &ifs );
 
 	// To remove
 	const char *getIp() const {
