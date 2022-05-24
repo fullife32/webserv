@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/24 11:25:42 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 12:50:58 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,11 @@
 
 #define LISTEN_LEN 1024
 #define EPOLL_TIMEOUT -1
+
+#define CREATE_FAIL 0
+#define OPTION_FAIL 1
+#define BIND_FAIL 2
+#define LISTEN_FAIL 3
 
 class Multiplex;
 
