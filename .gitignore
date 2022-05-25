@@ -3,3 +3,4 @@ start.sh
 *.o
 *.d
 webserv
+.objs
