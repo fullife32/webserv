@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/23 15:31:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 11:08:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,6 @@ int main(int ac, char **argv)
 	WS::RequestHTTP		request;
 	WS::ResponseHTTP	response;
 	
-	// char *	t = "HTTP 1.1 coucou wesh coco\n";
-
-	// for (size_t i = 0; i < strlen(t); i+= BUFFER_SIZE)
-	// {
-	// 	if (i + BUFFER_SIZE > strlen(t))
-	// 		write(1, &t[i], strlen(t) - i);
-	// 	else
-	// 		write(1, &t[i], BUFFER_SIZE);
-	// 	std::cout << std::endl;
-		
-	// }
-	// return (0);
-
 
 	if (ac != 2)
 		return (0);
@@ -76,9 +63,9 @@ int main(int ac, char **argv)
 		std::cerr << "error = " << e.getError() << " " << e.getMappedError() << std::endl;
 	}
 
-	for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 3)
+	for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)
 	{
-		std::cout << response.getNextSend(3) << std::endl;
+		write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
 	}
 
 }

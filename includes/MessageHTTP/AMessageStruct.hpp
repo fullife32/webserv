@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/22 18:29:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 11:13:14 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # define SERVER_NAME		"Webserv"
 # define SP					" "
 # define START_LINE_HTTP_VERSION "HTTP/1.1"
+# define CRLF				"\r\n"
+# define NEW_LINE			"\n"
 
 # define METHOD_GET			"GET"
 # define METHOD_POST		"POST"	

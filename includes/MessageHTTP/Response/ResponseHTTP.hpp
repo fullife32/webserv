@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/23 15:43:35 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 11:08:45 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,11 @@ class ResponseHTTP : public AMessageHTTP
 
 	private:
 
+		std::stringstream		m_dataResponse;
+		std::string				m_data;
 		StatusLine				m_startLine;
 		int						m_method;
-		std::stringstream		m_dataResponse;
 		size_t					m_chunk;
-		std::string::iterator	m_it_send;
-		char *					ptr;
 
 	public:
 
@@ -56,15 +55,18 @@ class ResponseHTTP : public AMessageHTTP
 
 
 	/* set		    ------------------------------------------------ */
-	void		setRequestMethod(int method);
+		void		setRequestMethod(int method);
 	
 	
 	/* functions    ------------------------------------------------ */
 
-		void	clear();
-		void	buildResponse(const RequestHTTP & request);
-		char *	getNextChunk(size_t BufferSize);
-		size_t	size() const ;
+		void		clear();
+		size_t		size() const ;
+
+		void			buildResponse(const RequestHTTP & request);
+		const char *	getNextChunk(size_t BufferSize);
+		size_t			getNextChunkSize(size_t BufferSize) const;
+
 
 
 		// void	send(size_t	begin, size_t size);

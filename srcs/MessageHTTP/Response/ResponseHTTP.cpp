@@ -6,11 +6,13 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/23 15:43:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 11:14:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResponseHTTP.hpp"
+#include <unistd.h>
+
 
 /*
 	POUR LES METHOD : 405 NOT ALLOWED que ce soit une methode qui n'est pas autorisee
@@ -27,10 +29,9 @@ namespace WS
 	*/
 	ResponseHTTP::ResponseHTTP()
 		: AMessageHTTP(),
+		m_dataResponse(),
 		m_startLine(),
 		m_method(0),
-		m_dataResponse(),
-		m_it_send(),
 		m_chunk(0)
 	{}
 
@@ -68,18 +69,6 @@ namespace WS
 	}
 
 
-	void	ResponseHTTP::buildResponse(const RequestHTTP & request)
-	{
-		clear();
-		m_minimalHeaderFields();
-		m_method = request.getMethod();
-		m_parseMethod();
-		m_formatedResponse();
-
-
-	}
-
-
 	void	ResponseHTTP::clear()
 	{
 		m_chunk = 0;
@@ -88,7 +77,17 @@ namespace WS
 		m_body.clear();
 		m_header_fields.clear();
 		m_dataResponse.clear();
+		m_data.clear();
+	}
 
+
+	void	ResponseHTTP::buildResponse(const RequestHTTP & request)
+	{
+		clear();
+		m_minimalHeaderFields();
+		m_method = request.getMethod();
+		m_parseMethod();
+		m_formatedResponse();
 	}
 
 
@@ -137,7 +136,22 @@ namespace WS
 
 	void	ResponseHTTP::m_formatedResponse()
 	{
-		m_dataResponse << START_LINE_HTTP_VERSION << SP << m_startLine.status.code << SP << m_startLine.status.reasonPhrase;
+		m_dataResponse.clear();
+		m_dataResponse << START_LINE_HTTP_VERSION << SP << m_startLine.status.code << SP << m_startLine.status.reasonPhrase << '\n';
+
+		for (std::map<std::string, std::string>::iterator it = m_header_fields.begin(); it != m_header_fields.end(); it++)
+		{
+			m_dataResponse << (*it).first << ":" << (*it).second << NEW_LINE;
+		}
+		m_dataResponse << NEW_LINE << m_body << CRLF; /// IF BODY IS EMPTY NEWLINE aussi ?
+
+		m_data = m_dataResponse.str();
+
+		// std::cout << "DATA = " << m_dataResponse.str() << std::endl;
+		// std::cout << m_data << std::endl;
+
+
+		
 		// std::cout << m_dataResponse.gcount() << std::endl;
 		// std::cout <<  m_dataResponse.str().length() << std::endl;
 		// std::cout <<  m_dataResponse.str() << std::endl;
@@ -148,14 +162,49 @@ namespace WS
 
 	size_t		ResponseHTTP::size() const
 	{
-		return m_dataResponse.str().size();
+		return m_data.size();
 	}
 
-
-	char *	ResponseHTTP::getNextChunk(size_t BufferSize)
+	size_t		ResponseHTTP::getNextChunkSize(size_t bufferSize) const
 	{
-
+		if (m_chunk > size())
+			return bufferSize - (m_chunk - size());
+		return bufferSize;
 	}
+
+	const char *	ResponseHTTP::getNextChunk(size_t bufferSize)
+	{
+		const char *ptr = &m_data[m_chunk];
+
+		m_chunk += bufferSize;
+		return (ptr);
+	}
+
+
+		// if (m_chunk == 0)
+		// 	return (m_dataResponse.str().at(0));
+		
+		// if (ptr == NULL )
+		// 	ptr = m_dataResponse.str().data();
+		// else
+		// 	ptr = ptr + BufferSize;
+		// std::cout << ptr << std::endl;
+		// ptr = &m_dataResponse.str()[m_chunk];
+		// m_chunk += BufferSize;
+		// write(1, ptr,  3);
+	
+		
+		// std::cout  << "ptr = " << m_chunk << ptr << std::endl;
+	// 	return (ptr);		
+
+
+	
+	// 	char	*next = &m_dataResponse.str().at(m_chunk);
+	// 	std::cout << std::endl << "AT next= " << m_chunk << next << std::endl;
+
+	// 	m_chunk += BufferSize;
+	// 	return next;
+	// }
 
 		// write(1, m_dataResponse.str().data(), 2);
 
@@ -187,8 +236,6 @@ namespace WS
 
 		// std::string
 	
-	
-	}
 
 
 

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 10:33:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 18:24:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/24 20:33:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ namespace WS
 	/* constructor ------------------------------------------------ */
 
 	AMessageHTTP::AMessageHTTP()
-	: m_startLine(),
-	m_header_fields(),
-	m_body()
+		: m_startLine(),
+		m_header_fields(),
+		m_body()
 	{}
 
 
 	AMessageHTTP::AMessageHTTP(const AMessageHTTP & copy)
-	: m_startLine(copy.m_startLine),
-	m_header_fields(copy.m_header_fields),
-	m_body(copy.m_body)
+		: m_startLine(copy.m_startLine),
+		m_header_fields(copy.m_header_fields),
+		m_body(copy.m_body)
 	{}
 
 	/* destructor  ------------------------------------------------ */
