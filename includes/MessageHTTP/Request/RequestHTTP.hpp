@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/23 15:28:09 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 12:14:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 namespace WS {
 
 
-class ParseRequest;
-
 class RequestHTTP : public AMessageHTTP
 {
 	/*
@@ -37,6 +35,7 @@ class RequestHTTP : public AMessageHTTP
 
 	private:
 		RequestLine							m_startLine;
+		ParseRequest						m_parseRequest;
 
 	public:
 
@@ -53,11 +52,11 @@ class RequestHTTP : public AMessageHTTP
 	/* get / set    ------------------------------------------------ */
 		int				getMethod() const;
 		void			setRequestLine(const RequestLine & requestLine);
-		void			buildRequest(ParseRequest & parser);
-		
+		void			append(const std::string & buffer);
 		
 
 	/* functions    ------------------------------------------------ */
+		void			buildRequest();
 
 
 		// debug

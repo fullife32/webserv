@@ -6,13 +6,13 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 11:14:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 13:11:08 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ResponseHTTP.hpp"
 #include <unistd.h>
-
+#include <fstream>
 
 /*
 	POUR LES METHOD : 405 NOT ALLOWED que ce soit une methode qui n'est pas autorisee
@@ -24,13 +24,14 @@
 namespace WS
 {
 
-	/*
-		Construct a response from a requestHTTP
-	*/
+/* -------------------------------------------------------------------------- */
+/*                     Constructor Destructor                                 */
+/* -------------------------------------------------------------------------- */
+
 	ResponseHTTP::ResponseHTTP()
 		: AMessageHTTP(),
 		m_dataResponse(),
-		m_startLine(),
+		m_requestLine(),
 		m_method(0),
 		m_chunk(0)
 	{}
@@ -38,7 +39,7 @@ namespace WS
 
 	ResponseHTTP::ResponseHTTP(const RequestHTTP & request)
 		: AMessageHTTP(),
-		m_startLine()
+		m_requestLine()
 	{
 		buildResponse(request);
 	}
@@ -58,7 +59,7 @@ namespace WS
 		if (this != &other)
 		{
 			clear();
-			m_startLine = other.m_startLine;
+			m_requestLine = other.m_requestLine;
 			m_header_fields = other.m_header_fields;
 			m_body = other.m_body;
 			m_method = other.m_method;
@@ -68,18 +69,42 @@ namespace WS
 		return *this;
 	}
 
+/* -------------------------------------------------------------------------- */
 
 	void	ResponseHTTP::clear()
 	{
 		m_chunk = 0;
 		m_method = 0;
-		m_startLine.clear();
+		m_requestLine.clear();
 		m_body.clear();
 		m_header_fields.clear();
 		m_dataResponse.clear();
 		m_data.clear();
 	}
 
+	size_t		ResponseHTTP::size() const
+	{
+		return m_data.size();
+	}
+
+	size_t		ResponseHTTP::getNextChunkSize(size_t bufferSize) const
+	{
+		if (m_chunk > size())
+			return bufferSize - (m_chunk - size());
+		return bufferSize;
+	}
+
+	const char *	ResponseHTTP::getNextChunk(size_t bufferSize)
+	{
+		const char *ptr = &m_data[m_chunk];
+
+		m_chunk += bufferSize;
+		return (ptr);
+	}
+	
+/* -------------------------------------------------------------------------- */
+/*                     Build Response                                         */
+/* -------------------------------------------------------------------------- */
 
 	void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 	{
@@ -90,7 +115,14 @@ namespace WS
 		m_formatedResponse();
 	}
 
-
+	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase)
+	{
+		clear();
+		m_minimalHeaderFields();
+		m_requestLine.statusCode = StatusCode;
+		m_requestLine.reasonPhrase = ReasonPhrase;
+		m_formated_Error(StatusCode);
+	}
 
 	/*
 		Set the minimals Header Fields needed for an answer.
@@ -101,6 +133,10 @@ namespace WS
 		 m_header_fields["Server"] = SERVER_NAME;
 	}
 
+
+/* -------------------------------------------------------------------------- */
+/*                     Method Parser                                          */
+/* -------------------------------------------------------------------------- */
 
 	/*
 		Setup the Method and Parse to the corresponding functions
@@ -131,125 +167,51 @@ namespace WS
 	{
 		std::cout << "in methode DELETE" << std::endl;
 	}
-
-
-
+	
+/* -------------------------------------------------------------------------- */
+/*                     Formated Response                                      */
+/* -------------------------------------------------------------------------- */
+	
+	
 	void	ResponseHTTP::m_formatedResponse()
 	{
 		m_dataResponse.clear();
-		m_dataResponse << START_LINE_HTTP_VERSION << SP << m_startLine.status.code << SP << m_startLine.status.reasonPhrase << '\n';
-
-		for (std::map<std::string, std::string>::iterator it = m_header_fields.begin(); it != m_header_fields.end(); it++)
-		{
-			m_dataResponse << (*it).first << ":" << (*it).second << NEW_LINE;
-		}
-		m_dataResponse << NEW_LINE << m_body << CRLF; /// IF BODY IS EMPTY NEWLINE aussi ?
-
+		m_formated_StatusLine();
+		m_formated_HeaderFields();
+		m_formated_body();
+		
 		m_data = m_dataResponse.str();
-
-		// std::cout << "DATA = " << m_dataResponse.str() << std::endl;
-		// std::cout << m_data << std::endl;
-
-
-		
-		// std::cout << m_dataResponse.gcount() << std::endl;
-		// std::cout <<  m_dataResponse.str().length() << std::endl;
-		// std::cout <<  m_dataResponse.str() << std::endl;
-
-		// std::cout << this->getNextSend(2) << std::endl;
-	
 	}
 
-	size_t		ResponseHTTP::size() const
+	void	ResponseHTTP::m_formated_StatusLine()
 	{
-		return m_data.size();
+		m_dataResponse << START_LINE_HTTP_VERSION << SP << m_requestLine.statusCode << SP << m_requestLine.reasonPhrase << CRLF;
 	}
 
-	size_t		ResponseHTTP::getNextChunkSize(size_t bufferSize) const
+	void	ResponseHTTP::m_formated_HeaderFields()
 	{
-		if (m_chunk > size())
-			return bufferSize - (m_chunk - size());
-		return bufferSize;
+		for (std::map<std::string, std::string>::iterator it = m_header_fields.begin(); it != m_header_fields.end(); it++)
+			m_dataResponse << (*it).first << ": " << (*it).second << CRLF;
 	}
 
-	const char *	ResponseHTTP::getNextChunk(size_t bufferSize)
+	void	ResponseHTTP::m_formated_body()
 	{
-		const char *ptr = &m_data[m_chunk];
-
-		m_chunk += bufferSize;
-		return (ptr);
+		if (m_body.empty() == false)
+			m_dataResponse << CRLF << m_body; /// IF BODY IS EMPTY NEWLINE aussi ?
+		m_dataResponse << CRLF << CRLF;
 	}
 
+	void	ResponseHTTP::m_formated_Error(int statusCode)
+	{
+		// std::ofstream		body ("Error404.html", std::ofstream::binary);
 
-		// if (m_chunk == 0)
-		// 	return (m_dataResponse.str().at(0));
-		
-		// if (ptr == NULL )
-		// 	ptr = m_dataResponse.str().data();
-		// else
-		// 	ptr = ptr + BufferSize;
-		// std::cout << ptr << std::endl;
-		// ptr = &m_dataResponse.str()[m_chunk];
-		// m_chunk += BufferSize;
-		// write(1, ptr,  3);
-	
-		
-		// std::cout  << "ptr = " << m_chunk << ptr << std::endl;
-	// 	return (ptr);		
+		// std::cout << body. << std::endl;
+		m_dataResponse.clear();
+		m_formated_StatusLine();
+		m_formated_HeaderFields();
+		m_dataResponse << CRLF << CRLF;
 
-
-	
-	// 	char	*next = &m_dataResponse.str().at(m_chunk);
-	// 	std::cout << std::endl << "AT next= " << m_chunk << next << std::endl;
-
-	// 	m_chunk += BufferSize;
-	// 	return next;
-	// }
-
-		// write(1, m_dataResponse.str().data(), 2);
-
-		// m_dataResponse.seekp(0);
-
-		// std::cout << m_dataResponse.str() << std::endl;
-
-		// m_dataResponse.seekp(5);
-
-
-		// std::cout << m_dataResponse.str() << std::endl;
-
-		// return (std::string());
-
-
-		
-		// if (m_chunk == 0)
-		// 	m_it_send = m_dataResponse.str().begin();
-		
-		// std::string		toSend(m_it_send, m_it_send + BufferSize);
-		// m_it_send += BufferSize;
-		// m_chunk += BufferSize;
-		// std::cout << *m_it_send << std::endl;
-		// return (toSend);
-	
-	
-		// if (m_chunk == 0)
-		// 	ptr = m_dataResponse.str().at(0);
-
-		// std::string
-	
-
-
-
-
+		// m_dataResponse << body.str();
+	}
 
 } // end namespace
-
-
-
-	// void	ResponseHTTP::m_formatedResponse()
-	// {
-	// 	m_dataResponse.append(START_LINE_HTTP_VERSION);
-	// 	m_dataResponse.append(SP);
-	// 	m_dataResponse.append(std::string(m_startLine.status.code));
-	// 	m_dataResponse.append(SP);
-	// 	m_dataResponse.append(m_startLine.status.reasonPhrase);
-	// }

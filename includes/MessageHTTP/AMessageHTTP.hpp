@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:22:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 09:44:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 12:59:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ class AMessageHTTP
 	protected:
 		static	std::map <std::string, int>		m_methods;
 
-		StartLine								m_startLine;
 		std::map <std::string, std::string> 	m_header_fields;
 		std::string								m_body;
 	

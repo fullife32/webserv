@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/22 18:11:55 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 13:02:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ namespace WS
 	void	StatusLine::clear()
 	{
 		version.clear();
-		status.code = 0;
-		status.reasonPhrase = NULL;
+		statusCode = 0;
+		reasonPhrase.clear();
 	}
 
 

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 11:08:45 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 13:07:37 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ class ResponseHTTP : public AMessageHTTP
 	/*
 		protected variables herited from AMessageHTTP:
 
-		StartLine								m_startLine;
 		std::map <std::string, std::string> 	m_header_fields;
 		std::string								m_body;
 		static	std::map <std::string, int>		m_methods;
@@ -35,7 +34,7 @@ class ResponseHTTP : public AMessageHTTP
 
 		std::stringstream		m_dataResponse;
 		std::string				m_data;
-		StatusLine				m_startLine;
+		StatusLine				m_requestLine;
 		int						m_method;
 		size_t					m_chunk;
 
@@ -63,6 +62,7 @@ class ResponseHTTP : public AMessageHTTP
 		void		clear();
 		size_t		size() const ;
 
+		void			buildError(int StatusCode, const std::string &  ReasonPhrase);
 		void			buildResponse(const RequestHTTP & request);
 		const char *	getNextChunk(size_t BufferSize);
 		size_t			getNextChunkSize(size_t BufferSize) const;
@@ -74,6 +74,11 @@ class ResponseHTTP : public AMessageHTTP
 
 		void	m_minimalHeaderFields();
 		void	m_formatedResponse();
+		void	m_formated_StatusLine();
+		void	m_formated_HeaderFields();
+		void	m_formated_body();
+		void	m_formated_Error(int StatusCode);
+
 
 		void	m_parseMethod();
 		void	m_method_GET();
@@ -85,7 +90,7 @@ class ResponseHTTP : public AMessageHTTP
 	public:
 		virtual void	debug_print_startline()
 		{
-			HTTPversion	*v = &m_startLine.version;
+			HTTPversion	*v = &m_requestLine.version;
 
 			std::cout << "HTTPversion = " << v->name << " " << v->major_version << "." << v->minor_version << std::endl;
 		}

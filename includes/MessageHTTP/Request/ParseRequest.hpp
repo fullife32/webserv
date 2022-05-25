@@ -6,22 +6,24 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/23 15:35:52 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/25 12:15:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSEREQUEST_HPP
 # define PARSEREQUEST_HPP
 
-# include "RequestHTTP.hpp"
+# include "AMessageStruct.hpp"
+# include <string>
+# include <vector>
+# include <map>
+
 
 # define NEWLINE	"\n"
 # define EMPTY_LINE	"\n\n"
 
 namespace WS
 {
-
-	class RequestHTTP;
 
 class ParseRequest
 {
@@ -57,7 +59,6 @@ class ParseRequest
 		void			m_separateHeaderBody(); // separe les datas dans m_header et m_body
 		void			m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
 		void			m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
-		//void			m_formated_RequestMethod(const std::string & methodWord);
 	
 }; // end class
 
