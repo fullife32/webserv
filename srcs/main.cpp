@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 19:06:00 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/26 16:56:09 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,15 @@
 #include "Client.hpp"
 #include "utils.hpp"
 
+template <class T>
+void	printVector(const std::vector<T> & vec)
+{
+	typename std::vector<T>::const_iterator	it;
+
+	for (it = vec.begin(); it != vec.end(); it++)
+		std::cout << *it << std::endl;
+}
+
 int	main(int ac, char **av) {
 	if (ac != 2) {
 		std::cerr << "Error: ./webserv path_to_configuration_file" << std::endl;
@@ -25,30 +34,9 @@ int	main(int ac, char **av) {
 	}
 
 	std::vector<ServerConf>	confs;
-	std::ifstream	ifs;
 
-	try {
-		char	buf[256];
-
-		ServerConf::openFile(av[1], ifs);
-		while (ifs.good()) {
-			std::vector<std::string>	tokens;
-
-			ifs.getline(buf, 256, '\n');
-			tokens = splitString(std::string(buf), " \n\t\v\b\r\f\a");
-		}
-		ifs.close();
-	} catch (ServerConf::ConfFail const &except) {
-		if (ifs.is_open())
-			ifs.close();
-		std::cerr << except.what() << std::endl;
+	if (ServerConf::startParse(av[1], confs) == 1)
 		return 1;
-	}
-	if (confs.empty()) {
-		std::cerr << "Error: No server block found in file" << std::endl;
-		return 1;
-	}
-
 
 	std::map<int, Server>	servers;
 
