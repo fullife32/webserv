@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 13:07:37 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/26 17:43:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 #include "ResponseHTTP.hpp"
 #include "RequestHTTP.hpp"
 #include <string>
+#include <memory.h>
 #include <sstream>
+#include <fstream>
 
 namespace WS {
 
@@ -37,6 +39,8 @@ class ResponseHTTP : public AMessageHTTP
 		StatusLine				m_requestLine;
 		int						m_method;
 		size_t					m_chunk;
+		std::ifstream			body_test;
+		char 					buffer[32];
 
 	public:
 

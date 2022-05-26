@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 13:11:08 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/26 17:49:45 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,10 +94,44 @@ namespace WS
 		return bufferSize;
 	}
 
+
 	const char *	ResponseHTTP::getNextChunk(size_t bufferSize)
 	{
-		const char *ptr = &m_data[m_chunk];
+		memset(buffer, 0, 32); ///
 
+		if (m_dataResponse.read(buffer, bufferSize))
+			return (buffer);
+		
+		size_t	len = strlen(buffer);
+		if (body_test.read(buffer + len, bufferSize - len))
+			return (buffer);
+		if (strlen(buffer) != 0)
+			return buffer;
+		clear();
+		return (NULL);
+			
+		
+		// size_t	len = 0;
+
+
+		// if ( !m_dataResponse.eofbit())
+		// 	len = m_dataResponse.read(buffer, bufferSize);
+		
+
+
+
+
+
+
+		// m_dataResponse.read(buffer, bufferSize);
+		// if (bufferSize > size() && body_test.is_open())
+		// {
+		// 	buffer = new char [bufferSize + 1];
+		// 	body_test.read(buffer, bufferSize);
+		// 	m_data.append(buffer);
+
+		// }	
+		const char *ptr = m_data.data();
 		m_chunk += bufferSize;
 		return (ptr);
 	}
@@ -113,6 +147,7 @@ namespace WS
 		m_method = request.getMethod();
 		m_parseMethod();
 		m_formatedResponse();
+		body_test.open("Error404.html", std::ifstream::in); /// FOR TEST
 	}
 
 	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase)
@@ -122,6 +157,8 @@ namespace WS
 		m_requestLine.statusCode = StatusCode;
 		m_requestLine.reasonPhrase = ReasonPhrase;
 		m_formated_Error(StatusCode);
+		body_test.open("Error404.html", std::ifstream::in); /// FOR TEST
+
 	}
 
 	/*
