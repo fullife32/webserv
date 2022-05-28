@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/26 21:08:31 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/28 23:06:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,28 @@
 #include "ConfStructs.hpp"
 #include "utils.hpp"
 
-typedef	std::map<std::string,void(*)(std::vector<std::string>&)> parseFunction_t;
+#define MAX_PORT 65535
+#define LOCALHOST "127.0.0.1"
+#define IP_MASK "255.255.255.255"
+#define DEFAULT_PORT "8000"
+
+enum e_config_error {
+	EMPTY_FILE,
+	NO_FILE,
+	NOT_FILE,
+	ANOTHER_ERROR,
+	OUTSIDE_SERVER,
+	NOT_VALID_KEY,
+	SERVER_MANDATORY,
+	TOO_MANY_ARGUMENTS,
+	NOT_ENOUGH_ARGUMENTS,
+	TOO_MANY_DIRECTIVE,
+	MISSING_END_LINE,
+	INVALID_IP,
+	INVALID_PORT
+};
+
+typedef	std::map<std::string,void(*)(std::vector<std::string>&,s_server&)> parseFunction_t;
 
 // when get one info check if exist or if default possible like cgi folder or autoindex
 
@@ -50,21 +71,21 @@ public:
 	static void	findServer( std::ifstream &ifs );
 
 	// Only server
-	static void	parseListen( std::vector<std::string> &tokens );
-	// static void	parseServerName( std::vector<std::string> &tokens );
+	static void	parseListen( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseServerName( std::vector<std::string> &tokens, struct s_server &block );
 
 	// Only location
-	// static void	parseMethod( std::vector<std::string> &tokens );
-	// static void	parseCgi( std::vector<std::string> &tokens );
+	// static void	parseMethod( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseCgi( std::vector<std::string> &tokens, struct s_server &block );
 
 	// Both server and location
-	// static void	parseErrorPage( std::vector<std::string> &tokens );
-	// static void	parseClientMaxBodySize( std::vector<std::string> &tokens );
-	// static void	parseRedirect( std::vector<std::string> &tokens );
-	// static void	parseRoot( std::vector<std::string> &tokens );
-	// static void	parseAutoindex( std::vector<std::string> &tokens );
-	// static void	parseIndex( std::vector<std::string> &tokens );
-	// static void	parseUploadPass( std::vector<std::string> &tokens );
+	// static void	parseErrorPage( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseClientMaxBodySize( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseRedirect( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseRoot( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseAutoindex( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseIndex( std::vector<std::string> &tokens, struct s_server &block );
+	// static void	parseUploadPass( std::vector<std::string> &tokens, struct s_server &block );
 
 	// To remove
 	const char	*getIp() const {
@@ -76,12 +97,33 @@ public:
 	//
 
 	class ConfFail : public std::exception {
-		// int	m_flag;
-		// error messages
+		int					m_flag;
+		const char			*m_word;
+
 	public:
-		// ConfFail( int flag ) : m_flag(flag) {}
+		ConfFail( int flag, const char *word ) : m_flag(flag), m_word(word) {}
 		virtual const char	*what() const throw() {
-			return "Conf failed";
+			char const *error_msg[] = {
+				"The configuration file is empty",
+				"No configuration file found",
+				"Impossible to open the configuration file",
+				"Something else occured in conf",
+				"Something found outside a server block",
+				"An invalid directive has been found",
+				"Not enough directive in the configuration file",
+				"Too many arguments in this directive",
+				"Not enough arguments in this directive",
+				"Too many declaration of this directive",
+				"Missing a ; at the end of the line of this directive",
+				"Invalid host",
+				"Invalid port"
+			};
+			static std::string	ret;
+			if (m_word != NULL)
+				ret = std::string(error_msg[m_flag]) + ": " + std::string(m_word);
+			else
+				ret = std::string(error_msg[m_flag]);
+			return ret.c_str();
 		}
 	};
 };

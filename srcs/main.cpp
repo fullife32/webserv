@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/26 16:56:09 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/28 18:22:40 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,6 @@
 #include "Multiplex.hpp"
 #include "Client.hpp"
 #include "utils.hpp"
-
-template <class T>
-void	printVector(const std::vector<T> & vec)
-{
-	typename std::vector<T>::const_iterator	it;
-
-	for (it = vec.begin(); it != vec.end(); it++)
-		std::cout << *it << std::endl;
-}
 
 int	main(int ac, char **av) {
 	if (ac != 2) {
