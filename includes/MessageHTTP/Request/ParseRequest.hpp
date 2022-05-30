@@ -6,21 +6,14 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 12:15:21 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 08:26:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSEREQUEST_HPP
 # define PARSEREQUEST_HPP
 
-# include "AMessageStruct.hpp"
-# include <string>
-# include <vector>
-# include <map>
-
-
-# define NEWLINE	"\n"
-# define EMPTY_LINE	"\n\n"
+# include "MessageHTTP.hpp"
 
 namespace WS
 {

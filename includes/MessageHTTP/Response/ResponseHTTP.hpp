@@ -6,41 +6,34 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/26 17:43:56 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 10:21:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEHTTP_HPP
 # define RESPONSEHTTP_HPP
 
-#include "ResponseHTTP.hpp"
-#include "RequestHTTP.hpp"
-#include <string>
-#include <memory.h>
-#include <sstream>
-#include <fstream>
+#include "MessageHTTP.hpp"
 
 namespace WS {
 
-class ResponseHTTP : public AMessageHTTP
+class ResponseHTTP : public MessageMethods
 {
 	/*
-		protected variables herited from AMessageHTTP:
+		protected variables herited from MessageMethods:
 
-		std::map <std::string, std::string> 	m_header_fields;
-		std::string								m_body;
 		static	std::map <std::string, int>		m_methods;
 	*/
 
 	private:
 
-		std::stringstream		m_dataResponse;
-		std::string				m_data;
+		std::map <std::string, std::string>	m_headerFields;
 		StatusLine				m_requestLine;
 		int						m_method;
-		size_t					m_chunk;
-		std::ifstream			body_test;
-		char 					buffer[32];
+		std::stringstream		m_header;
+		std::ifstream			m_body;
+		size_t					m_lenght;
+		char					*m_bufferToSend;
 
 	public:
 
@@ -64,12 +57,11 @@ class ResponseHTTP : public AMessageHTTP
 	/* functions    ------------------------------------------------ */
 
 		void		clear();
-		size_t		size() const ;
+		size_t		size() ;
 
 		void			buildError(int StatusCode, const std::string &  ReasonPhrase);
 		void			buildResponse(const RequestHTTP & request);
 		const char *	getNextChunk(size_t BufferSize);
-		size_t			getNextChunkSize(size_t BufferSize) const;
 
 
 
@@ -77,12 +69,13 @@ class ResponseHTTP : public AMessageHTTP
 	private:
 
 		void	m_minimalHeaderFields();
-		void	m_formatedResponse();
+		void	m_formatedResponse(const std::string & url);
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
-		void	m_formated_body();
-		void	m_formated_Error(int StatusCode);
+		void	m_formated_Error(int StatusCode, const std::string & ReasonPhrase);
 
+
+		void	m_openFile_Body(const std::string & url);
 
 		void	m_parseMethod();
 		void	m_method_GET();

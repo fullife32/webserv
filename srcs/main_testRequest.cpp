@@ -6,12 +6,12 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/26 17:50:39 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 09:58:49 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Webserv.hpp"
-#include "ParseRequest.hpp"
+#include "MessageHTTP.hpp"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -46,9 +46,9 @@ void	test_stream()
 
 	// std::string str2(fs.beg(), fs.end());
 
-  	fs.seekg (0, fs.end);
-    int length = fs.tellg();
-    fs.seekg (0, fs.beg);
+  	// fs.seekg (0, fs.end);
+    // int length = fs.tellg();
+    // fs.seekg (0, fs.beg);
 
 	// char *buff = new char[lenght];
 
@@ -129,8 +129,7 @@ int main(int ac, char **argv)
 		response.buildError(e.getError(), e.getMappedError());
 	}
 
-
-	std::cout << response.getNextChunk(response.size()) << std::endl;
+	// std::cout << response.getNextChunk(response.size()) << std::endl;
 
 	// write like send()
 

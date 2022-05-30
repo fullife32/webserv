@@ -1,36 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AMessageStruct.hpp                                 :+:      :+:    :+:   */
+/*   MessageStruct.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 13:01:59 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 09:28:01 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IMESSAGESTRUCT_HPP
-# define IMESSAGESTRUCT_HPP
+#ifndef MESSAGESTRUCT_HPP
+# define MESSAGESTRUCT_HPP
 
-# include "ErrorMessage.hpp"
-# include <string>
-
-# define SERVER_NAME		"Webserv"
-# define START_LINE_HTTP_VERSION "HTTP/1.1"
-# define NEW_LINE			"\n"
-# define CRLF				"\r\n"
-# define SP					" "
-
-# define METHOD_GET			"GET"
-# define METHOD_POST		"POST"	
-# define METHOD_DELETE		"DELETE"
-# define METHOD_HEAD		"HEAD"
-# define METHOD_PUT			"PUT"
-# define METHOD_CONNECT		"CONNECT"
-# define METHOD_OPTIONS		"OPTIONS"
-# define METHOD_TRACE		"TRACE"
-
+#include "MessageHTTP.hpp"
 
 namespace WS {
 
@@ -83,6 +66,7 @@ namespace WS {
 		void	clear();
 	};
 
+
 	/* Status Line  ------------------------------------------------ */
 	/*
 		status-code = 3DIGIT
@@ -98,6 +82,18 @@ namespace WS {
 	
 		void	clear();
 	};
+
+
+	/* Message Methods static map  --------------------------------- */
+
+	class MessageMethods
+	{
+		protected:
+			static	std::map <std::string, int>		m_methods;
+	};
+
+std::map <std::string, int>		init_map_method();
+
 
 } //end namespace
 

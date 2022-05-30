@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AMessageStruct.cpp                                 :+:      :+:    :+:   */
+/*   MessageStruct.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 13:02:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 10:23:45 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "AMessageStruct.hpp"
+#include "MessageHTTP.hpp"
 #include <iostream>
 #include <cstdlib>
 
@@ -79,6 +79,27 @@ namespace WS
 		reasonPhrase.clear();
 	}
 
+
+	/* Message Methods static map  --------------------------------- */
+
+	std::map <std::string, int>		init_map_method()
+	{
+		std::map<std::string, int>	methods;
+
+		methods[METHOD_GET]		= GET;
+		methods[METHOD_POST]	= POST;	
+		methods[METHOD_DELETE]	= DELETE;
+		methods[METHOD_HEAD]	= HEAD;
+		methods[METHOD_PUT]		= PUT;
+		methods[METHOD_CONNECT]	= CONNECT;
+		methods[METHOD_OPTIONS]	= OPTIONS;
+		methods[METHOD_TRACE]	= TRACE;
+
+		return methods;
+	}
+
+
+	std::map <std::string, int>		MessageMethods::m_methods = init_map_method();
 
 
 } // end namespace

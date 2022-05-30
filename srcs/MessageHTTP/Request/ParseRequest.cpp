@@ -6,14 +6,11 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 12:14:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/29 11:33:09 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ParseRequest.hpp"
-#include "AMessageStruct.hpp"
-#include "Utils.hpp"
-#include <iostream>
+#include "MessageHTTP.hpp"
 
 namespace WS {
 

@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/22 15:32:39 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/05/30 08:36:13 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,8 @@ NAME = webserv
 
 # The list of the all the sources, because $(wildcard *.c) is too dangerous
 SRCS =	main_testRequest.cpp \
-		AMessageHTTP.cpp \
-		AMessageStruct.cpp \
 		ParseRequest.cpp \
+		MessageStruct.cpp \
 		RequestHTTP.cpp \
 		ResponseHTTP.cpp \
 		Split.cpp \

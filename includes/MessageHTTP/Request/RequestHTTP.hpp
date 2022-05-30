@@ -6,36 +6,32 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 12:14:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 08:58:05 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUESTHTTP_HPP
 # define REQUESTHTTP_HPP
 
-#include "AMessageHTTP.hpp"
-#include "ParseRequest.hpp"
-#include "Utils.hpp"
-
-#include <iostream>
+#include "MessageHTTP.hpp"
 
 namespace WS {
 
 
-class RequestHTTP : public AMessageHTTP
+class RequestHTTP : public MessageMethods
 {
 	/*
-		protected variables herited from AMessageHTTP:
+		protected variables herited from AMessageHTTP: list of all Methods
 
-		StartLine								m_startLine;
-		std::map <std::string, std::string> 	m_header_fields;
-		std::string								m_body;
 		static	std::map <std::string, int>		m_methods;
 	*/
 
 	private:
 		RequestLine							m_startLine;
+		std::map <std::string, std::string>	m_headerFields;
 		ParseRequest						m_parseRequest;
+		std::string							m_body;
+
 
 	public:
 
@@ -51,12 +47,15 @@ class RequestHTTP : public AMessageHTTP
 
 	/* get / set    ------------------------------------------------ */
 		int				getMethod() const;
+		std::string		getUrl() const;
+
 		void			setRequestLine(const RequestLine & requestLine);
-		void			append(const std::string & buffer);
-		
+		void			setBody(const std::string & body);
+		void			setHeaderFields(const std::map<std::string, std::string> & headerFields);
 
 	/* functions    ------------------------------------------------ */
 		void			buildRequest();
+		void			append(const std::string & buffer);
 
 
 		// debug

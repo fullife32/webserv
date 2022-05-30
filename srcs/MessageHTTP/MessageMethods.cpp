@@ -1,50 +1,48 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   AMessageHTTP.cpp                                   :+:      :+:    :+:   */
+/*   MessageMethods.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 10:33:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 13:00:03 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 09:52:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "AMessageHTTP.hpp"
-#include <map>
-#include <string>
+#include "MessageHTTP.hpp"
+// #include <map>
+// #include <string>
 
 namespace WS 
 {
 
-	/* constructor ------------------------------------------------ */
+	// /* constructor ------------------------------------------------ */
 
-	AMessageHTTP::AMessageHTTP()
-		: m_header_fields(),
-		m_body()
-	{}
-
-
-	AMessageHTTP::AMessageHTTP(const AMessageHTTP & copy)
-		: m_header_fields(copy.m_header_fields),
-		m_body(copy.m_body)
-	{}
-
-	/* destructor  ------------------------------------------------ */
-	AMessageHTTP::~AMessageHTTP()
-	{}
+	// AMessageHTTP::AMessageHTTP()
+	// 	: m_header_fields()
+	// {}
 
 
-	/* set		    ------------------------------------------------ */
-	void	AMessageHTTP::setBody(const std::string & body)
-	{
-		m_body = body;
-	}
+	// AMessageHTTP::AMessageHTTP(const AMessageHTTP & copy)
+	// 	: m_header_fields(copy.m_header_fields)
+	// {}
 
-	void	AMessageHTTP::setHeaderFields(const std::map<std::string, std::string> & headerFields)
-	{
-		m_header_fields = headerFields;
-	}
+	// /* destructor  ------------------------------------------------ */
+	// AMessageHTTP::~AMessageHTTP()
+	// {}
+
+
+	// /* set		    ------------------------------------------------ */
+	// // void	AMessageHTTP::setBody(const std::string & body)
+	// // {
+	// // 	m_body = body;
+	// // }
+
+	// void	AMessageHTTP::setHeaderFields(const std::map<std::string, std::string> & headerFields)
+	// {
+	// 	m_header_fields = headerFields;
+	// }
 
 
 
@@ -66,6 +64,6 @@ std::map <std::string, int>		init_map_method()
 }
 
 
-std::map <std::string, int>		AMessageHTTP::m_methods = init_map_method();
+std::map <std::string, int>		MessageMethods::m_methods = init_map_method();
 
 } // end namespace

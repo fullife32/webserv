@@ -6,12 +6,11 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/25 12:15:38 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 09:54:16 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "RequestHTTP.hpp"
-
+#include "MessageHTTP.hpp"
 namespace WS
 {
 
@@ -20,17 +19,15 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 	RequestHTTP::RequestHTTP()
-		: AMessageHTTP(),
-		m_startLine(),
+		: m_startLine(),
 		m_parseRequest()
 	{}
 
 
 	RequestHTTP::RequestHTTP(const RequestHTTP & copy)
-		: AMessageHTTP(copy),
-		m_startLine(copy.m_startLine),
+		: m_startLine(copy.m_startLine),
 		m_parseRequest(copy.m_parseRequest)
-	{	}
+	{}
 
 	RequestHTTP::~RequestHTTP()
 	{}
@@ -46,7 +43,7 @@ namespace WS
 	void	RequestHTTP::buildRequest()
 	{
 		m_startLine = m_parseRequest.getRequestLine();
-		m_header_fields = m_parseRequest.getHeaderFields();
+		m_headerFields = m_parseRequest.getHeaderFields();
 		m_body = m_parseRequest.getBody();
 	}
 
@@ -58,6 +55,17 @@ namespace WS
 		m_startLine = requestline;
 	}
 
+	void	RequestHTTP::setBody(const std::string & body)
+	{
+		m_body = body;
+	}
+
+	void	RequestHTTP::setHeaderFields(const std::map<std::string, std::string> & headerFields)
+	{
+		m_headerFields = headerFields;
+	}
+
+
 /* -------------------------------------------------------------------------- */
 // get
 
@@ -65,8 +73,19 @@ namespace WS
 	{
 		std::map <std::string, int>::const_iterator	found = m_methods.find(m_startLine.method);
 		if (found == m_methods.end())
+		{
+			
+			// std::cout << "get method : " << std::endl;
 			throw MessageErrorException(STATUS_BAD_REQUEST);
+		}
 		return (*found).second;
 	}
 
+
+	std::string	RequestHTTP::getUrl() const
+	{
+		return (m_startLine.target);
+	}
+
+	
 } // end namespace
