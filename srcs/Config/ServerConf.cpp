@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/28 23:03:11 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/30 22:53:10 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,20 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 	parseFunction_t	locationFnct;
 	setFunctionsCall(serverFnct, locationFnct);
 
-
 	try {
 		while (ifs.good()) {
 			struct s_server confTmp;
 
-			memset(&confTmp, 0, sizeof(confTmp)); // init in another way
-			parseServer(ifs, confTmp, serverFnct, locationFnct);
-			// if () server ip and port equal another server set to his sub
-			confs.push_back(ServerConf(confTmp));
+			if (findServer(ifs) == true) {
+				// init structs here
+				parseServer(ifs, confTmp, serverFnct, locationFnct);
+				// if () server ip and port equal another server set to his sub
+				confs.push_back(ServerConf(confTmp));
+			}
 		}
 		if (!ifs.eof())
 			throw ServerConf::ConfFail(ANOTHER_ERROR, "read error"); // something failed
+		// TODO: if (eof && no server ) print no server block here
 	} catch (ServerConf::ConfFail const &except) {
 		if (ifs.is_open())
 			ifs.close();
@@ -65,7 +67,7 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 	if (ifs.is_open())
 		ifs.close();
 	if (confs.empty()) {
-		std::cerr << "Error: No server block found in file" << std::endl;
+		std::cerr << "Error: No server block found in file" << std::endl; // two errors printed (catch and this one :/)
 		return 1;
 	}
 	std::cout << "CONFIG FINISHED !" << std::endl; //
@@ -83,26 +85,42 @@ void	ServerConf::openFile( std::string filePath, std::ifstream &ifs ) { // doesn
 }
 
 void	ServerConf::setFunctionsCall( parseFunction_t &serverFnct, parseFunction_t &locationFnct ) {
-	serverFnct.insert(make_pair("listen", parseListen));
-	// serverFnct.insert(make_pair("server_name", parseServerName));
-	// serverFnct.insert(make_pair("error_page", parseErrorPage));
-	// serverFnct.insert(make_pair("client_max_body_size", parseClientMaxBodySize));
-	// serverFnct.insert(make_pair("redirect", parseRedirect));
-	// serverFnct.insert(make_pair("root", parseRoot));
-	// serverFnct.insert(make_pair("autoindex", parseAutoindex));
-	// serverFnct.insert(make_pair("index", parseIndex));
-	// serverFnct.insert(make_pair("upload_pass", parseUploadPass));
+	serverFnct.insert(std::make_pair("listen", parseListen));
+	serverFnct.insert(std::make_pair("server_name", parseServerName));
+	serverFnct.insert(std::make_pair("error_page", parseErrorPage));
+	serverFnct.insert(std::make_pair("client_max_body_size", parseClientMaxBodySize));
+	serverFnct.insert(std::make_pair("return", parseRedirect));
+	// serverFnct.insert(std::make_pair("root", parseRoot));
+	// serverFnct.insert(std::make_pair("autoindex", parseAutoindex));
+	// serverFnct.insert(std::make_pair("index", parseIndex));
+	// serverFnct.insert(std::make_pair("upload_pass", parseUploadPass));
 
-	(void)locationFnct;
-	// locationFnct.insert(make_pair("method", parseMethod));
-	// locationFnct.insert(make_pair("cgi", parseCgi));
-	// locationFnct.insert(make_pair("error_page", parseErrorPage));
-	// locationFnct.insert(make_pair("client_max_body_size", parseClientMaxBodySize));
-	// locationFnct.insert(make_pair("redirect", parseRedirect));
-	// locationFnct.insert(make_pair("root", parseRoot));
-	// locationFnct.insert(make_pair("autoindex", parseAutoindex));
-	// locationFnct.insert(make_pair("index", parseIndex));
-	// locationFnct.insert(make_pair("upload_pass", parseUploadPass));
+	// locationFnct.insert(std::make_pair("method", parseMethod));
+	// locationFnct.insert(std::make_pair("cgi", parseCgi));
+	locationFnct.insert(std::make_pair("error_page", parseErrorPage));
+	locationFnct.insert(std::make_pair("client_max_body_size", parseClientMaxBodySize));
+	locationFnct.insert(std::make_pair("return", parseRedirect));
+	// locationFnct.insert(std::make_pair("root", parseRoot));
+	// locationFnct.insert(std::make_pair("autoindex", parseAutoindex));
+	// locationFnct.insert(std::make_pair("index", parseIndex));
+	// locationFnct.insert(std::make_pair("upload_pass", parseUploadPass));
+}
+
+bool	ServerConf::findServer( std::ifstream &ifs ) {
+	while (ifs.good()) {
+		char						buf[BUFFER_SIZE];
+		std::vector<std::string>	tokens;
+
+		ifs.getline(buf, BUFFER_SIZE, '\n');
+		tokens = splitStringtoTokens(buf, " \t");
+		if (tokens.empty())
+			continue;
+		else if (tokens.size() == 2 && tokens[0] == "server" && tokens[1] == "{")
+			return true;
+		else
+			throw ServerConf::ConfFail(OUTSIDE_SERVER, tokens[0].c_str());
+	}
+	return false;
 }
 
 static bool	isEnding( std::string &lastToken ) {
@@ -110,33 +128,33 @@ static bool	isEnding( std::string &lastToken ) {
 }
 
 void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct ) {
-	int		line = 0;
-
-	findServer(ifs);
 	while (ifs.good()) { // secure every read loop
-		char						buf[256];
+		char						buf[BUFFER_SIZE];
 		std::vector<std::string>	tokens;
 
-		ifs.getline(buf, 256, '\n');
+		ifs.getline(buf, BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
 		printVector(tokens); //
-		if (tokens.empty())
+		if (tokens.empty() && !ifs.eof())
 			continue;
+		else if (tokens.empty() && ifs.eof())
+			throw ServerConf::ConfFail(NO_CLOSING_BRACKET, "server");
 		else if (tokens.size() == 1 && tokens[0] == "}")
-			break;
+			return;
 		else if (tokens[0] == "location")
 			; // function location with location map
 		else {
 			parseFunction_t::iterator	it;
 
 			if (isEnding(tokens.back()) == false)
-				throw ServerConf::ConfFail(MISSING_END_LINE, tokens[0].c_str());
+				throw ServerConf::ConfFail(MISSING_END_LINE, tokens[0].c_str()); // return all line instead ? with spaces ?
 			popLast(tokens.back());
 			if (tokens.back().length() == 0)
 				tokens.pop_back();
 			it = serverFnct.find(*tokens.begin());
 			if (it == serverFnct.end())
 				throw ServerConf::ConfFail(NOT_VALID_KEY, tokens[0].c_str()); // Not a valid key send token and nb of error
+				// throw ServerConf::ConfFail(NOT_VALID_KEY, tokens[0].c_str()); // Not a valid key send token and nb of error
 			if (tokens.size() < 2)
 				throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0].c_str());
 			it->second(tokens, block);
@@ -145,22 +163,6 @@ void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseF
 	if (block.listen.second == 0)
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "no host/port"); // Not a valid key send token and nb of error
 	// check si config suffisante
-}
-
-void	ServerConf::findServer( std::ifstream &ifs ) {
-	while (ifs.good()) {
-		char						buf[256];
-		std::vector<std::string>	tokens;
-
-		ifs.getline(buf, 256, '\n');
-		tokens = splitStringtoTokens(buf, " \t");
-		if (tokens.empty())
-			continue;
-		else if (tokens.size() == 2 && tokens[0] == "server" && tokens[1] == "{")
-			break;
-		else
-			throw ServerConf::ConfFail(OUTSIDE_SERVER, tokens[0].c_str()); // something outside server block
-	}
 }
 
 static void	isValidIpAddress( std::string &ip ) {
@@ -209,6 +211,8 @@ static bool	isPort( std::string &port ) {
 }
 
 void	ServerConf::parseListen( std::vector<std::string> &tokens, struct s_server &block ) {
+	if (block.listen.first != "")
+		throw ServerConf::ConfFail(TOO_MANY_DIRECTIVE, tokens[0].c_str());
 	if (tokens.size() != 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0].c_str());
 	std::vector<std::string>	inet;
@@ -227,5 +231,63 @@ void	ServerConf::parseListen( std::vector<std::string> &tokens, struct s_server 
 	}
 	isValidIpAddress(inet[0]);
 	isValidPort(inet[1]);
-	block.listen = make_pair(inet[0], strtod(inet[1].c_str(), NULL));
+	block.listen = std::make_pair(inet[0], strtod(inet[1].c_str(), NULL));
+}
+
+void	ServerConf::parseServerName( std::vector<std::string> &tokens, struct s_server &block ) {
+	if (!block.server_name.empty()) // many server name entrance possible ?
+		throw ServerConf::ConfFail(TOO_MANY_DIRECTIVE, tokens[0].c_str());
+	for (std::vector<std::string>::iterator it = tokens.begin() + 1; it != tokens.end(); ++it) {
+		block.server_name.push_back(*it); // check format ?
+	}
+}
+
+void	ServerConf::parseErrorPage( std::vector<std::string> &tokens, struct s_server &block ) { // TODO: check format URI ?
+	if (tokens.size() < 3)
+		throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0].c_str());
+	// check format uri last element
+	for (std::vector<std::string>::iterator code = tokens.begin() + 1; *code != tokens.back(); ++code) {
+		double	n;
+
+		if ((*code).size() != 3)
+			throw ServerConf::ConfFail(WRONG_ERROR_HTTP_CODE, (*code).c_str());
+		n = std::strtod((*code).c_str(), NULL); // what to do if code already set to uri ?
+		if (n < 400 || n > 599)
+			throw ServerConf::ConfFail(WRONG_ERROR_HTTP_CODE, (*code).c_str()); // code out of range ?
+		block.error_page.insert(std::make_pair(n, tokens.back()));
+	}
+}
+
+void	ServerConf::parseClientMaxBodySize( std::vector<std::string> &tokens, struct s_server &block ) {
+	if (tokens.size() > 2)
+		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0].c_str()); // code out of range ?
+	double	n;
+	char	*pEnd = NULL;
+
+	n = std::strtod(tokens[1].c_str(), &pEnd); // what to do if already entered
+	if (n != 0 && tokens[1].at(0) == '0')
+		throw ServerConf::ConfFail(WRONG_BODY_SIZE_FORMAT, tokens[1].c_str());
+	else if (pEnd != NULL && std::strlen(pEnd) > 1)
+		throw ServerConf::ConfFail(WRONG_BODY_SIZE_FORMAT, tokens[1].c_str());
+	else if (pEnd != NULL && std::strlen(pEnd) == 1 && std::tolower(*pEnd) != 'm')
+		throw ServerConf::ConfFail(WRONG_BODY_SIZE_FORMAT, tokens[1].c_str());
+	if (pEnd != NULL && std::tolower(*pEnd) == 'm')
+		n *= 1000000;
+	block.client_max_body_size = n;
+}
+
+void	ServerConf::parseRedirect( std::vector<std::string> &tokens, struct s_server &block ) {
+	if (tokens.size() < 3)
+		throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0].c_str());
+	if (tokens.size() > 3)
+		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0].c_str());
+	// check format uri last element
+	double	n;
+
+	if (tokens[1].size() != 3)
+		throw ServerConf::ConfFail(WRONG_REDIR_HTTP_CODE, tokens[1].c_str());
+	n = std::strtod(tokens[1].c_str(), NULL); // what to do if code already set to uri ?
+	if (n < 300 || n > 399)
+		throw ServerConf::ConfFail(WRONG_REDIR_HTTP_CODE, tokens[1].c_str()); // code out of range ?
+	block.error_page.insert(std::make_pair(n, tokens[2]));
 }
