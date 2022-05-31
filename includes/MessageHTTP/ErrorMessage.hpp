@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/22 15:30:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/31 12:39:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,9 @@ class MessageErrorException : public std::exception
 {
 	private:
 		const int							m_current_error;
+		static std::map<int, std::string>	m_errors;
 
 	public:
-		static std::map<int, std::string> 	m_errors;
 
 	/* constructor ------------------------------------------------ */
 		MessageErrorException(int	error);

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/31 11:58:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/31 12:09:40 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -295,8 +295,6 @@ namespace WS
 
 	void	ResponseHTTP::m_formated_ErrorBody(std::stringstream & body)
 	{
-		// std::stringstream	body;
-
 		body << "<!DOCTYPE html>" << '\n';
 		body << "<html lang=\"en\">" << '\n';
 		body << "<head>" << '\n';
@@ -312,16 +310,6 @@ namespace WS
 
 		setContentLength(body.str().size());
 		setHeaderFields("Content-Type", "text/html");
-
-		// // return (body);
-		// m_body.write(body.str().data(), m_length);
-
-
-		// // std::cout << body.str();
-		// m_body.read(m_bufferToSend, body.str().size());
-		// std::cout << m_bufferToSend;
-
-		// m_body.init();
 	}
 
 /* -------------------------------------------------------------------------- */
