@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 10:28:19 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/31 11:58:40 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,18 +86,24 @@ namespace WS
 		if (m_bufferToSend != NULL)
 			delete [] m_bufferToSend;
 		m_bufferToSend = NULL;
+
 	}
 
 	size_t		ResponseHTTP::size() 
 	{
-		size_t len;
-	
-		m_body.seekg (0, m_body.end);
-		len = m_body.tellg();
-		m_body.seekg (0, m_body.beg);
-		return len;
+		return (m_length);
 	}
 
+	// size_t		ResponseHTTP::size_already_read() // si on utilise Content-range (envoi de plusieurs chunk) ?
+	// {
+
+	// }
+
+	/*
+		Prepare le buffer pour envoi a send()
+			envoi d'abord le header puis le body de la page
+			clear et envoi NULL une fois tout envoyé.
+	*/
 	const char *	ResponseHTTP::getNextChunk(size_t bufferSize)
 	{
 		if (m_bufferToSend == NULL)
@@ -121,32 +127,61 @@ namespace WS
 /*                     Build Response                                         */
 /* -------------------------------------------------------------------------- */
 
+	/*
+		Construit la reponse en fonction de la requete.
+		Si une erreur se produit throw MessageError et reconstruit la reponse en fonction de l'erreur rencontree.
+	*/
 	void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 	{
 		clear();
 		m_minimalHeaderFields();
 		m_method = request.getMethod();
 		m_parseMethod();
-		m_formatedResponse(request.getUrl());
+		m_formated_Response(request.getUrl());
 	}
 
+	/*
+		Construit la reponse en fonction de l'erreur rencontree.
+	*/
 	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase)
 	{
 		clear();
 		m_minimalHeaderFields();
 		m_requestLine.statusCode = StatusCode;
 		m_requestLine.reasonPhrase = ReasonPhrase;
-		m_formated_Error(StatusCode, ReasonPhrase);
+		m_formated_Error();
 	}
 
 	/*
 		Set the minimals Header Fields needed for an answer.
+			Date and Server
 	*/
 	void	ResponseHTTP::m_minimalHeaderFields()
 	{
-		 m_headerFields["Date"] = getStringTime();
-		 m_headerFields["Server"] = SERVER_NAME;
+		setHeaderFields("Date", getStringTime());
+		setHeaderFields("Server", SERVER_NAME);
 	}
+
+	/*
+		Set Content-Lenght headerFields and keep size in intern variable
+	*/
+	void	ResponseHTTP::setContentLength(size_t size)
+	{
+		std::stringstream StringSize;
+
+		StringSize << size;
+		m_length = size;
+		setHeaderFields("Content-Length", StringSize.str()); 
+	}
+
+	/*
+		Set a headerFields
+	*/
+	void	ResponseHTTP::setHeaderFields(const std::string & headerField, const std::string & value)
+	{
+		m_headerFields[headerField] = value;
+	}
+
 
 
 /* -------------------------------------------------------------------------- */
@@ -187,14 +222,19 @@ namespace WS
 /*                     Formated Response                                      */
 /* -------------------------------------------------------------------------- */
 	
-	
-	void	ResponseHTTP::m_formatedResponse(const std::string & url)
+	/*
+		Formated Response : 
+			try openFile from URL
+			formated Header : Status Line and Header Fields.
+	*/
+	void	ResponseHTTP::m_formated_Response(const std::string & url)
 	{
 		m_header.clear();
+		m_openFile_Body(url);
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
-		m_openFile_Body(url);
 	}
+
 
 	void	ResponseHTTP::m_formated_StatusLine()
 	{
@@ -206,9 +246,12 @@ namespace WS
 		for (std::map<std::string, std::string>::iterator it = m_headerFields.begin(); it != m_headerFields.end(); it++)
 			m_header << (*it).first << ": " << (*it).second << CRLF;
 		m_header << CRLF;
-		
 	}
 
+	/*
+		try opening file from URL.
+			throw MessageError
+	*/
 	void	ResponseHTTP::m_openFile_Body(const std::string & url)
 	{
 		std::cout << "OPENFILE " <<  url << std::endl; ///
@@ -222,26 +265,70 @@ namespace WS
 			throw	MessageErrorException(400); ////
 		}
 
-		
+
+		// save content length for ifstream
+		m_body.seekg (0, m_body.end);
+		setContentLength(m_body.tellg());
+		m_body.seekg (0, m_body.beg);
 	}
 
-	void	ResponseHTTP::m_formated_Error(int statusCode, const std::string & ReasonPhrase)
+/* -------------------------------------------------------------------------- */
+/*                     Formated Error Response                                */
+/* -------------------------------------------------------------------------- */
+
+	/*
+		formated Error Response:
+			create a simple body html for Error
+	*/
+	void	ResponseHTTP::m_formated_Error()
 	{
+		std::stringstream	body;
+
 		m_header.clear();
 		m_formated_StatusLine();
+		m_formated_ErrorBody(body);
 		m_formated_HeaderFields();
-		m_header << "<!DOCTYPE html>" << '\n';
-		m_header << "<html lang=\"en\">" << '\n';
-		m_header << "<head>" << '\n';
-		m_header << "<meta charset=\"UTF-8\">" << '\n';
-		m_header << "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" << '\n';
-		m_header << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << '\n';
-		m_header << "<title>" << statusCode << " " << ReasonPhrase << "</title>" << '\n';
-		m_header << "</head>" << '\n';
-		m_header << "<body>" << '\n';
-		m_header << "</body>" << '\n';
-		m_header << "</html>" << '\n';
-		m_header << CRLF << CRLF;
+
+		m_header << body.str();
 	}
+
+
+	void	ResponseHTTP::m_formated_ErrorBody(std::stringstream & body)
+	{
+		// std::stringstream	body;
+
+		body << "<!DOCTYPE html>" << '\n';
+		body << "<html lang=\"en\">" << '\n';
+		body << "<head>" << '\n';
+		body << "<meta charset=\"UTF-8\">" << '\n';
+		body << "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" << '\n';
+		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << '\n';
+		body << "<title>" << m_requestLine.statusCode << " " << m_requestLine.reasonPhrase << "</title>" << '\n';
+		body << "</head>" << '\n';
+		body << "<body>" << '\n';
+		body << "</body>" << '\n';
+		body << "</html>" << '\n';
+		body << CRLF << CRLF;
+
+		setContentLength(body.str().size());
+		setHeaderFields("Content-Type", "text/html");
+
+		// // return (body);
+		// m_body.write(body.str().data(), m_length);
+
+
+		// // std::cout << body.str();
+		// m_body.read(m_bufferToSend, body.str().size());
+		// std::cout << m_bufferToSend;
+
+		// m_body.init();
+	}
+
+/* -------------------------------------------------------------------------- */
+/*                     Find Location                                          */
+/* -------------------------------------------------------------------------- */
+
+
+
 
 } // end namespace

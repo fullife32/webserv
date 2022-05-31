@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/29 11:33:09 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 10:51:48 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	ParseRequest::m_prepareRequestBuilding()
 	m_formated_RequestLine(split[0]);
 	split.erase(split.begin());
 	m_formated_HeaderFields(split);
+	m_check_host_HeaderFields();
 }
 
 
@@ -158,5 +159,31 @@ void	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & head
 		m_headerFields[key] = value;
 	}
 }
+
+/*
+	Check host for symplify search for opening file
+		if not in headerfield : 
+		else
+			if already in target : do nothing
+			else cat host + target in requestLine
+*/
+void	ParseRequest::m_check_host_HeaderFields()
+{
+	// find Header Field "host"
+	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find("host");
+	
+	if (found_host == m_headerFields.end()) ///// FAUT IL OBLIGATOIREMENT LE HOST ? normalement oui avec http1.1
+		throw MessageErrorException(400);
+
+	// get header field value of "host"
+	std::string		host = (*found_host).second;
+	if (host.empty())
+		throw MessageErrorException(400);
+
+	// check if host is already in target
+	if ( m_requestLine.target.find(host) == std::string::npos)
+		m_requestLine.target = host + m_requestLine.target;
+}
+
 
 } // end namespace

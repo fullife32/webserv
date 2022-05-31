@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 08:26:50 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/30 10:40:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ class ParseRequest
 		void			m_separateHeaderBody(); // separe les datas dans m_header et m_body
 		void			m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
 		void			m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
-	
+		void			m_check_host_HeaderFields();
+
+
 }; // end class
 
 } // end namespace

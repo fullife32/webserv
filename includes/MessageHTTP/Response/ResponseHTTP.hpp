@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 10:21:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/31 11:59:16 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ class ResponseHTTP : public MessageMethods
 		StatusLine				m_requestLine;
 		int						m_method;
 		std::stringstream		m_header;
-		std::ifstream			m_body;
-		size_t					m_lenght;
+		std::fstream			m_body;
+		size_t					m_length;
 		char					*m_bufferToSend;
 
 	public:
@@ -52,6 +52,8 @@ class ResponseHTTP : public MessageMethods
 
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
+		void		setContentLength(size_t size);
+		void		setHeaderFields(const std::string & headerField, const std::string & value);
 	
 	
 	/* functions    ------------------------------------------------ */
@@ -64,16 +66,14 @@ class ResponseHTTP : public MessageMethods
 		const char *	getNextChunk(size_t BufferSize);
 
 
-
-		// void	send(size_t	begin, size_t size);
 	private:
 
 		void	m_minimalHeaderFields();
-		void	m_formatedResponse(const std::string & url);
+		void	m_formated_Response(const std::string & url);
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
-		void	m_formated_Error(int StatusCode, const std::string & ReasonPhrase);
-
+		void	m_formated_Error();
+		void	m_formated_ErrorBody(std::stringstream & body);
 
 		void	m_openFile_Body(const std::string & url);
 
