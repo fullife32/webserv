@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/28 18:22:40 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/31 16:04:18 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #include "utils.hpp"
 
 int	main(int ac, char **av) {
-	if (ac != 2) {
+	if (ac != 2) { // if only one arg go to default path
 		std::cerr << "Error: ./webserv path_to_configuration_file" << std::endl;
 		return 1;
 	}

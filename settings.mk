@@ -6,7 +6,7 @@
 #    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/28 17:55:55 by eassouli         ###   ########.fr        #
+#    Updated: 2022/05/31 18:18:29 by eassouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ NAME = webserv
 # The list of the all the sources, because $(wildcard *.c) is too dangerous
 SRCS =	main.cpp		\
 		ServerConf.cpp \
+		ParseConf.cpp \
 		Socket.cpp \
 		Server.cpp \
 		Multiplex.cpp \
