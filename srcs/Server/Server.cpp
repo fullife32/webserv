@@ -24,17 +24,6 @@ Server::~Server() {}
 
 /* --- Public functions --- */
 
-void	Server::showInfos() {
-	std::cout << std::endl << "---------- Infos Socket ----------" << std::endl;
-	std::cout << "sockfd: " << m_fd << std::endl;
-	std::cout << "conf.ip_addr: " << m_conf.getIp() << std::endl;
-	std::cout << "conf.listen: " << m_conf.getPort() << std::endl;
-	// std::cout << "clients:" << std::endl;
-	// for (std::vector<Client>::iterator it = m_clients.begin() ; it != m_clients.end(); ++it)
-		// std::cout << "fd: " << it->getFd() << std::endl;
-	// std::cout << "----------------------------------" << std::endl << std::endl;
-}
-
 int	Server::createSocket() {
 	int fd;
 
@@ -65,4 +54,8 @@ void	Server::bindSocket( int const fd, ServerConf const &conf ) {
 void	Server::listenSocket( int const fd ) {
 	if (listen(fd, LISTEN_LEN) == -1)
 		throw Server::SocketFail(LISTEN_FAIL);
+}
+
+ServerConf const	&Server::getConf() const {
+	return m_conf;
 }

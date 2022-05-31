@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/20 19:10:29 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/25 17:03:37 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,18 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
-#include "ParseConfig.hpp"
+#include "ServerConf.hpp"
 #include "Socket.hpp"
 
 #define LISTEN_LEN 1024
 #define EPOLL_TIMEOUT -1
+
+enum e_socket_error {
+	CREATE_FAIL,
+	OPTION_FAIL,
+	BIND_FAIL,
+	LISTEN_FAIL
+};
 
 class Multiplex;
 
@@ -40,40 +47,47 @@ class Multiplex;
 */
 class Server : public Socket {
 private:
+	
 	const ServerConf	&m_conf;
 
 public:
+	
 	Server( int const fd, ServerConf const &conf );
 	Server( Server const &other );
 	~Server();
 
 private:
+	
 	Server();
 	Server &operator=( Server const &other );
 
 public:
-	void	showInfos(); // debug
-
+	
 	static int	createSocket();
 	static void	setOpts( int const fd );
 	static void	bindSocket( int const fd, ServerConf const &conf ); // Careful 255.255.255.255
 	static void	listenSocket( int const fd );
 
+	ServerConf const	&getConf() const;
 	// Server	&findServer()
 
 	class SocketFail : public std::exception {
+	private:
+
 		int	m_flag;
-		// char *error_msg[] = {
-		// 	"Socket creation failed",
-		// 	"Socket options failed",
-		// 	"Socket bind failed",
-		// 	"Socket listen failed"
-		// };
 
 	public:
+
 		SocketFail( int flag ) : m_flag(flag) {}
+
 		virtual const char	*what() const throw() {
-			return "Socket failed";
+			char const *error_msg[] = {
+				"Socket creation failed",
+				"Socket options failed",
+				"Socket bind failed",
+				"Socket listen failed"
+			};
+			return error_msg[m_flag];
 		}
 	};
 };

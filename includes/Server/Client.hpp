@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 19:34:32 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 11:56:52 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,22 +25,33 @@
 */
 class Client : public Socket {
 private:
+
+	bool				m_toRemove; // ?
+	bool				m_toChangeEvent; // ?
 	sockaddr_storage 	m_cli;
 	socklen_t			m_size;
 	Server				&m_server;
 
 public:
+
 	Client( int fd, sockaddr_storage cli, socklen_t size, Server &server );
 	Client( Client const &other );
 	~Client();
 
 private:
+
 	Client();
 	Client &operator=( Client const &other );
 
 public:
 
 	static Client	acceptClient( int fdServer, Server &server );
+
+	bool			getToRemove() const;
+	bool			getToChangeEvent() const;
+
+	void			setToRemove();
+	void			setToChangeEvent();
 
 	class ClientFail : public std::exception {
 	public:

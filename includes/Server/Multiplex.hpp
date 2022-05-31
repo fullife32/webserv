@@ -6,21 +6,22 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 19:34:25 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 11:57:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MULTIPLEX_HPP
 # define MULTIPLEX_HPP
 
-#include "Server.hpp"
+#include <cstring>
 #include <iostream>
-#include <sys/epoll.h>
-#include <stdlib.h>
 #include <map>
+#include <stdlib.h>
+#include <sys/epoll.h>
 #include "Client.hpp"
+#include "Server.hpp"
 
-#define MAXEVENTS 64
+#define MAXEVENTS 8
 
 /*
 	This class create an epoll list and have functions to add a new socket to
@@ -29,26 +30,35 @@
 */
 class Multiplex {
 private:
+
 	int			m_fd;
 	int			m_nbReady;
 	epoll_event	*m_events;
 
 public:
+
 	Multiplex();
 	~Multiplex();
 
 private:
+
 	Multiplex( Multiplex const &other );
 	Multiplex &operator=( Multiplex const &other );
 	
 public:
+
 	void	createPlex();
-	void	addServersToPoll( std::map<int, Server> &servers ) const;
-	void	addClientToPoll( Client &client ) const;
 	int		waitPlex();
 	void	handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients );
+
+	void	addServersToPoll( std::map<int, Server> &servers ) const;
 	void	handleServer( int i, std::map<int, Server> &servers, std::map<int, Client> &clients );
+
+	void	addClientToPoll( Client &client ) const;
 	void	handleClients( int i, std::map<int, Client> &clients );
+	void	changeClientEvent( Client &client, int newEvent ) const;
+	void	deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator it );
+
 	void	freeEvents();
 	void	closePlex();
 
