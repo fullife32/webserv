@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    settings.mk                                        :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
+#    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/20 18:02:50 by eassouli         ###   ########.fr        #
+#    Updated: 2022/05/30 08:36:13 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,15 +14,19 @@
 NAME = webserv
 
 # The list of the all the sources, because $(wildcard *.c) is too dangerous
-SRCS =	main.cpp		\
+SRCS =	main_testRequest.cpp \
+		ParseRequest.cpp \
+		MessageStruct.cpp \
+		RequestHTTP.cpp \
+		ResponseHTTP.cpp \
+		Split.cpp \
+		ErrorMessage.cpp \
+		DateFormat.cpp \
+		Print.cpp \
 		Socket.cpp \
 		Server.cpp \
 		Multiplex.cpp \
 		Client.cpp \
-		IMessageHTTP.cpp \
-		ParseRequest.cpp \
-		RequestHTTP.cpp \
-		utils.cpp \
 
 
 # The file where make will look for all the sources (in addition to the root
