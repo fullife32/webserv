@@ -6,7 +6,7 @@
 #    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/31 18:18:29 by eassouli         ###   ########.fr        #
+#    Updated: 2022/06/01 19:28:37 by eassouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ NAME = webserv
 SRCS =	main.cpp		\
 		ServerConf.cpp \
 		ParseConf.cpp \
+		GetConf.cpp \
 		Socket.cpp \
 		Server.cpp \
 		Multiplex.cpp \
@@ -41,7 +42,7 @@ OBJS_DIR = .objs
 INC_DIR = includes
 
 # The C++ compiler
-CXX = g++
+CXX = clang++
 
 # The C++ compilation flags
 CXXFLAGS = -Wall -Wextra -std=c++98 -pedantic

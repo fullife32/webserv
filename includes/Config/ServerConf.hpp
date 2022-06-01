@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/31 18:37:23 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/01 19:27:47 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,19 @@ enum e_config_error {
 	WRONG_BODY_SIZE_FORMAT,
 	WRONG_REDIR_HTTP_CODE,
 	AUTOINDEX_FORMAT,
-	LOCATION_FORMAT
+	WRONG_METHOD,
+	WRONG_PATH_FORMAT,
+	WRONG_EXT_FORMAT
 };
 
 typedef	std::map<std::string,void(*)(std::vector<std::string>&,s_base&)> parseFunction_t;
 
-// when get one info check if exist or if default possible like cgi folder or autoindex
-
 class ServerConf {
-	s_server										m_main; // if server name here send this or search map or this by default
+	std::pair<std::vector<std::string>, s_server>	m_main; // TODO: if server name here send this or search map or this by default
 	std::map<std::vector<std::string>, s_server>	m_subs;
 
 public:
-	ServerConf( s_server serverConf );
+	ServerConf( std::vector<std::string> server_name, s_server serverConf );
 	ServerConf( ServerConf const &other );
 	~ServerConf();
 
@@ -71,10 +71,13 @@ private:
 	ServerConf &operator=( ServerConf const &other );
 
 public:
+	static void showConf(std::vector<ServerConf> &confs); // DEBUG
+
 	static void parseLocation( std::ifstream &ifs, struct s_location &location, parseFunction_t &locationFnct );
 	static void	initLocationConf( struct s_location &config );
 
-	static void	mandatoryCheck( const struct s_server &config);
+	static bool	insertInSub(s_server &newServer, std::vector<ServerConf> &confs);
+	static void	mandatoryCheck( struct s_server &config);
 	static bool	isEnding( std::string &lastToken );
 	static void	parseServer( std::ifstream	&ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct );
 	static void	initServerConf( struct s_server &config );
@@ -101,12 +104,12 @@ public:
 	static void	parseIndex( std::vector<std::string> &tokens, struct s_base &block );
 	static void	parseUploadPass( std::vector<std::string> &tokens, struct s_base &block );
 
-	// To remove
+	// TODO: To move
 	const char	*getIp() const {
-		return m_main.listen.first.c_str();
+		return m_main.second.listen.first.c_str();
 	}
-	int	getPort() const {
-		return m_main.listen.second;
+	size_t	getPort() const {
+		return m_main.second.listen.second;
 	}
 	//
 
@@ -122,7 +125,7 @@ public:
 				"The configuration file is empty",
 				"No configuration file found",
 				"Impossible to open the configuration file",
-				"Something else occured in conf", // make it better
+				"Impossible to read configuration file",
 				"Something found outside a server block",
 				"An invalid directive has been found",
 				"A mandatory directive is missing to setup a server",
@@ -136,7 +139,10 @@ public:
 				"Invalid error http code number (4xx - 5xx)",
 				"Invalid client max body size number",
 				"Invalid redirection http code number (3xx)",
-				"Invalid autoindex format (on | off)"
+				"Invalid autoindex format (on | off)",
+				"Invalid method (GET | POST | DELETE)",
+				"Invalid path format (/path)",
+				"Invalid extension format (.extension)"
 			};
 			static std::string	ret;
 			if (m_word != "")

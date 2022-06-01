@@ -6,14 +6,14 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/31 18:36:51 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/01 19:26:46 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ServerConf.hpp"
 
-ServerConf::ServerConf( s_server serverConf )
-: m_main(serverConf) { }
+ServerConf::ServerConf( std::vector<std::string> server_name, s_server serverConf )
+: m_main(std::make_pair(server_name, serverConf)) { }
 
 ServerConf::ServerConf( ServerConf const &other )
 : m_main(other.m_main), m_subs(other.m_subs) { }
@@ -28,6 +28,75 @@ void	printVector(const std::vector<T> & vec)
 
 	for (it = vec.begin(); it != vec.end(); it++)
 		std::cout << *it << std::endl;
+}
+
+static void	showConfLocation(s_location location) {
+	std::cout << "		Error_page:" << std::endl;
+	for (std::map<size_t, std::string>::iterator itErrors = location.error_page.begin(); itErrors != location.error_page.end(); ++itErrors)
+		std::cout << "			- " << (*itErrors).first << " > " << (*itErrors).second << std::endl;
+	std::cout << "		Client_max_body_size: " << location.client_max_body_size << std::endl;
+	std::cout << "		Redirect: " << location.redirect.first << " > " << location.redirect.second << std::endl;
+	std::cout << "		Root: " << location.root << std::endl;
+	std::cout << "		Autoindex: " << location.autoindex << std::endl;
+	std::cout << "		Index:";
+	for (std::vector<std::string>::iterator itIndex = location.index.begin(); itIndex != location.index.end(); ++itIndex)
+		std::cout << " " << (*itIndex);
+	std::cout << std::endl;
+	std::cout << "		Upload_pass: " << location.upload_pass << std::endl;
+	std::cout << "		Method:";
+	for (std::vector<std::string>::iterator itMethod = location.method.begin(); itMethod != location.method.end(); ++itMethod)
+		std::cout << " " << (*itMethod);
+	std::cout << std::endl;
+	std::cout << "		Cgi:" << std::endl;
+	for (std::map<std::string, std::string>::iterator itCgi = location.cgi.begin(); itCgi != location.cgi.end(); ++itCgi)
+		std::cout << "			- " << (*itCgi).first << " > " << (*itCgi).second << std::endl;
+}
+
+static void	showConfServer(s_server &server) {
+	std::cout << "	Error_page:" << std::endl;
+	for (std::map<size_t, std::string>::iterator itErrors = server.error_page.begin(); itErrors != server.error_page.end(); ++itErrors)
+		std::cout << "		- " << (*itErrors).first << " > " << (*itErrors).second << std::endl;
+	std::cout << "	Client_max_body_size: " << server.client_max_body_size << std::endl;
+	std::cout << "	Redirect: " << server.redirect.first << " > " << server.redirect.second << std::endl;
+	std::cout << "	Root: " << server.root << std::endl;
+	std::cout << "	Autoindex: " << server.autoindex << std::endl;
+	std::cout << "	Index:";
+	for (std::vector<std::string>::iterator itIndex = server.index.begin(); itIndex != server.index.end(); ++itIndex)
+		std::cout << " " << (*itIndex);
+	std::cout << std::endl;
+	std::cout << "	Upload_pass: " << server.upload_pass << std::endl;
+	for (std::map<std::string, struct s_location>::const_iterator it = server.location.begin(); it != server.location.end(); ++it) {
+		std::cout << std::endl << "	Location: " << (*it).first << std::endl;
+		showConfLocation((*it).second);
+	}
+}
+
+void ServerConf::showConf(std::vector<ServerConf> &confs) {
+	int	i = 0;
+	std::cout << std::endl << std::endl << std::endl << std::endl;
+	for (std::vector<ServerConf>::iterator it = confs.begin(); it != confs.end(); ++it) {
+		std::cout << "Server: " << i << std::endl << "Main" << std::endl;
+		std::cout << "	Listen: " << (*it).m_main.second.listen.first << " : " << (*it).m_main.second.listen.second << std::endl;
+		std::cout << "	Server_name:";
+		for (std::vector<std::string>::iterator itNames = (*it).m_main.first.begin(); itNames != (*it).m_main.first.end(); ++itNames)
+		std::cout << " " << (*itNames);
+		std::cout << std::endl;
+		showConfServer((*it).m_main.second);
+		std::cout << std::endl;
+		int j = 0;
+		for (std::map<std::vector<std::string>, s_server>::iterator itSubs = (*it).m_subs.begin(); itSubs != (*it).m_subs.end(); ++itSubs) {
+
+			std::cout << "Sub " << j << ":" << std::endl;
+			std::cout << "	Server_name:";
+			for (std::vector<std::string>::const_iterator itNamesSubs = (*itSubs).first.begin(); itNamesSubs != (*itSubs).first.end(); ++itNamesSubs)
+				std::cout << " " << (*itNamesSubs);
+			std::cout << std::endl;
+			showConfServer((*itSubs).second);
+			std::cout << std::endl;
+			j++;
+		}
+		i++;
+	}
 }
 //
 
@@ -53,12 +122,12 @@ void	ServerConf::setFunctionsCall( parseFunction_t &serverFnct, parseFunction_t 
 	locationFnct.insert(std::make_pair("upload_pass", parseUploadPass));
 }
 
-void	ServerConf::openFile( std::string filePath, std::ifstream &ifs ) { // doesn't work with directory
+void	ServerConf::openFile( std::string filePath, std::ifstream &ifs ) {
 	ifs.open(filePath.c_str(), std::ifstream::in);
 	if (!ifs.is_open())
 		throw ServerConf::ConfFail(NO_FILE, filePath);
 	else if (ifs.eof())
-		throw ServerConf::ConfFail(EMPTY_FILE, filePath); // Usefull ?
+		throw ServerConf::ConfFail(EMPTY_FILE, filePath);
 	else if (!ifs.good())
 		throw ServerConf::ConfFail(NOT_FILE, filePath);
 }
@@ -85,13 +154,12 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 				initServerConf(serverTmp);
 				parseServer(ifs, serverTmp, serverFnct, locationFnct);
 				mandatoryCheck(serverTmp);
-				// if () server ip and port equal another server set to his sub
-				confs.push_back(ServerConf(serverTmp));
+				if (insertInSub(serverTmp, confs) == false)
+					confs.push_back(ServerConf(serverTmp.server_name, serverTmp));
 			}
 		}
 		if (!ifs.eof())
-			throw ServerConf::ConfFail(ANOTHER_ERROR, "read error"); // something failed
-		// TODO: if (eof && no server ) print no server block here
+			throw ServerConf::ConfFail(ANOTHER_ERROR, "");
 	} catch (ServerConf::ConfFail const &except) {
 		if (ifs.is_open())
 			ifs.close();
@@ -102,21 +170,47 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 	if (ifs.is_open())
 		ifs.close();
 	if (confs.empty()) {
-		std::cerr << "Error: No server block found in file" << std::endl; // two errors printed (catch and this one :/)
+		std::cerr << "No server block found in file" << std::endl;
 		return 1;
 	}
-	std::cout << "CONFIG FINISHED !" << std::endl; //
+	showConf(confs);
 	return 0;
 }
 
-void	ServerConf::mandatoryCheck( const struct s_server &config ) {
+bool	ServerConf::insertInSub(s_server &newServer, std::vector<ServerConf> &confs) {
+	for (std::vector<ServerConf>::iterator it = confs.begin(); it != confs.end(); ++it) {
+		if ((*it).getIp() == newServer.listen.first
+		&& (*it).getPort() == newServer.listen.second) {
+			(*it).m_subs.insert(make_pair(newServer.server_name, newServer)); // TODO: make private
+			return true;
+		}
+	}
+	return false;
+}
+
+void	ServerConf::mandatoryCheck( struct s_server &config ) {
 	if (config.listen.first == "")
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "listen");
 	else if (config.server_name.empty() == true)
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "server_name");
-	if (config.root == "") // add check root in location /
+	std::map<std::string,s_location>::const_iterator it = config.location.find("/");
+	if (config.root == "" && (it == config.location.end() || (*it).second.root == ""))
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "root");
-	// move here default param if nothing
+	if (config.index.empty() == true) {
+		config.index.push_back("index");
+		config.index.push_back("index.html");
+	}
+	for (std::map<std::string,s_location>::iterator it = config.location.begin(); it != config.location.end(); ++it) {
+		if ((*it).second.index.empty()) {
+			(*it).second.index.push_back("index");
+			(*it).second.index.push_back("index.html");
+		}
+		if ((*it).second.method.empty()) {
+			(*it).second.method.push_back("GET");
+			(*it).second.method.push_back("POST");
+			(*it).second.method.push_back("DELETE");
+		}
+	}
 }
 
 bool	ServerConf::isEnding( std::string &lastToken ) {
@@ -124,14 +218,14 @@ bool	ServerConf::isEnding( std::string &lastToken ) {
 }
 
 void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct ) {
-	while (ifs.good()) { // secure every read loop
+	while (ifs.good()) { // TODO: secure every read loop
 		char						buf[BUFFER_SIZE];
 		std::vector<std::string>	tokens;
 
 		ifs.getline(buf, BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
-		printVector(tokens); //
-		if (tokens.empty() && !ifs.eof())
+		// printVector(tokens); //
+		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
 			continue;
 		else if (tokens.empty() && ifs.eof())
 			throw ServerConf::ConfFail(NO_CLOSING_BRACKET, "server");
@@ -140,6 +234,8 @@ void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseF
 		else if (tokens[0] == "location") {
 			if (tokens.size() != 3 || tokens[2] != "{")
 				throw ServerConf::ConfFail(NOT_VALID_KEY, "location");
+			else if (tokens[1][0] != '/')
+				throw ServerConf::ConfFail(WRONG_PATH_FORMAT, tokens[1]);
 			struct s_location locationTmp;
 
 			initLocationConf(locationTmp);
@@ -150,14 +246,13 @@ void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseF
 			parseFunction_t::iterator	it;
 
 			if (isEnding(tokens.back()) == false)
-				throw ServerConf::ConfFail(MISSING_END_LINE, tokens[0]); // return all line instead ? with spaces ?
+				throw ServerConf::ConfFail(MISSING_END_LINE, tokens[0]);
 			popLast(tokens.back());
 			if (tokens.back().length() == 0)
 				tokens.pop_back();
 			it = serverFnct.find(*tokens.begin());
 			if (it == serverFnct.end())
-				throw ServerConf::ConfFail(NOT_VALID_KEY, tokens[0]); // Not a valid key send token and nb of error
-				// throw ServerConf::ConfFail(NOT_VALID_KEY, tokens[0]); // Not a valid key send token and nb of error
+				throw ServerConf::ConfFail(NOT_VALID_KEY, tokens[0]);
 			if (tokens.size() < 2)
 				throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0]);
 			it->second(tokens, block);
@@ -168,10 +263,9 @@ void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseF
 }
 
 void	ServerConf::initServerConf( struct s_server &config ) {
-	config.listen = std::make_pair("", 0); // mandatory
-	// server name mandatory ?
+	config.listen = std::make_pair("", 0);
 	config.client_max_body_size = DEFAULT_BODY;
-	config.root = ""; // mandatory
+	config.root = "";
 	config.autoindex = false;
 	config.upload_pass = "";
 }
@@ -183,7 +277,7 @@ bool	ServerConf::findServer( std::ifstream &ifs ) {
 
 		ifs.getline(buf, BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
-		if (tokens.empty())
+		if (tokens.empty() || tokens[0] == "#")
 			continue;
 		else if (tokens.size() == 2 && tokens[0] == "server" && tokens[1] == "{")
 			return true;
@@ -200,8 +294,8 @@ void ServerConf::parseLocation( std::ifstream &ifs, struct s_location &location,
 
 		ifs.getline(buf, BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
-		printVector(tokens); //
-		if (tokens.empty() && !ifs.eof())
+		// printVector(tokens); //
+		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
 			continue;
 		else if (tokens.empty() && ifs.eof())
 			throw ServerConf::ConfFail(NO_CLOSING_BRACKET, "location");
@@ -211,13 +305,13 @@ void ServerConf::parseLocation( std::ifstream &ifs, struct s_location &location,
 			parseFunction_t::iterator	it;
 
 			if (isEnding(tokens.back()) == false)
-				throw ServerConf::ConfFail(MISSING_END_LINE, tokens[0]); // return all line instead ? with spaces ?
+				throw ServerConf::ConfFail(MISSING_END_LINE, tokens[0]);
 			popLast(tokens.back());
 			if (tokens.back().length() == 0)
 				tokens.pop_back();
 			it = locationFnct.find(*tokens.begin());
 			if (it == locationFnct.end())
-				throw ServerConf::ConfFail(NOT_VALID_KEY, tokens[0]); // Not a valid key send token and nb of error
+				throw ServerConf::ConfFail(NOT_VALID_KEY, tokens[0]);
 			if (tokens.size() < 2)
 				throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0]);
 			it->second(tokens, location);
@@ -225,11 +319,8 @@ void ServerConf::parseLocation( std::ifstream &ifs, struct s_location &location,
 	}
 }
 
-void	ServerConf::initLocationConf( struct s_location &config ) { // TODO: a revoir
+void	ServerConf::initLocationConf( struct s_location &config ) {
 	config.client_max_body_size = DEFAULT_BODY;
-	config.method.push_back("GET"); // move after check succeed
-	config.method.push_back("POST");
-	config.method.push_back("DELETE");
 	config.root = "";
 	config.autoindex = false;
 	config.upload_pass = "";

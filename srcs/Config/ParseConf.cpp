@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 18:18:34 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/31 18:20:03 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/01 19:25:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static void	isValidIpAddress( std::string &ip ) {
 	for (std::vector<std::string>::iterator it = addr.begin(); it != addr.end(); ++it) {
 		if ((*it).length() == 0 || ((*it).length() != 1 && (*it)[0] == '0'))
 			throw ServerConf::ConfFail(INVALID_IP, ip);
-		char	*pEnd;
+		char	*pEnd = NULL;
 		long	n;
 
 		n = strtol((*it).c_str(), &pEnd, 10);
@@ -34,11 +34,10 @@ static void	isValidIpAddress( std::string &ip ) {
 		else if (std::strlen(pEnd) != 0)
 			throw ServerConf::ConfFail(INVALID_PORT, ip);
 	}
-	// TODO: Fix .0.0.0:xxx
 }
 
 static void	isValidPort( std::string &port ) {
-	char	*pEnd;
+	char	*pEnd = NULL;
 	long	n;
 
 	if (port[0] == '0')
@@ -51,7 +50,7 @@ static void	isValidPort( std::string &port ) {
 }
 
 static bool	isPort( std::string &port ) {
-	char	*pEnd;
+	char	*pEnd = NULL;
 
 	strtol(port.c_str(), &pEnd, 10);
 	return (std::strlen(pEnd) == 0);
@@ -59,72 +58,86 @@ static bool	isPort( std::string &port ) {
 
 void	ServerConf::parseListen( std::vector<std::string> &tokens, struct s_base &block ) {
 	s_server	&blockServer = (s_server&)block;
+
 	if (blockServer.listen.first != "")
 		throw ServerConf::ConfFail(TOO_MANY_DIRECTIVE, tokens[0]);
 	if (tokens.size() != 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
-	std::vector<std::string>	inet;
+	std::pair<std::string, std::string>	inet;
 
-	inet.push_back(LOCALHOST); // TODO: or 0.0.0.0 ??
-	inet.push_back(DEFAULT_PORT);
+	inet.first = LOCALHOST;
+	inet.second = DEFAULT_PORT;
 	if (tokens[1].find(':') != std::string::npos) {
-		inet[0] = tokens[1].substr(0, tokens[1].find(':'));
-		inet[1] = tokens[1].substr(tokens[1].find(':') + 1);
+		inet.first = tokens[1].substr(0, tokens[1].find(':'));
+		inet.second = tokens[1].substr(tokens[1].find(':') + 1);
 	}
 	else if (isPort(tokens[1]) == true)
-		inet[1] = tokens[1];
-	else {
-		if (tokens[1] != "localhost")
-			inet[0] = tokens[1];
-	}
-	isValidIpAddress(inet[0]);
-	isValidPort(inet[1]);
-	blockServer.listen = std::make_pair(inet[0], strtod(inet[1].c_str(), NULL));
+		inet.second = tokens[1];
+	else
+		inet.first = tokens[1];
+	isValidIpAddress(inet.first);
+	isValidPort(inet.second);
+	if (inet.first == "localhost")
+		inet.first = LOCALHOST;
+	blockServer.listen = std::make_pair(inet.first, strtod(inet.second.c_str(), NULL));
 }
 
 void	ServerConf::parseServerName( std::vector<std::string> &tokens, struct s_base &block ) {
 	s_server	&blockServer = (s_server&)block;
-	if (!blockServer.server_name.empty()) // many server name entrance possible ?
+
+	if (!blockServer.server_name.empty())
 		throw ServerConf::ConfFail(TOO_MANY_DIRECTIVE, tokens[0]);
 	for (std::vector<std::string>::iterator it = tokens.begin() + 1; it != tokens.end(); ++it) {
-		blockServer.server_name.push_back(*it); // check format ?
+		blockServer.server_name.push_back(*it);
 	}
 }
 
 void	ServerConf::parseMethod( std::vector<std::string> &tokens, struct s_base &block ) {
 	s_location	&blockLoc = (s_location&)block;
-	
+
+	for (std::vector<std::string>::iterator methods = tokens.begin() + 1; methods != tokens.end(); ++methods) {
+		if (*methods != "GET" && *methods != "POST" && *methods != "DELETE")
+			throw ServerConf::ConfFail(WRONG_METHOD, (*methods).c_str());
+		blockLoc.method.push_back(*methods);
+	}
 }
 
 void	ServerConf::parseCgi( std::vector<std::string> &tokens, struct s_base &block ) {
 	s_location	&blockLoc = (s_location&)block;
 
-}
-
-
-void	ServerConf::parseErrorPage( std::vector<std::string> &tokens, struct s_base &block ) { // TODO: check format URI ?
 	if (tokens.size() < 3)
 		throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0]);
-	// check format uri last element
+	else if (tokens.size() > 3)
+		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
+	if (tokens[1][0] != '.' || (tokens[1][0] == '.' && tokens[1].size() == 1))
+		throw ServerConf::ConfFail(WRONG_EXT_FORMAT, tokens[1]);
+	blockLoc.cgi.insert(make_pair(tokens[1], tokens[2]));
+}
+
+void	ServerConf::parseErrorPage( std::vector<std::string> &tokens, struct s_base &block ) {
+	if (tokens.size() < 3)
+		throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0]);
+	else if (tokens.back()[0] != '/')
+		throw ServerConf::ConfFail(WRONG_PATH_FORMAT, tokens.back());
 	for (std::vector<std::string>::iterator code = tokens.begin() + 1; *code != tokens.back(); ++code) {
 		double	n;
 
 		if ((*code).size() != 3)
 			throw ServerConf::ConfFail(WRONG_ERROR_HTTP_CODE, (*code));
-		n = std::strtod((*code).c_str(), NULL); // what to do if code already set to uri ?
+		n = std::strtod((*code).c_str(), NULL);
 		if (n < 400 || n > 599)
-			throw ServerConf::ConfFail(WRONG_ERROR_HTTP_CODE, (*code)); // code out of range ?
+			throw ServerConf::ConfFail(WRONG_ERROR_HTTP_CODE, (*code));
 		block.error_page.insert(std::make_pair(n, tokens.back()));
 	}
 }
 
 void	ServerConf::parseClientMaxBodySize( std::vector<std::string> &tokens, struct s_base &block ) {
 	if (tokens.size() > 2)
-		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]); // code out of range ?
+		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
 	double	n;
 	char	*pEnd = NULL;
 
-	n = std::strtod(tokens[1].c_str(), &pEnd); // what to do if already entered
+	n = std::strtod(tokens[1].c_str(), &pEnd);
 	if (n != 0 && tokens[1].at(0) == '0')
 		throw ServerConf::ConfFail(WRONG_BODY_SIZE_FORMAT, tokens[1]);
 	else if (pEnd != NULL && std::strlen(pEnd) > 1)
@@ -136,20 +149,19 @@ void	ServerConf::parseClientMaxBodySize( std::vector<std::string> &tokens, struc
 	block.client_max_body_size = n;
 }
 
-void	ServerConf::parseRedirect( std::vector<std::string> &tokens, struct s_base &block ) {
+void	ServerConf::parseRedirect( std::vector<std::string> &tokens, struct s_base &block ) { // TODO: redirect if go to folder or server that redirect ?
 	if (tokens.size() < 3)
 		throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0]);
 	if (tokens.size() > 3)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
-	// check format uri last element
 	double	n;
 
 	if (tokens[1].size() != 3)
 		throw ServerConf::ConfFail(WRONG_REDIR_HTTP_CODE, tokens[1]);
-	n = std::strtod(tokens[1].c_str(), NULL); // what to do if code already set to uri ?
+	n = std::strtod(tokens[1].c_str(), NULL);
 	if (n < 300 || n > 399)
-		throw ServerConf::ConfFail(WRONG_REDIR_HTTP_CODE, tokens[1]); // code out of range ?
-	block.error_page.insert(std::make_pair(n, tokens[2]));
+		throw ServerConf::ConfFail(WRONG_REDIR_HTTP_CODE, tokens[1]);
+	block.redirect = std::make_pair(n, tokens[2]);
 }
 
 void	ServerConf::parseRoot( std::vector<std::string> &tokens, struct s_base &block ) {
@@ -172,7 +184,7 @@ void	ServerConf::parseAutoindex( std::vector<std::string> &tokens, struct s_base
 }
 
 void	ServerConf::parseIndex( std::vector<std::string> &tokens, struct s_base &block ) {
-	for (std::vector<std::string>::iterator it = tokens.begin(); it != tokens.end(); ++it) {
+	for (std::vector<std::string>::iterator it = tokens.begin() + 1; it != tokens.end(); ++it) {
 		block.index.push_back(*it);
 	}
 }
@@ -180,5 +192,7 @@ void	ServerConf::parseIndex( std::vector<std::string> &tokens, struct s_base &bl
 void	ServerConf::parseUploadPass( std::vector<std::string> &tokens, struct s_base &block ) {
 	if (tokens.size() > 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
+	else if (tokens[1][0] != '/')
+		throw ServerConf::ConfFail(WRONG_PATH_FORMAT, tokens[1]);
 	block.upload_pass = tokens[1];
 }
