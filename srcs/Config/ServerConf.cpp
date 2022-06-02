@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/01 19:26:46 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/02 18:44:00 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 				initServerConf(serverTmp);
 				parseServer(ifs, serverTmp, serverFnct, locationFnct);
 				mandatoryCheck(serverTmp);
-				if (insertInSub(serverTmp, confs) == false)
+				if (insertInSub(serverTmp, confs) == false) // TODO: accept no server_name if main
 					confs.push_back(ServerConf(serverTmp.server_name, serverTmp));
 			}
 		}
@@ -188,14 +188,31 @@ bool	ServerConf::insertInSub(s_server &newServer, std::vector<ServerConf> &confs
 	return false;
 }
 
+void	ServerConf::replaceConfig(s_server &server, const s_location &location) {
+	server.error_page.insert(location.error_page.begin(), location.error_page.end());
+	if (location.client_max_body_size != DEFAULT_BODY)
+		server.client_max_body_size = location.client_max_body_size;
+	if (location.redirect.first != 0)
+		server.redirect = location.redirect;
+	if (location.root != "")
+		server.root = location.root;
+	if (server.autoindex == false || location.autoindex != false)
+		server.autoindex = location.autoindex;
+	if (location.index.size() != 2 || (location.index.size() == 2 &&
+	(location.index[0] != "index" || location.index[1] != "index.html")))
+		server.index.insert(server.index.end(), location.index.begin(), location.index.end());
+	if (location.upload_pass != "")
+		server.upload_pass = location.upload_pass;
+}
+
 void	ServerConf::mandatoryCheck( struct s_server &config ) {
 	if (config.listen.first == "")
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "listen");
-	else if (config.server_name.empty() == true)
-		throw ServerConf::ConfFail(SERVER_MANDATORY, "server_name");
 	std::map<std::string,s_location>::const_iterator it = config.location.find("/");
 	if (config.root == "" && (it == config.location.end() || (*it).second.root == ""))
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "root");
+	if (it != config.location.end())
+		replaceConfig(config, (*it).second);
 	if (config.index.empty() == true) {
 		config.index.push_back("index");
 		config.index.push_back("index.html");
@@ -219,10 +236,10 @@ bool	ServerConf::isEnding( std::string &lastToken ) {
 
 void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct ) {
 	while (ifs.good()) { // TODO: secure every read loop
-		char						buf[BUFFER_SIZE];
+		char						buf[CONFIG_BUFFER_SIZE];
 		std::vector<std::string>	tokens;
 
-		ifs.getline(buf, BUFFER_SIZE, '\n');
+		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n'); // TODO: move in function check arg ??
 		tokens = splitStringtoTokens(buf, " \t");
 		// printVector(tokens); //
 		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
@@ -272,10 +289,10 @@ void	ServerConf::initServerConf( struct s_server &config ) {
 
 bool	ServerConf::findServer( std::ifstream &ifs ) {
 	while (ifs.good()) {
-		char						buf[BUFFER_SIZE];
+		char						buf[CONFIG_BUFFER_SIZE];
 		std::vector<std::string>	tokens;
 
-		ifs.getline(buf, BUFFER_SIZE, '\n');
+		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
 		if (tokens.empty() || tokens[0] == "#")
 			continue;
@@ -289,10 +306,10 @@ bool	ServerConf::findServer( std::ifstream &ifs ) {
 
 void ServerConf::parseLocation( std::ifstream &ifs, struct s_location &location, parseFunction_t &locationFnct ) {
 	while (ifs.good()) {
-		char						buf[BUFFER_SIZE];
+		char						buf[CONFIG_BUFFER_SIZE];
 		std::vector<std::string>	tokens;
 
-		ifs.getline(buf, BUFFER_SIZE, '\n');
+		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
 		// printVector(tokens); //
 		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
