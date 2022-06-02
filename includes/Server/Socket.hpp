@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:27 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/20 19:34:28 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 12:50:52 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,9 @@
 # define SOCKET_HPP
 
 #include <iostream>
-#include <sys/epoll.h>
 #include <cstdlib>
+#include <sys/epoll.h>
 #include <unistd.h>
-
-#define CREATE_FAIL 0
-#define OPTION_FAIL 1
-#define BIND_FAIL 2
-#define LISTEN_FAIL 3
 
 /*
 	This class serve as an assembly of all the basic infos of a socket,
@@ -36,6 +31,7 @@ public:
 	~Socket();
 
 private:
+	Socket();
 	Socket( Socket const &other );
 	Socket &operator=( Socket const &other );
 

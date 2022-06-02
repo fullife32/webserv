@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 18:56:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/17 14:48:25 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/05/28 23:07:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 #include <string>
 #include <map>
 #include <iostream>
+#include <cstring>
+
 
 /*
 ** Split version for std::string
@@ -38,6 +40,29 @@ std::vector<std::string> 		splitString(const std::string & str, const std::strin
 	return split;
 }
 
+std::vector<std::string>	splitStringtoTokens(char strToTokenize[], const std::string & delimitors) {
+	std::vector<std::string>	splitTokens;
+	char						*token;
+
+	token = strtok(strToTokenize, delimitors.c_str());
+	while (token != NULL) {
+		splitTokens.push_back(std::string(token));
+		token = strtok(NULL, delimitors.c_str());
+	}
+	return splitTokens;
+}
+
+void	popLast( std::string & str ) {
+	if (str.empty())
+		return;
+	str = str.substr(0, str.size() - 1);
+}
+
+void	popFirst( std::string & str ) {
+	if (str.empty())
+		return;
+	str = str.substr(1);
+}
 
 template <class T>
 void	printVector(const std::vector<T> & vec)

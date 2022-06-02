@@ -1,26 +1,14 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Socket.cpp                                         :+:      :+:    :+:   */
+/*   GetConf.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/19 17:09:58 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/24 12:47:50 by eassouli         ###   ########.fr       */
+/*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
+/*   Updated: 2022/06/01 17:33:09 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Socket.hpp"
+#include "ServerConf.hpp"
 
-Socket::Socket( int fd ): m_fd(fd) {}
-
-Socket::~Socket() {}
-
-void	Socket::closeSocket( void ) {
-	if (m_fd != -1)
-		close(m_fd);
-}
-
-int Socket::getFd( void ) const {
-	return m_fd;
-}

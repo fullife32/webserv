@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/05/22 14:57:08 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/06/02 11:40:51 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,9 @@ SRCS =	main_testRequest.cpp \
 		ErrorMessage.cpp \
 		DateFormat.cpp \
 		Print.cpp \
+		ServerConf.cpp \
+		ParseConf.cpp \
+		GetConf.cpp \
 		Socket.cpp \
 		Server.cpp \
 		Multiplex.cpp \

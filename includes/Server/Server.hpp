@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/20 19:10:29 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/24 12:51:51 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,16 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <vector>
-#include "ParseConfig.hpp"
+#include "ServerConf.hpp"
 #include "Socket.hpp"
 
 #define LISTEN_LEN 1024
 #define EPOLL_TIMEOUT -1
+
+#define CREATE_FAIL 0
+#define OPTION_FAIL 1
+#define BIND_FAIL 2
+#define LISTEN_FAIL 3
 
 class Multiplex;
 
@@ -40,25 +45,28 @@ class Multiplex;
 */
 class Server : public Socket {
 private:
+	
 	const ServerConf	&m_conf;
 
 public:
+	
 	Server( int const fd, ServerConf const &conf );
 	Server( Server const &other );
 	~Server();
 
 private:
+	
 	Server();
 	Server &operator=( Server const &other );
 
 public:
-	void	showInfos(); // debug
-
+	
 	static int	createSocket();
 	static void	setOpts( int const fd );
 	static void	bindSocket( int const fd, ServerConf const &conf ); // Careful 255.255.255.255
 	static void	listenSocket( int const fd );
 
+	ServerConf const	&getConf() const;
 	// Server	&findServer()
 
 	class SocketFail : public std::exception {
