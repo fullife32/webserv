@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 11:41:47 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/31 16:04:18 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,21 @@
 #include "ServerConf.hpp"
 #include "Multiplex.hpp"
 #include "Client.hpp"
+#include "utils.hpp"
 
 int	main(int ac, char **av) {
-	if (ac != 3) { // change to 2
-		std::cerr << "Error: ./webserv ip port" << std::endl;
+	if (ac != 2) { // if only one arg go to default path
+		std::cerr << "Error: ./webserv path_to_configuration_file" << std::endl;
 		return 1;
 	}
 
-	std::vector<ServerConf>		confs; // not finished
-	std::map<int, Server>		servers;
-	std::map<int, Client>		clients;
-	ServerConf					test(av[1], av[2]);
+	std::vector<ServerConf>	confs;
 
-	confs.push_back(test);
+	if (ServerConf::startParse(av[1], confs) == 1)
+		return 1;
+
+	std::map<int, Server>	servers;
+
 	for (std::vector<ServerConf>::iterator it = confs.begin(), ite = confs.end(); it != ite; ++it) {
 		int fd = -1;
 
@@ -63,6 +65,8 @@ int	main(int ac, char **av) {
 		std::cerr << except.what() << std::endl;
 		return 1;
 	}
+
+	std::map<int, Client>	clients;
 
 	for (;;) {
 		if (plex.waitPlex() == -1)

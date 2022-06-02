@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 11:57:37 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/05/26 20:25:57 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 #include <cstring>
 #include <iostream>
 #include <map>
-#include <stdlib.h>
+#include <cstdlib>
 #include <sys/epoll.h>
 #include "Client.hpp"
 #include "Server.hpp"
