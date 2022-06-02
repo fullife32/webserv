@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 11:56:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/02 16:38:34 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <sys/epoll.h>
 #include "Server.hpp"
+#include "MessageHTTP.hpp"
 
 /*
 	This class contains all informations needed to create and work with a
@@ -31,6 +32,8 @@ private:
 	sockaddr_storage 	m_cli;
 	socklen_t			m_size;
 	Server				&m_server;
+	WS::ResponseHTTP	m_response;
+	WS::RequestHTTP		m_request;
 
 public:
 
@@ -40,7 +43,12 @@ public:
 
 private:
 
-	Client();
+	Client();s
+	{
+		response.setServer(m_server);
+	}
+
+
 	Client &operator=( Client const &other );
 
 public:
@@ -52,6 +60,17 @@ public:
 
 	void			setToRemove();
 	void			setToChangeEvent();
+
+	void			recv(char *buffer)
+	{
+		request.append(buffer);
+	}
+
+	char *			send()
+	{
+		return response.getNextChunk(MESSAGE_BUFFER_SIZE)
+	}
+
 
 	class ClientFail : public std::exception {
 	public:

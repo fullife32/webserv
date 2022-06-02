@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 10:51:48 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:09:32 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,9 @@ void 		ParseRequest::m_formated_RequestLine(const std::string & startline)
 	m_requestLine.target = split[1];
 	if (split.size() == 3)
 		m_requestLine.version.formatedVersion(split[2]);
+
+	if (m_requestLine.target.size() > REQUEST_URL_MAX_SIZE)
+		throw MessageErrorException(414);
 }
 
 /*

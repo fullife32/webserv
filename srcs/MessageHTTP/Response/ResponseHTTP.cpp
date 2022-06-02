@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/31 12:09:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:24:49 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 	ResponseHTTP::ResponseHTTP()
-		: m_headerFields(),
+		: m_server(NULLL),
+		m_headerFields(),
 		m_requestLine(),
 		m_method(0),
 		m_header(),
@@ -59,6 +60,7 @@ namespace WS
 		if (this != &other)
 		{
 			clear();
+			m_server = other.m_server;
 			m_requestLine = other.m_requestLine;
 			m_headerFields = other.m_headerFields;
 			m_method = other.m_method;
@@ -94,11 +96,6 @@ namespace WS
 		return (m_length);
 	}
 
-	// size_t		ResponseHTTP::size_already_read() // si on utilise Content-range (envoi de plusieurs chunk) ?
-	// {
-
-	// }
-
 	/*
 		Prepare le buffer pour envoi a send()
 			envoi d'abord le header puis le body de la page
@@ -122,45 +119,10 @@ namespace WS
 		clear();
 		return (NULL);
 	}
-	
+
 /* -------------------------------------------------------------------------- */
-/*                     Build Response                                         */
+/*                     Get PSet                                               */
 /* -------------------------------------------------------------------------- */
-
-	/*
-		Construit la reponse en fonction de la requete.
-		Si une erreur se produit throw MessageError et reconstruit la reponse en fonction de l'erreur rencontree.
-	*/
-	void	ResponseHTTP::buildResponse(const RequestHTTP & request)
-	{
-		clear();
-		m_minimalHeaderFields();
-		m_method = request.getMethod();
-		m_parseMethod();
-		m_formated_Response(request.getUrl());
-	}
-
-	/*
-		Construit la reponse en fonction de l'erreur rencontree.
-	*/
-	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase)
-	{
-		clear();
-		m_minimalHeaderFields();
-		m_requestLine.statusCode = StatusCode;
-		m_requestLine.reasonPhrase = ReasonPhrase;
-		m_formated_Error();
-	}
-
-	/*
-		Set the minimals Header Fields needed for an answer.
-			Date and Server
-	*/
-	void	ResponseHTTP::m_minimalHeaderFields()
-	{
-		setHeaderFields("Date", getStringTime());
-		setHeaderFields("Server", SERVER_NAME);
-	}
 
 	/*
 		Set Content-Lenght headerFields and keep size in intern variable
@@ -183,6 +145,80 @@ namespace WS
 	}
 
 
+	const ResponseHTTP::headerFields_type &		ResponseHTTP::get_all_HeaderFields() const
+	{
+		return m_headerFields;
+	}
+
+
+	std::string		ResponseHTTP::get_value_HeaderFields(const std::string & key)
+	{
+		ResponseHTTP::headerFields_type::iterator found = m_headerFields.find(key);
+
+		if (found == m_headerFields.end())
+			return (std::string());
+		return (*found).second;
+
+
+		// std::map<std::string, std::string>	ResponseHeaderFields = Client.ResponseHTTP.get_all_HeaderFields();
+
+
+		// std::map<std::string, std::string>::const_iterator founder = ResponseHeaderFields.find("Content-Lenght");
+
+		// if (found != ResponseHeaderFields.end())
+		// {
+		// 	(*it).first /// == "Content-Lenght"
+		// 	(*it).second /// == "value of Content.lenght"
+		// }
+
+
+	}
+
+
+/* -------------------------------------------------------------------------- */
+/*                     Build Response                                         */
+/* -------------------------------------------------------------------------- */
+
+	/*
+		Construit la reponse en fonction de la requete.
+		Si une erreur se produit throw MessageError et reconstruit la reponse en fonction de l'erreur rencontree.
+	*/
+	void	ResponseHTTP::buildResponse(const RequestHTTP & request)
+	{
+		clear();
+		m_set_minimalHeaderFields();
+		m_method = request.getMethod();
+		m_parseMethod();
+		if request.hasQueryString()
+			m_formated_CGI_Response(request);
+		else		
+			m_formated_Response(request.getUrl());
+	}
+
+	/*
+		Construit la reponse en fonction de l'erreur rencontree.
+	*/
+	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase)
+	{
+		clear();
+		m_set_minimalHeaderFields();
+		m_requestLine.statusCode = StatusCode;
+		m_requestLine.reasonPhrase = ReasonPhrase;
+		m_formated_Error();
+	}
+
+	/*
+		Set the minimals Header Fields needed for an answer.
+			Date and Server
+	*/
+	void	ResponseHTTP::m_set_minimalHeaderFields()
+	{
+		setHeaderFields("Date", getStringTime());
+		setHeaderFields("Server", SERVER_NAME);
+	}
+
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                     Method Parser                                          */
@@ -200,16 +236,21 @@ namespace WS
 			case (POST) : m_method_POST(); break;
 			case (DELETE) : m_method_DELETE(); break;
 			default :
-				throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED);
+				throw MessageErrorException(STATUS_NOT_IMPLEMENTED); // TODO: 501 not implemented
 		}
 	}
 
 
-	void	ResponseHTTP::m_method_GET()
+	void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 	{
 		std::cout << "in methode GET" << std::endl;
+
+		if request.
+
+		// TODO: 411 ERROR
+		//
 	}
-	void	ResponseHTTP::m_method_POST()
+	void	ResponseHTTP::m_method_POST(const RequestHTTP & request)
 	{
 		std::cout << "in methode POST" << std::endl;
 	}
@@ -236,6 +277,11 @@ namespace WS
 	}
 
 
+	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
+	{
+
+	}
+
 	void	ResponseHTTP::m_formated_StatusLine()
 	{
 		m_header << START_LINE_HTTP_VERSION << SP << m_requestLine.statusCode << SP << m_requestLine.reasonPhrase << CRLF;
@@ -257,7 +303,7 @@ namespace WS
 		std::cout << "OPENFILE " <<  url << std::endl; ///
 		try
 		{
-			m_body.open(url.data(), std::ofstream::binary);
+			m_body.open(url.data(), std::fstream::binary);
 		}
 		catch(const std::exception& e)
 		{
@@ -283,10 +329,17 @@ namespace WS
 	void	ResponseHTTP::m_formated_Error()
 	{
 		std::stringstream	body;
+		std::string			ErrorUrl = m_server.getErrorPage();
 
 		m_header.clear();
 		m_formated_StatusLine();
-		m_formated_ErrorBody(body);
+		if ErrorUrl.empty()
+		{
+			m_formated_ErrorBody(body);
+
+		}
+		else
+			m_openFile_Body(ErrorUrl);
 		m_formated_HeaderFields();
 
 		m_header << body.str();
@@ -295,6 +348,8 @@ namespace WS
 
 	void	ResponseHTTP::m_formated_ErrorBody(std::stringstream & body)
 	{
+		if (ErrorUrl.empty())
+
 		body << "<!DOCTYPE html>" << '\n';
 		body << "<html lang=\"en\">" << '\n';
 		body << "<head>" << '\n';
@@ -318,5 +373,38 @@ namespace WS
 
 
 
+void		ResponseHTTP::m_foundLocation()
+{
+
+
+	if (server.allowedMethod(m_method) == false)
+		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED);
+	
+		server.isFound()
+}
+
+
+
+std::map< std::string, std::string> m_listContentType;
+
+
+void	initm_listContentType()
+{
+
+	m_listContentType[".aac"] = "audio/aac";
+	m_listContentType[".avi"] = "video/x-msvideo";
+	m_listContentType[".bmp"] = "image/bmp";
+	m_listContentType[".css"] = "text/css";
+	m_listContentType[".csv"] = "text/csv";
+	m_listContentType[".gif"] = "image/gif";
+	m_listContentType[".htm"] = "text/html";
+	m_listContentType[".html"] = "text/html";
+	m_listContentType[".ico"] = "image/x-icon";
+	m_listContentType[".jpeg"] = "image/jpeg";
+	m_listContentType[".jpg"] = "image/jpeg";
+	m_listContentType[".mpeg"] = "video/mpeg";
+	m_listContentType[".png"] = "image/png";
+	m_listContentType[".svg"] = "image/svg+xml";
+}
 
 } // end namespace

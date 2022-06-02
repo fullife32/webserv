@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 08:58:05 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:18:12 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ class RequestHTTP : public MessageMethods
 		void			buildRequest();
 		void			append(const std::string & buffer);
 
-
+		bool			hasQueryString() const ;
 		// debug
 		virtual void	debug_print_startline()
 		{

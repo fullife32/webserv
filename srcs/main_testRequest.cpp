@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 09:58:49 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 16:16:43 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 #include <fstream>
 #include <sstream>
 
-#define BUFFER_SIZE	2
 #define DEBUG_WEBSERV
 
 
@@ -84,6 +83,12 @@ void	test_stream()
 
 int main(int ac, char **argv)
 {
+
+	std::fstream	fst("srcs/");
+
+	std::cout << fst.good() << std::endl;
+
+
 
 
 	char	buf[BUFFER_SIZE];

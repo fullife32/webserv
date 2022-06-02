@@ -6,29 +6,23 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/29 11:24:35 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 08:41:35 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:10:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MESSAGEHTTP_HPP
 # define MESSAGEHTTP_HPP
 
+# include "WebservDefine.hpp"
+
+# define REQUEST_URL_MAX_SIZE	256
+# define MESSAGE_BUFFER_SIZE	256
 # define SERVER_NAME		"Webserv"
 # define START_LINE_HTTP_VERSION "HTTP/1.1"
 # define NEWLINE			"\n"
 # define EMPTY_LINE			"\n\n"
 # define CRLF				"\r\n"
 # define SP					" "
-
-# define METHOD_GET			"GET"
-# define METHOD_POST		"POST"	
-# define METHOD_DELETE		"DELETE"
-# define METHOD_HEAD		"HEAD"
-# define METHOD_PUT			"PUT"
-# define METHOD_CONNECT		"CONNECT"
-# define METHOD_OPTIONS		"OPTIONS"
-# define METHOD_TRACE		"TRACE"
-
 
 
 #include <iostream>	// debug

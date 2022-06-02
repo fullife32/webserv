@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 09:28:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 16:23:27 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,6 @@
 #include "MessageHTTP.hpp"
 
 namespace WS {
-
-
-	enum e_RequestMethod
-	{
-		GET = 0,
-		POST,
-		DELETE,
-		HEAD,
-		PUT,
-		CONNECT,
-		OPTIONS,
-		TRACE
-	};
 
 
 	/* HTTPversion  ------------------------------------------------ */
