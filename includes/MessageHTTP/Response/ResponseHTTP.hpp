@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 17:19:43 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:28:41 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ class ResponseHTTP : public MessageMethods
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
 
-		void	m_formated_CGI_Response();
+		void	m_formated_CGI_Response(const RequestHTTP & request);
 
 		void	m_formated_Error();
 		void	m_formated_ErrorBody(std::stringstream & body);

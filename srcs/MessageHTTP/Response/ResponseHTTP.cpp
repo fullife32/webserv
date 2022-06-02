@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 17:24:49 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/02 17:29:09 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 	ResponseHTTP::ResponseHTTP()
-		: m_server(NULLL),
+		: m_server(NULL),
 		m_headerFields(),
 		m_requestLine(),
 		m_method(0),
@@ -189,7 +189,7 @@ namespace WS
 		m_set_minimalHeaderFields();
 		m_method = request.getMethod();
 		m_parseMethod();
-		if request.hasQueryString()
+		if (request.hasQueryString() == true)
 			m_formated_CGI_Response(request);
 		else		
 			m_formated_Response(request.getUrl());
