@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_testRequest.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 09:58:49 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:43:44 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,67 +82,67 @@ void	test_stream()
 }
 
 
-int main(int ac, char **argv)
-{
+// int main(int ac, char **argv)
+// {
 
 
-	char	buf[BUFFER_SIZE];
-	int 	fd;
-	int		size_read;
-	WS::RequestHTTP		request;
-	WS::ResponseHTTP	response;
+// 	char	buf[BUFFER_SIZE];
+// 	int 	fd;
+// 	int		size_read;
+// 	WS::RequestHTTP		request;
+// 	WS::ResponseHTTP	response;
 	
 
-	// test_stream();
-	// return 0;
+// 	// test_stream();
+// 	// return 0;
 
-	if (ac != 2)
-		return (0);
+// 	if (ac != 2)
+// 		return (0);
 
-	// open file for test
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		std::cerr << std::strerror(errno) << std::endl;
-		return (-1);
-	}	
+// 	// open file for test
+// 	fd = open(argv[1], O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		std::cerr << std::strerror(errno) << std::endl;
+// 		return (-1);
+// 	}	
 	
 
-	// get buffer like recv
-	do
-	{
-		size_read = read(fd, &buf, BUFFER_SIZE - 1);
-		if (size_read != -1)
-			request.append(buf);
-		memset(buf, '\0', BUFFER_SIZE);
-	} while (size_read > 0);
+// 	// get buffer like recv
+// 	do
+// 	{
+// 		size_read = read(fd, &buf, BUFFER_SIZE - 1);
+// 		if (size_read != -1)
+// 			request.append(buf);
+// 		memset(buf, '\0', BUFFER_SIZE);
+// 	} while (size_read > 0);
 	
 
-	// end recv : client try to build request and response
-	try
-	{
-		request.buildRequest();
-		response.buildResponse(request);
-	}
-	catch (WS::MessageErrorException & e)
-	{
-		response.buildError(e.getError(), e.getMappedError());
-	}
+// 	// end recv : client try to build request and response
+// 	try
+// 	{
+// 		request.buildRequest();
+// 		response.buildResponse(request);
+// 	}
+// 	catch (WS::MessageErrorException & e)
+// 	{
+// 		response.buildError(e.getError(), e.getMappedError());
+// 	}
 
-	// std::cout << response.getNextChunk(response.size()) << std::endl;
+// 	// std::cout << response.getNextChunk(response.size()) << std::endl;
 
-	// write like send()
+// 	// write like send()
 
-	const char *buffer = response.getNextChunk(31);
-	while (buffer != NULL)
-	{
-		std::cout << buffer;
-		buffer = response.getNextChunk(31);
-	}
+// 	const char *buffer = response.getNextChunk(31);
+// 	while (buffer != NULL)
+// 	{
+// 		std::cout << buffer;
+// 		buffer = response.getNextChunk(31);
+// 	}
 	
-	// for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)
-	// {
-	// 	write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
-	// }
+// 	// for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)
+// 	// {
+// 	// 	write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
+// 	// }
 
-}
+// }

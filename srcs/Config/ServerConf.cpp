@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 19:36:28 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:44:49 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,7 +247,7 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 		std::cerr << "No server block found in file" << std::endl;
 		return 1;
 	}
-	showConf(confs);
+	// showConf(confs); // TODO DEBUG
 	return 0;
 }
 
