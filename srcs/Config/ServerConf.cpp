@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/02 18:44:00 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:36:28 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,18 +31,22 @@ void	printVector(const std::vector<T> & vec)
 }
 
 static void	showConfLocation(s_location location) {
-	std::cout << "		Error_page:" << std::endl;
-	for (std::map<size_t, std::string>::iterator itErrors = location.error_page.begin(); itErrors != location.error_page.end(); ++itErrors)
-		std::cout << "			- " << (*itErrors).first << " > " << (*itErrors).second << std::endl;
+	if (location.error_page.empty() == false) {
+		std::cout << "		Error_page:" << std::endl;
+		for (std::map<size_t, std::string>::iterator itErrors = location.error_page.begin(); itErrors != location.error_page.end(); ++itErrors)
+			std::cout << "			- " << (*itErrors).first << " > " << (*itErrors).second << std::endl;
+	}
 	std::cout << "		Client_max_body_size: " << location.client_max_body_size << std::endl;
-	std::cout << "		Redirect: " << location.redirect.first << " > " << location.redirect.second << std::endl;
+	if (location.redirect.first != 0)
+		std::cout << "		Redirect: " << location.redirect.first << " > " << location.redirect.second << std::endl;
 	std::cout << "		Root: " << location.root << std::endl;
 	std::cout << "		Autoindex: " << location.autoindex << std::endl;
 	std::cout << "		Index:";
 	for (std::vector<std::string>::iterator itIndex = location.index.begin(); itIndex != location.index.end(); ++itIndex)
 		std::cout << " " << (*itIndex);
 	std::cout << std::endl;
-	std::cout << "		Upload_pass: " << location.upload_pass << std::endl;
+	if (location.upload_pass != "")
+		std::cout << "		Upload_pass: " << location.upload_pass << std::endl;
 	std::cout << "		Method:";
 	for (std::vector<std::string>::iterator itMethod = location.method.begin(); itMethod != location.method.end(); ++itMethod)
 		std::cout << " " << (*itMethod);
@@ -53,18 +57,22 @@ static void	showConfLocation(s_location location) {
 }
 
 static void	showConfServer(s_server &server) {
-	std::cout << "	Error_page:" << std::endl;
-	for (std::map<size_t, std::string>::iterator itErrors = server.error_page.begin(); itErrors != server.error_page.end(); ++itErrors)
-		std::cout << "		- " << (*itErrors).first << " > " << (*itErrors).second << std::endl;
+	if (server.error_page.empty() == false) {
+		std::cout << "	Error_page:" << std::endl;
+		for (std::map<size_t, std::string>::iterator itErrors = server.error_page.begin(); itErrors != server.error_page.end(); ++itErrors)
+			std::cout << "		- " << (*itErrors).first << " > " << (*itErrors).second << std::endl;
+	}
 	std::cout << "	Client_max_body_size: " << server.client_max_body_size << std::endl;
-	std::cout << "	Redirect: " << server.redirect.first << " > " << server.redirect.second << std::endl;
+	if (server.redirect.first != 0)
+		std::cout << "	Redirect: " << server.redirect.first << " > " << server.redirect.second << std::endl;
 	std::cout << "	Root: " << server.root << std::endl;
 	std::cout << "	Autoindex: " << server.autoindex << std::endl;
 	std::cout << "	Index:";
 	for (std::vector<std::string>::iterator itIndex = server.index.begin(); itIndex != server.index.end(); ++itIndex)
 		std::cout << " " << (*itIndex);
 	std::cout << std::endl;
-	std::cout << "	Upload_pass: " << server.upload_pass << std::endl;
+	if (server.upload_pass != "")
+		std::cout << "	Upload_pass: " << server.upload_pass << std::endl;
 	for (std::map<std::string, struct s_location>::const_iterator it = server.location.begin(); it != server.location.end(); ++it) {
 		std::cout << std::endl << "	Location: " << (*it).first << std::endl;
 		showConfLocation((*it).second);
@@ -73,7 +81,6 @@ static void	showConfServer(s_server &server) {
 
 void ServerConf::showConf(std::vector<ServerConf> &confs) {
 	int	i = 0;
-	std::cout << std::endl << std::endl << std::endl << std::endl;
 	for (std::vector<ServerConf>::iterator it = confs.begin(); it != confs.end(); ++it) {
 		std::cout << "Server: " << i << std::endl << "Main" << std::endl;
 		std::cout << "	Listen: " << (*it).m_main.second.listen.first << " : " << (*it).m_main.second.listen.second << std::endl;
@@ -86,7 +93,7 @@ void ServerConf::showConf(std::vector<ServerConf> &confs) {
 		int j = 0;
 		for (std::map<std::vector<std::string>, s_server>::iterator itSubs = (*it).m_subs.begin(); itSubs != (*it).m_subs.end(); ++itSubs) {
 
-			std::cout << "Sub " << j << ":" << std::endl;
+			std::cout << "Sub: " << j << std::endl;
 			std::cout << "	Server_name:";
 			for (std::vector<std::string>::const_iterator itNamesSubs = (*itSubs).first.begin(); itNamesSubs != (*itSubs).first.end(); ++itNamesSubs)
 				std::cout << " " << (*itNamesSubs);
@@ -97,6 +104,73 @@ void ServerConf::showConf(std::vector<ServerConf> &confs) {
 		}
 		i++;
 	}
+}
+
+void	ServerConf::getConfTest(std::vector<ServerConf> &confs) {
+	std::string url;
+	std::cout << "Location \"\" ? " << confs.at(0).getLocationPath("", "") << std::endl;
+	std::cout << "Location / ? " << confs.at(0).getLocationPath("simple.com", "/") << std::endl;
+	std::cout << "Location other / ? " << confs.at(0).getLocationPath("other_simple.com", "/") << std::endl;
+	std::cout << "Location /exec ? " << confs.at(0).getLocationPath("", "/exec") << std::endl;
+	std::cout << "Location other /exec ? " << confs.at(0).getLocationPath("other_simple.com", "/exec") << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Get IP ? " << confs.at(0).getIp() << " Get Port ? " << confs.at(0).getPort() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Method allowed / ? " << confs.at(0).isMethodAllowed("", "/", 0) << std::endl;
+	std::cout << "Method allowed GET /test ? " << confs.at(0).isMethodAllowed("", "/test", 0) << std::endl;
+	std::cout << "Method allowed GET /get_only ? " << confs.at(0).isMethodAllowed("", "/get_only", 0) << std::endl;
+	std::cout << "Method allowed POST /get_only ? " << confs.at(0).isMethodAllowed("", "/get_only", 1) << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Cgi path /exec ? " << confs.at(0).getCgiPath("", "/exec", ".php") << std::endl;
+	std::cout << "Cgi path /test ? " << confs.at(0).getCgiPath("", "/test", ".php") << std::endl;
+	std::cout << "Cgi path / ? " << confs.at(0).getCgiPath("", "/", ".php") << std::endl;
+	std::cout << "Cgi path / 2 ? " << confs.at(0).getCgiPath("", "/", ".py") << std::endl;
+	std::cout << "Cgi path other /exec ? " << confs.at(0).getCgiPath("other_simple.com", "/exec", ".py") << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Error page 404 / ? " << confs.at(0).getErrorPage("", "/", 404) << std::endl;
+	std::cout << "Error page 404 /test ? " << confs.at(0).getErrorPage("", "/test", 404) << std::endl;
+	std::cout << "Error page 404 /get_only ? " << confs.at(0).getErrorPage("", "/get_only", 404) << std::endl;
+	std::cout << "Error page 404 /no_get ? " << confs.at(0).getErrorPage("", "/no_get", 404) << std::endl;
+	std::cout << "Error page 0 / ? " << confs.at(0).getErrorPage("", "/", 0) << std::endl;
+	std::cout << "Error page other / ? " << confs.at(0).getErrorPage("other_simple.com", "/", 403) << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Max body size / ? " << confs.at(0).getBodySize("", "/") << std::endl;
+	std::cout << "Max body size /test ? " << confs.at(0).getBodySize("", "/test") << std::endl;
+	std::cout << "Max body size /upload ? " << confs.at(0).getBodySize("", "/upload") << std::endl;
+	std::cout << "Max body size other /upload ? " << confs.at(0).getBodySize("other_simple.com", "/upload") << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Is redirecting / ? " << confs.at(0).isRedirecting("", "/", url) << " > " << url << std::endl;
+	std::cout << "Is redirecting /test ? " << confs.at(0).isRedirecting("", "/test", url) << " > " << url << std::endl;
+	std::cout << "Is redirecting /return_page ? " << confs.at(0).isRedirecting("", "/return_page", url) << " > " << url << std::endl;
+	std::cout << "Is redirecting other / ? " << confs.at(0).isRedirecting("other_simple.com", "/", url) << " > " << url << std::endl;
+	std::cout << "Is redirecting other /return_page ? " << confs.at(0).isRedirecting("other_simple.com", "/return_page", url) << " > " << url << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Is Autoindex / ? " << confs.at(0).isAutoindexOn("", "/") << std::endl;
+	std::cout << "Is Autoindex /test ? " << confs.at(0).isAutoindexOn("", "/test") << std::endl;
+	std::cout << "Is Autoindex /get_only ? " << confs.at(0).isAutoindexOn("", "/get_only") << std::endl;
+	std::cout << "Is Autoindex other / ? " << confs.at(0).isAutoindexOn("other_simple.com", "/") << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Index / ? " << confs.at(0).getIndexList("", "/").back() << std::endl;
+	std::cout << "Index /test ? " << confs.at(0).getIndexList("", "/test").back() << std::endl;
+	std::cout << "Index /exec ? " << confs.at(0).getIndexList("", "/exec").back() << std::endl;
+	std::cout << "Index /upload ? " << confs.at(0).getIndexList("", "/upload").back() << std::endl;
+	std::cout << "Index other / ? " << confs.at(0).getIndexList("other_simple.com", "/").back() << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Is Upload path / ? " << confs.at(0).isUploadPath("", "/") << std::endl;
+	std::cout << "Is Upload path /test ? " << confs.at(0).isUploadPath("", "/test") << std::endl;
+	std::cout << "Is Upload path /upload ? " << confs.at(0).isUploadPath("", "/upload") << std::endl;
+	std::cout << "Is Upload path other / ? " << confs.at(0).isUploadPath("other_simple.com", "/") << std::endl;
+	std::cout << "Is Upload path other /upload ? " << confs.at(0).isUploadPath("other_simple.com", "/upload") << std::endl;
+	std::cout << std::endl;
 }
 //
 
@@ -188,7 +262,7 @@ bool	ServerConf::insertInSub(s_server &newServer, std::vector<ServerConf> &confs
 	return false;
 }
 
-void	ServerConf::replaceConfig(s_server &server, const s_location &location) {
+void	ServerConf::replaceConfig(s_server &server, s_location &location) {
 	server.error_page.insert(location.error_page.begin(), location.error_page.end());
 	if (location.client_max_body_size != DEFAULT_BODY)
 		server.client_max_body_size = location.client_max_body_size;
@@ -208,20 +282,18 @@ void	ServerConf::replaceConfig(s_server &server, const s_location &location) {
 void	ServerConf::mandatoryCheck( struct s_server &config ) {
 	if (config.listen.first == "")
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "listen");
-	std::map<std::string,s_location>::const_iterator it = config.location.find("/");
-	if (config.root == "" && (it == config.location.end() || (*it).second.root == ""))
-		throw ServerConf::ConfFail(SERVER_MANDATORY, "root");
+	std::map<std::string,s_location>::iterator it = config.location.find("/");
 	if (it != config.location.end())
 		replaceConfig(config, (*it).second);
-	if (config.index.empty() == true) {
-		config.index.push_back("index");
+	if (config.root == "")
+		config.root = "html";
+	if (config.index.empty() == true)
 		config.index.push_back("index.html");
-	}
 	for (std::map<std::string,s_location>::iterator it = config.location.begin(); it != config.location.end(); ++it) {
-		if ((*it).second.index.empty()) {
-			(*it).second.index.push_back("index");
+		if ((*it).second.root == "")
+			(*it).second.root = config.root;
+		if ((*it).second.index.empty())
 			(*it).second.index.push_back("index.html");
-		}
 		if ((*it).second.method.empty()) {
 			(*it).second.method.push_back("GET");
 			(*it).second.method.push_back("POST");

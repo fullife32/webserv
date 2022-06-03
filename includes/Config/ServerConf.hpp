@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/02 19:32:46 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/03 18:57:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,14 @@ private:
 	ServerConf &operator=( ServerConf const &other );
 
 public:
-	static void showConf(std::vector<ServerConf> &confs); // DEBUG
+	static void showConf(std::vector<ServerConf> &confs); // TODO DEBUG
+	static void	getConfTest(std::vector<ServerConf> &confs); // TODO DEBUG
 
 	static void parseLocation( std::ifstream &ifs, struct s_location &location, parseFunction_t &locationFnct );
 	static void	initLocationConf( struct s_location &config );
 
 	static bool	insertInSub(s_server &newServer, std::vector<ServerConf> &confs);
-	static void	replaceConfig(s_server &server, const s_location &location); // TODO really usefull ???
+	static void	replaceConfig(s_server &server, s_location &location); // TODO really usefull ???
 	static void	mandatoryCheck( struct s_server &config);
 	static bool	isEnding( std::string &lastToken );
 	static void	parseServer( std::ifstream	&ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct );
@@ -108,15 +109,19 @@ public:
 	static void	parseUploadPass( std::vector<std::string> &tokens, struct s_base &block );
 
 	// Getter functions
-	const char	*getIp() const;
-	size_t		getPort() const;
 	const s_base	&getLocationByName( std::string serverName, std::string locationName, bool &yes ) const;
-	const s_server	&getServerByName( std::string name ) const;
-	bool			isMethodAllowed( std::string server_name, std::string location, int method ) const;
-	size_t  		isRedirecting(std::string server_name, std::string location, std::string &url) const;
+	const s_server	&getServerByName( std::string serverName ) const;
 	std::string  	getLocationPath(std::string server_name, std::string location) const;
+	const char		*getIp() const;
+	size_t			getPort() const;
+	bool			isMethodAllowed( std::string server_name, std::string location, int method ) const;
+	std::string 	getCgiPath(std::string server_name, std::string location, std::string extension) const;
 	std::string		getErrorPage(std::string server_name, std::string location, size_t errorNumber) const;
-
+	size_t			getBodySize(std::string server_name, std::string location) const;
+	size_t  		isRedirecting(std::string server_name, std::string location, std::string &url) const;
+	bool			isAutoindexOn(std::string server_name, std::string location) const;
+	std::vector<std::string>	getIndexList(std::string server_name, std::string location) const;
+	std::string		isUploadPath(std::string server_name, std::string location) const;
 
 
 	class ConfFail : public std::exception {
