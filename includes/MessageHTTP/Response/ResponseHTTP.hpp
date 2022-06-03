@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 14:39:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:19:13 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 	private:
 
 		// classCGI				m_cgi;
-		Server *				m_server;
 		StatusLine				m_requestLine;
+		Server *				m_server;
 		int						m_method;
 		std::stringstream		m_header;
 		std::fstream			m_body;
 		size_t					m_length;
-		char					m_buffer[MESSAGE_BUFFER_SIZE + 1];
+		char					*m_buffer;
 		//TODO error page check if exist else create it
 		//TODO test DELETE / 
 		
@@ -46,7 +46,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 	/* constructor ------------------------------------------------ */
 		ResponseHTTP();
-		ResponseHTTP(const RequestHTTP & request);
+		ResponseHTTP(Server * server, char *m_buffer);
 		ResponseHTTP(const ResponseHTTP & copy);
 
 	/* destructor  ------------------------------------------------ */

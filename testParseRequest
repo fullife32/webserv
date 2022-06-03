@@ -11,4 +11,4 @@ Sec-Fetch-Dest: document
 Sec-Fetch-Mode: navigate
 Sec-Fetch-Site: cross-site
 Sec-Fetch-User: ?1
-Cache-Control: max-age=0	
+Cache-Control: max-age=0

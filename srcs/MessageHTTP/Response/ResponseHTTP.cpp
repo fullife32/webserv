@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 14:57:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:19:31 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,28 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 	ResponseHTTP::ResponseHTTP()
-		: m_server(NULL),
-		m_requestLine(),
+		: m_requestLine(),
+		m_server(NULL),
 		m_method(0),
 		m_header(),
-		m_body(),m_length(0)
+		m_body(),
+		m_length(0),
+		m_buffer(NULL)
 	{
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
 	}
 
 
-	ResponseHTTP::ResponseHTTP(const RequestHTTP & request)
-		: m_requestLine()
+	ResponseHTTP::ResponseHTTP(Server * server, char * buffer)
+		: m_requestLine(),
+		m_server(server),
+		m_method(0),
+		m_header(),
+		m_body(),
+		m_length(0),
+		m_buffer(buffer)
 	{
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
-		buildResponse(request);
 	}
 
 
@@ -114,7 +121,7 @@ namespace WS
 	}
 
 /* -------------------------------------------------------------------------- */
-/*                     Get PSet                                               */
+/*                     Get Set                                               */
 /* -------------------------------------------------------------------------- */
 
 	/*

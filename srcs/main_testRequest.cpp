@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 14:55:08 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 17:31:59 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 
 #define DEBUG_WEBSERV
 
-
+#define BUFFER_SIZE	32
 
 
 void	test_stream()
@@ -84,6 +84,8 @@ void	test_stream()
 int main(int ac, char **argv)
 {
 
+
+	// testing multi open same file with an insert for one and read for the other
 	// std::fstream	fst("srcs");
 	// std::fstream	fst2("testParseRequest");
 	// std::fstream	fst3("testParseRequest");
@@ -97,17 +99,27 @@ int main(int ac, char **argv)
 	// std::cout << "good : " << fst3.good() << std::endl;
 
 
+	// fst3.seekg(0, fst3.end);
+
+	// char	buf[BUFFER_SIZE + 1];
+
+	// memset(buf, 0, BUFFER_SIZE);
+
+	// while (fst2.read(buf, BUFFER_SIZE))
+	// {
+	// 	fst3 << "coucou";
+	// 	std::cout << buf;
+	// 	memset(buf, 0, BUFFER_SIZE);
+	// }
+	// return (0);
 
 
-	char	buf[BUFFER_SIZE];
+	char	buf[BUFFER_SIZE + 1];
 	int 	fd;
 	int		size_read;
 	WS::RequestHTTP		request;
 	WS::ResponseHTTP	response;
 	
-
-	// test_stream();
-	// return 0;
 
 	if (ac != 2)
 		return (0);

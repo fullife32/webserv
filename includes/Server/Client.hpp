@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 14:46:10 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:01:25 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,10 @@ private:
 	sockaddr_storage 	m_cli;
 	socklen_t			m_size;
 	Server				&m_server;
-	WS::ResponseHTTP	m_response;
 	WS::RequestHTTP		m_request;
+	WS::ResponseHTTP	m_response;
+	char				m_buffer[MESSAGE_BUFFER_SIZE + 1];
+
 
 public:
 
@@ -54,8 +56,11 @@ public:
 	bool			getToRemove() const;
 	bool			getToChangeEvent() const;
 
-	void			setToRemove();
-	void			setToChangeEvent();
+	void			setToRemove(); // end send() or recev == 0;
+	void			setToChangeEvent(); // end recv()
+
+	void			recv();
+	void			send();
 
 
 	class ClientFail : public std::exception {
