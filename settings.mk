@@ -6,7 +6,7 @@
 #    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/01 19:28:37 by eassouli         ###   ########.fr        #
+#    Updated: 2022/06/03 19:41:34 by eassouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,14 +18,19 @@ SRCS =	main.cpp		\
 		ServerConf.cpp \
 		ParseConf.cpp \
 		GetConf.cpp \
+		main_testRequest.cpp \
+		ParseRequest.cpp \
+		MessageStruct.cpp \
+		RequestHTTP.cpp \
+		ResponseHTTP.cpp \
+		Split.cpp \
+		ErrorMessage.cpp \
+		DateFormat.cpp \
+		Print.cpp \
 		Socket.cpp \
 		Server.cpp \
 		Multiplex.cpp \
 		Client.cpp \
-		IMessageHTTP.cpp \
-		ParseRequest.cpp \
-		RequestHTTP.cpp \
-		utils.cpp \
 
 
 # The file where make will look for all the sources (in addition to the root

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 17:53:19 by rotrojan          #+#    #+#              #
-#    Updated: 2022/05/17 18:01:14 by rotrojan         ###   ########.fr        #
+#    Updated: 2022/05/22 15:31:39 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,9 @@ endif
 ESC_SEQ = \033[
 BLUE = $(ESC_SEQ)34m
 YELLOW = $(ESC_SEQ)33m
+SALMON = $(ESC_SEQ)38;5;163m
+VIOLIN = $(ESC_SEQ)38;5;203m 
+LITTLE_VIOLIN = $(ESC_SEQ)38;5;97m 
 GREEN = $(ESC_SEQ)32m
 BOLD = $(ESC_SEQ)1m
 MOVE_UP = $(ESC_SEQ)1A
@@ -56,7 +59,7 @@ ESC_STOP = $(ESC_SEQ)0m
 COMPILING_PRINTED = 0
 VARIABLES_PRINTED = 0
 VARIABLES_INTERLINE_PRINTED = 0
-PRINT_INTERLINE = printf '$(YELLOW)$(BOLD)================================================================================$(ESC_STOP)\n'
+PRINT_INTERLINE = printf '$(LITTLE_VIOLIN)$(BOLD)================================================================================$(ESC_STOP)\n'
 
 # Prevents the Makefile from recursively calling itself infinitely
 # See $(OBJS) rule
@@ -81,12 +84,12 @@ all: display_variables $(NAME)
 
 $(NAME): $(OBJS) | display_variables
 	@$(PRINT_INTERLINE)
-	@printf '$(YELLOW)$(BOLD)linking object files$(ESC_STOP)\n'
+	@printf '$(LITTLE_VIOLIN)$(BOLD)linking object files$(ESC_STOP)\n'
 	@$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS) $(LDLIBS)
 	@$(PRINT_INTERLINE)
-	@printf '$(YELLOW)$(BOLD)%s$(ESC_STOP)$(YELLOW) built$(ESC_STOP)\n' '$@'
+	@printf '$(LITTLE_VIOLIN)$(BOLD)%s$(ESC_STOP)$(LITTLE_VIOLIN) built$(ESC_STOP)\n' '$@'
 	@$(PRINT_INTERLINE)
-	@cat .ascii_art
+	@printf "$$(cat .ascii_art)"
 
 $(OBJS): $(OBJS_DIR)/%.o: %.cpp $(OBJS_DIR)/debug$(DEBUG) $(OBJS_DIR)/sanitize$(SANITIZE) | $(OBJS_DIR)
 # This retrieves the number of files to be compiled / updated
@@ -98,7 +101,7 @@ endif
 		if [ '$(VARIABLES_INTERLINE_PRINTED)' -eq '0' ]; then \
 			$(PRINT_INTERLINE); \
 		fi; \
-		printf '$(BOLD)$(YELLOW)compiling sources$(ESC_STOP)\n'; \
+		printf '$(BOLD)$(LITTLE_VIOLIN)compiling sources$(ESC_STOP)\n'; \
 	fi; $(eval COMPILING_PRINTED = 1)
 	@printf '%s\n' $@
 	@$(DRAW_PROGRESS_BAR)
@@ -125,11 +128,11 @@ $(OBJS_DIR)/sanitize$(SANITIZE): | $(OBJS_DIR)
 display_variables:
 	@if [ '$(VARIABLES_PRINTED)' -eq '0' ]; then \
 		$(PRINT_INTERLINE); \
-		printf '$(YELLOW)executable name: $(BOLD)%s$(ESC_STOP)\n' '$(NAME)'; \
-		printf '$(YELLOW)compiler:$(ESC_STOP) %s\n' '$(CXX)'; \
-		printf '$(YELLOW)compilation flags:$(ESC_STOP) %s\n' '$(CXXFLAGS)'; \
-		printf '$(YELLOW)libraries:$(ESC_STOP) %s\n' '$(LIBS)'; \
-		printf '$(YELLOW)linking flags:$(ESC_STOP) %s\n' '$(LDFLAGS)'; \
+		printf '$(LITTLE_VIOLIN)executable name: $(BOLD)%s$(ESC_STOP)\n' '$(NAME)'; \
+		printf '$(LITTLE_VIOLIN)compiler:$(ESC_STOP) %s\n' '$(CXX)'; \
+		printf '$(LITTLE_VIOLIN)compilation flags:$(ESC_STOP) %s\n' '$(CXXFLAGS)'; \
+		printf '$(LITTLE_VIOLIN)libraries:$(ESC_STOP) %s\n' '$(LIBS)'; \
+		printf '$(LITTLE_VIOLIN)linking flags:$(ESC_STOP) %s\n' '$(LDFLAGS)'; \
 		$(PRINT_INTERLINE); \
 	fi; $(eval VARIABLES_PRINTED = 1) $(eval VARIABLES_INTERLINE_PRINTED = 1)
 

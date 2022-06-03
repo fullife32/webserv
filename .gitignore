@@ -1,5 +1,9 @@
 docker/
 start.sh
+.vscode/s
+test_virg
+.objs/
 *.o
 *.d
 webserv
+.objs

@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/05/24 12:51:51 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:40:52 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,12 @@
 #define LISTEN_LEN 1024
 #define EPOLL_TIMEOUT -1
 
-#define CREATE_FAIL 0
-#define OPTION_FAIL 1
-#define BIND_FAIL 2
-#define LISTEN_FAIL 3
+enum e_socket_error {
+	CREATE_FAIL,
+	OPTION_FAIL,
+	BIND_FAIL,
+	LISTEN_FAIL
+};
 
 class Multiplex;
 
@@ -70,18 +72,22 @@ public:
 	// Server	&findServer()
 
 	class SocketFail : public std::exception {
+	private:
+
 		int	m_flag;
-		// char *error_msg[] = {
-		// 	"Socket creation failed",
-		// 	"Socket options failed",
-		// 	"Socket bind failed",
-		// 	"Socket listen failed"
-		// };
 
 	public:
+
 		SocketFail( int flag ) : m_flag(flag) {}
+
 		virtual const char	*what() const throw() {
-			return "Socket failed";
+			char const *error_msg[] = {
+				"Socket creation failed",
+				"Socket options failed",
+				"Socket bind failed",
+				"Socket listen failed"
+			};
+			return error_msg[m_flag];
 		}
 	};
 };
