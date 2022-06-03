@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 16:23:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:37:14 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ namespace WS {
 	struct RequestLine
 	{
 		HTTPversion		version;
+		// URL				target;
 		std::string		target; // URL
 		std::string		method; // ACTIONS : GET, POST, DELETE
 
@@ -71,6 +72,40 @@ namespace WS {
 	};
 
 
+
+	/* Header Fields  ------------------------------------------------ */
+
+	class HeaderFields
+	{
+		typedef std::map<std::string, std::string> 	value_type;
+
+		protected:
+			value_type	m_headerFields;
+
+		public:
+			void			clear();
+			void			set_headerFields(const std::string & headerField, const std::string & value);
+			void			set_headerFields(const value_type & headerFlieds);
+
+			std::string		get_value_headerFields(const std::string & key) const ;
+			value_type		get_headerFields() const ;
+
+	};
+	
+	/* URL						  ---------------------------------- */
+	
+	struct URL
+	{
+		std::string	serverName;	// example.com
+		std::string	path;		//				/location/here
+		std::string filename;	//								/file.html
+		std::string	query;		//											?queryString=value
+		std::string fragment;	//																#fragment
+
+		std::string		formatedPath() const ;
+	};
+
+
 	/* Message Methods static map  --------------------------------- */
 
 	class MessageMethods
@@ -78,7 +113,7 @@ namespace WS {
 		protected:
 			static	std::map <std::string, int>		m_methods;
 	};
-
+	
 std::map <std::string, int>		init_map_method();
 
 

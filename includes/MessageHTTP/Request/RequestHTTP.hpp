@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 17:18:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 13:39:38 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,19 @@
 namespace WS {
 
 
-class RequestHTTP : public MessageMethods
+class RequestHTTP : public MessageMethods, public HeaderFields
 {
 	/*
-		protected variables herited from AMessageHTTP: list of all Methods
+		protected variables herited from MessageMethods: list of all Methods
+			static	std::map <std::string, int>		m_methods;
 
-		static	std::map <std::string, int>		m_methods;
+		protected variables herited from HeaderFields: list of all Methods
+			std::map<std::string, std::string>	m_headerFields;	
 	*/
-
 	private:
 		RequestLine							m_startLine;
-		std::map <std::string, std::string>	m_headerFields;
 		ParseRequest						m_parseRequest;
 		std::string							m_body;
-
 
 	public:
 
@@ -48,16 +47,18 @@ class RequestHTTP : public MessageMethods
 	/* get / set    ------------------------------------------------ */
 		int				getMethod() const;
 		std::string		getUrl() const;
-
 		void			setRequestLine(const RequestLine & requestLine);
 		void			setBody(const std::string & body);
-		void			setHeaderFields(const std::map<std::string, std::string> & headerFields);
 
 	/* functions    ------------------------------------------------ */
 		void			buildRequest();
 		void			append(const std::string & buffer);
 
 		bool			hasQueryString() const ;
+		bool			hasBody() const ;
+
+
+		
 		// debug
 		virtual void	debug_print_startline()
 		{

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 10:23:45 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:37:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,41 @@ namespace WS
 		statusCode = 0;
 		reasonPhrase.clear();
 	}
+
+	/* Header Fields  ------------------------------------------------ */
+
+	void		HeaderFields::clear()
+	{
+		m_headerFields.clear();
+	}
+
+
+	void		HeaderFields::set_headerFields(const HeaderFields::value_type & headerFields)
+	{
+		m_headerFields = headerFields;
+	}
+
+	void	HeaderFields::set_headerFields(const std::string & headerField, const std::string & value)
+	{
+		m_headerFields[headerField] = value;
+	}
+
+
+	HeaderFields::value_type		HeaderFields::get_headerFields() const
+	{
+		return m_headerFields;
+	}
+
+
+	std::string		HeaderFields::get_value_headerFields(const std::string & key) const
+	{
+		HeaderFields::value_type::const_iterator found = m_headerFields.find(key);
+
+		if (found == m_headerFields.end())
+			return (std::string());
+		return (*found).second;
+	}
+
 
 
 	/* Message Methods static map  --------------------------------- */

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 17:18:21 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 12:07:05 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ namespace WS
 
 	void	RequestHTTP::buildRequest()
 	{
-		m_startLine = m_parseRequest.getRequestLine(); // TODO: ERROR 414 URL TOO LONG
+		m_startLine = m_parseRequest.getRequestLine();
 		m_headerFields = m_parseRequest.getHeaderFields();
 		m_body = m_parseRequest.getBody();
 	}
@@ -59,12 +59,6 @@ namespace WS
 	{
 		m_body = body;
 	}
-
-	void	RequestHTTP::setHeaderFields(const std::map<std::string, std::string> & headerFields)
-	{
-		m_headerFields = headerFields;
-	}
-
 
 /* -------------------------------------------------------------------------- */
 // get
@@ -88,11 +82,20 @@ namespace WS
 	}
 
 
+/* -------------------------------------------------------------------------- */
+
 	bool	RequestHTTP::hasQueryString() const
 	{
 		if (m_startLine.target.find("?") != std::string::npos)
 			return true;
 		return false;
+	}
+
+	bool	RequestHTTP::hasBody() const 
+	{
+		if (m_body.empty())
+			return false;
+		return true;
 	}
 	
 } // end namespace

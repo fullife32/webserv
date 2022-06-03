@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 16:16:43 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:55:08 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,17 @@ void	test_stream()
 int main(int ac, char **argv)
 {
 
-	std::fstream	fst("srcs/");
+	// std::fstream	fst("srcs");
+	// std::fstream	fst2("testParseRequest");
+	// std::fstream	fst3("testParseRequest");
 
-	std::cout << fst.good() << std::endl;
+	// std::cout << "is open " << fst.is_open() << std::endl;
+	// std::cout << "is open " << fst2.is_open() << std::endl;
+	// std::cout << "is open " << fst3.is_open() << std::endl;
+
+	// std::cout << "good : " << fst.good() << std::endl;
+	// std::cout << "good : " << fst2.good() << std::endl;
+	// std::cout << "good : " << fst3.good() << std::endl;
 
 
 
@@ -138,11 +146,11 @@ int main(int ac, char **argv)
 
 	// write like send()
 
-	const char *buffer = response.getNextChunk(31);
+	const char *buffer = response.getNextChunk(MESSAGE_BUFFER_SIZE);
 	while (buffer != NULL)
 	{
 		std::cout << buffer;
-		buffer = response.getNextChunk(31);
+		buffer = response.getNextChunk(MESSAGE_BUFFER_SIZE);
 	}
 	
 	// for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 17:28:41 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:39:54 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,28 +18,26 @@
 
 namespace WS {
 
-class ResponseHTTP : public MessageMethods
+class ResponseHTTP : public MessageMethods, public HeaderFields
 {
 	/*
-		protected variables herited from MessageMethods:
+		protected variables herited from MessageMethods: list of all Methods
+			static	std::map <std::string, int>		m_methods;
 
-		static	std::map <std::string, int>		m_methods;
+		protected variables herited from HeaderFields: list of all Methods
+			std::map<std::string, std::string>	m_headerFields;	
 	*/
 
-	typedef	std::map<std::string, std::string>	headerFields_type;
-	
 	private:
 
 		// classCGI				m_cgi;
 		Server *				m_server;
-		headerFields_type		m_headerFields;
 		StatusLine				m_requestLine;
 		int						m_method;
 		std::stringstream		m_header;
 		std::fstream			m_body;
 		size_t					m_length;
-		char					*m_bufferToSend;
-		char					m_buffer[MESSAGE_BUFFER_SIZE];
+		char					m_buffer[MESSAGE_BUFFER_SIZE + 1];
 		//TODO error page check if exist else create it
 		//TODO test DELETE / 
 		
@@ -60,13 +58,10 @@ class ResponseHTTP : public MessageMethods
 
 
 	/* get		    ------------------------------------------------ */
-		const headerFields_type	& get_all_HeaderFields() const;
-		std::string				get_value_HeaderFields(const std::string & key);
 
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
 		void		setContentLength(size_t size);
-		void		setHeaderFields(const std::string & headerField, const std::string & value);
 		void		setServer(Server & server);
 	
 	
@@ -74,7 +69,6 @@ class ResponseHTTP : public MessageMethods
 
 		void		clear();
 		size_t		size() ;
-
 
 
 		void			buildError(int StatusCode, const std::string &  ReasonPhrase);
@@ -87,20 +81,17 @@ class ResponseHTTP : public MessageMethods
 		// set
 		void	m_set_minimalHeaderFields();
 
-		// formated Response and Error for send()
+	/* formated Response   ------------------------------------------ */
 		void	m_formated_Response(const std::string & url);
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
-
 		void	m_formated_CGI_Response(const RequestHTTP & request);
-
 		void	m_formated_Error();
 		void	m_formated_ErrorBody(std::stringstream & body);
-
 		void	m_openFile_Body(const std::string & url);
 
-		// request method
-		void	m_parseMethod();
+	/* Methods    ------------------------------------------------ */
+		void	m_parseMethod(const RequestHTTP & request);
 		void	m_method_GET(const RequestHTTP & request);
 		void	m_method_POST(const RequestHTTP & request);
 		void	m_method_DELETE();
@@ -116,7 +107,6 @@ class ResponseHTTP : public MessageMethods
 
 			std::cout << "HTTPversion = " << v->name << " " << v->major_version << "." << v->minor_version << std::endl;
 		}
-
 
 
 }; // end class RequestHTTP

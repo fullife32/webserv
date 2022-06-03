@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/02 16:38:34 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/03 14:46:10 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,7 @@ public:
 
 private:
 
-	Client();s
-	{
-		response.setServer(m_server);
-	}
-
+	Client();
 
 	Client &operator=( Client const &other );
 
@@ -60,16 +56,6 @@ public:
 
 	void			setToRemove();
 	void			setToChangeEvent();
-
-	void			recv(char *buffer)
-	{
-		request.append(buffer);
-	}
-
-	char *			send()
-	{
-		return response.getNextChunk(MESSAGE_BUFFER_SIZE)
-	}
 
 
 	class ClientFail : public std::exception {
