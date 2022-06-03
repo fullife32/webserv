@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:32:14 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/01 19:18:42 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/02 15:29:15 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ struct s_base {
 };
 
 struct s_location : public s_base {
-	std::vector<std::string>			method;
-	std::map<std::string, std::string>	cgi;
+	std::vector<std::string>				method;
+	std::map<std::string, std::string>		cgi;
 };
 
 struct s_server : public s_base {

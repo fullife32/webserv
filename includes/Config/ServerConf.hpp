@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/01 19:27:47 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/02 19:32:46 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,20 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+#include <algorithm>
 #include <map>
 #include <fcntl.h>
 #include <fstream>
 #include "ConfStructs.hpp"
 #include "utils.hpp"
 
-# define BUFFER_SIZE 256
+# define CONFIG_BUFFER_SIZE 256
 # define MAX_PORT 65535
 # define LOCALHOST "127.0.0.1"
 # define IP_MASK "255.255.255.255"
 # define DEFAULT_PORT "8000"
 # define DEFAULT_BODY 1000000
+# define DEFAULT_CONFIG_PATH "test_config/simple.conf" // TODO actualise path for main
 
 enum e_config_error {
 	EMPTY_FILE,
@@ -77,6 +79,7 @@ public:
 	static void	initLocationConf( struct s_location &config );
 
 	static bool	insertInSub(s_server &newServer, std::vector<ServerConf> &confs);
+	static void	replaceConfig(s_server &server, const s_location &location); // TODO really usefull ???
 	static void	mandatoryCheck( struct s_server &config);
 	static bool	isEnding( std::string &lastToken );
 	static void	parseServer( std::ifstream	&ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct );
@@ -104,14 +107,17 @@ public:
 	static void	parseIndex( std::vector<std::string> &tokens, struct s_base &block );
 	static void	parseUploadPass( std::vector<std::string> &tokens, struct s_base &block );
 
-	// TODO: To move
-	const char	*getIp() const {
-		return m_main.second.listen.first.c_str();
-	}
-	size_t	getPort() const {
-		return m_main.second.listen.second;
-	}
-	//
+	// Getter functions
+	const char	*getIp() const;
+	size_t		getPort() const;
+	const s_base	&getLocationByName( std::string serverName, std::string locationName, bool &yes ) const;
+	const s_server	&getServerByName( std::string name ) const;
+	bool			isMethodAllowed( std::string server_name, std::string location, int method ) const;
+	size_t  		isRedirecting(std::string server_name, std::string location, std::string &url) const;
+	std::string  	getLocationPath(std::string server_name, std::string location) const;
+	std::string		getErrorPage(std::string server_name, std::string location, size_t errorNumber) const;
+
+
 
 	class ConfFail : public std::exception {
 		int					m_flag;
