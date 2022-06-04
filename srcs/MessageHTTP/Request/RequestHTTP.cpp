@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 12:07:05 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:32:19 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 
-	void	RequestHTTP::append(const std::string & buffer)
+	void	RequestHTTP::append(const char * buffer)
 	{
 		m_parseRequest.append(buffer);
 	}

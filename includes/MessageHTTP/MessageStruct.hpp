@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 14:37:14 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 09:54:42 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,27 @@ namespace WS {
 		void	clear();
 	};
 
+	/* URL						  ---------------------------------- */
+	
+	struct URL
+	{
+		std::string	serverName;	// example.com
+		std::string	path;		//				/location/here
+		std::string filename;	//								/file.html
+		std::string	fileExtension;//								.html
+		std::string	query;		//											?queryString=value
+		std::string fragment;	//																#fragment
 
-	/* Request Line ------------------------------------------------ */
+		std::string		formatedPath() const ;
+	};
+
+	/* Request Line -------m----------------------------------------- */
 
 
 	struct RequestLine
 	{
 		HTTPversion		version;
-		// URL				target;
+		URL				url;
 		std::string		target; // URL
 		std::string		method; // ACTIONS : GET, POST, DELETE
 
@@ -92,18 +105,6 @@ namespace WS {
 
 	};
 	
-	/* URL						  ---------------------------------- */
-	
-	struct URL
-	{
-		std::string	serverName;	// example.com
-		std::string	path;		//				/location/here
-		std::string filename;	//								/file.html
-		std::string	query;		//											?queryString=value
-		std::string fragment;	//																#fragment
-
-		std::string		formatedPath() const ;
-	};
 
 
 	/* Message Methods static map  --------------------------------- */

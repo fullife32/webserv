@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/02 11:44:37 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:47:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ public:
 	Server( Server const &other );
 	~Server();
 
+	Server &operator=( Server const &other );
 private:
 	
 	Server();
-	Server &operator=( Server const &other );
 
 public:
 	

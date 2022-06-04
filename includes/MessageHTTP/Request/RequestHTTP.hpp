@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 13:39:38 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:46:41 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 
 	/* functions    ------------------------------------------------ */
 		void			buildRequest();
-		void			append(const std::string & buffer);
+		void			append(const char * buffer);
 
 		bool			hasQueryString() const ;
 		bool			hasBody() const ;

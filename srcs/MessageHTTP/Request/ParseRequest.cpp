@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 17:09:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 09:59:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,14 @@ ParseRequest::ParseRequest()
 {}
 
 
-ParseRequest::ParseRequest(std::string	data)
-	: m_data(data)
+ParseRequest::ParseRequest(const ParseRequest & copy) :
+	m_data(copy.m_data),
+	m_header(copy.m_header),
+	m_body(copy.m_body),
+	m_requestLine(copy.m_requestLine)
 {
-	if (data.empty())
-		throw MessageErrorException(STATUS_BAD_REQUEST);
+	m_headerFields = copy.m_headerFields;
 }
-
 
 ParseRequest::~ParseRequest()
 {}
@@ -57,17 +58,19 @@ std::string &	ParseRequest::append(const std::string & str)
 void	ParseRequest::m_prepareRequestBuilding()
 {
 	std::vector<std::string>	split;
+	std::string					FirstLine;
 
 	m_separateHeaderBody();
 
 	split = splitString(m_header, NEWLINE);
 	if (split.size() == 0)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	
-	m_formated_RequestLine(split[0]);
+	FirstLine = split[0];
 	split.erase(split.begin());
+
+	m_formated_RequestLine(FirstLine);
 	m_formated_HeaderFields(split);
-	m_check_host_HeaderFields();
+	m_check_host_HeaderFields(FirstLine);
 }
 
 
@@ -102,7 +105,6 @@ std::map<std::string, std::string>	ParseRequest::getHeaderFields()
 
 		throw exception if empty line is not found (400: Bad Request)
 */
-
 void			ParseRequest::m_separateHeaderBody()
 {
 	size_t		separation = m_data.find(EMPTY_LINE);
@@ -159,7 +161,7 @@ void	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & head
 			throw MessageErrorException(STATUS_BAD_REQUEST);
 		key = std::string(&line[0], &line[found]);
 		value = std::string(&line[found + 1], &line[line.size()]);
-		m_headerFields[key] = value;
+		set_headerFields(key, value);
 	}
 }
 
@@ -170,22 +172,60 @@ void	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & head
 			if already in target : do nothing
 			else cat host + target in requestLine
 */
-void	ParseRequest::m_check_host_HeaderFields()
+void	ParseRequest::m_check_host_HeaderFields(const std::string & url)
 {
 	// find Header Field "host"
 	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find("host");
 	
 	if (found_host == m_headerFields.end()) ///// FAUT IL OBLIGATOIREMENT LE HOST ? normalement oui avec http1.1
-		throw MessageErrorException(400);
+		throw MessageErrorException(STATUS_BAD_REQUEST);
 
 	// get header field value of "host"
+	m_requestLine.url.serverName = (*found_host).second;
 	std::string		host = (*found_host).second;
 	if (host.empty())
-		throw MessageErrorException(400);
+		throw MessageErrorException(STATUS_BAD_REQUEST);
 
 	// check if host is already in target
-	if ( m_requestLine.target.find(host) == std::string::npos)
-		m_requestLine.target = host + m_requestLine.target;
+	if ( url.find(host) != std::string::npos)
+	{
+		m_requestLine.url.serverName = host;
+		m_requestLine.url.path.erase(0, host.size());
+	}
+}
+
+
+void	ParseRequest::m_formated_Url(std::string target)
+{
+	size_t		found_fragment = target.find("#");
+	size_t		found_query = target.find("?");
+	size_t		found_file;
+	size_t		found_extension;
+
+
+	if (found_fragment != std::string::npos)
+	{
+		m_requestLine.url.fragment = std::string(&target[found_fragment + 1], *target.end());
+		target.erase(found_fragment);
+	}	
+	if (found_query != std::string::npos)
+	{
+		m_requestLine.url.query = std::string(&target[found_query + 1], *target.end());
+		target.erase(found_query);
+	}
+
+	found_file = target.find_last_of("/");
+	if (found_file != std::string::npos && found_file != target.size())
+	{
+		found_extension = target.find_last_of('.', found_file);
+		if (found_extension != std::string::npos && found_extension != target.size())
+		{
+			m_requestLine.url.fileExtension = std::string(&target[found_extension + 1], *target.end());
+			m_requestLine.url.filename = std::string(&target[found_file + 1], *target.end());
+			target.erase(found_file);
+		}
+	}
+	m_requestLine.url.path = target;
 }
 
 

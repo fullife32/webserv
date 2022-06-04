@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 19:01:25 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:34:27 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ public:
 	void			setToRemove(); // end send() or recev == 0;
 	void			setToChangeEvent(); // end recv()
 
-	void			recv();
-	void			send();
+	void			receive_data();
+	void			send_data();
 
 
 	class ClientFail : public std::exception {

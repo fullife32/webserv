@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 19:19:31 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:54:27 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ namespace WS
 		m_body.clear();
 		m_header.clear();
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
-		m_server = NULL;
 	}
 
 	size_t		ResponseHTTP::size() 
@@ -103,21 +102,25 @@ namespace WS
 			envoi d'abord le header puis le body de la page
 			clear et envoi NULL une fois tout envoyé.
 	*/
-	const char *	ResponseHTTP::getNextChunk(size_t bufferSize)
+	size_t	ResponseHTTP::getNextChunk()
 	{
+		size_t	len;
+		
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 
-		if (m_header.read(m_buffer, bufferSize))
-			return m_buffer;
+		if (m_header.read(m_buffer, MESSAGE_BUFFER_SIZE))
+			return MESSAGE_BUFFER_SIZE;
 
-		size_t	len = strlen(m_buffer);
+		len = strlen(m_buffer);
 
-		if (m_body.is_open() && m_body.read(m_buffer + len, bufferSize - len))
-			return m_buffer;
-		if (strlen(m_buffer) != 0)
-			return m_buffer;
+		if (m_body.is_open() && m_body.read(m_buffer + len, MESSAGE_BUFFER_SIZE - len))
+			return MESSAGE_BUFFER_SIZE;
+			
+		len = strlen(m_buffer);
+		if (len != 0)
+			return len;
 		clear();
-		return (NULL);
+		return (0);
 	}
 
 /* -------------------------------------------------------------------------- */

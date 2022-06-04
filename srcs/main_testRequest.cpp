@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 17:31:59 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:45:49 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,12 +158,12 @@ int main(int ac, char **argv)
 
 	// write like send()
 
-	const char *buffer = response.getNextChunk(MESSAGE_BUFFER_SIZE);
-	while (buffer != NULL)
-	{
-		std::cout << buffer;
-		buffer = response.getNextChunk(MESSAGE_BUFFER_SIZE);
-	}
+	// const char *buffer = response.getNextChunk();
+	// while (buffer != NULL)
+	// {
+	// 	std::cout << buffer;
+	// 	buffer = response.getNextChunk();
+	// }
 	
 	// for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)
 	// {

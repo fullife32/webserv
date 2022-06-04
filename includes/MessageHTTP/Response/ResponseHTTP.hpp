@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 19:19:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:49:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		protected variables herited from HeaderFields: list of all Methods
 			std::map<std::string, std::string>	m_headerFields;	
 	*/
-
 	private:
 
 		// classCGI				m_cgi;
@@ -58,6 +57,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 
 	/* get		    ------------------------------------------------ */
+		size_t	getNextChunk();
 
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
@@ -71,9 +71,8 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		size_t		size() ;
 
 
-		void			buildError(int StatusCode, const std::string &  ReasonPhrase);
-		void			buildResponse(const RequestHTTP & request);
-		const char *	getNextChunk(size_t BufferSize);
+		void		buildError(int StatusCode, const std::string &  ReasonPhrase);
+		void		buildResponse(const RequestHTTP & request);
 
 
 	private:

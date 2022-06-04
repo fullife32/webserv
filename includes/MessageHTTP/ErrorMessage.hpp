@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 15:18:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 11:51:39 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,6 @@
 #define S_STATUS_HTTPVERSION_NOT_SUPPORTED	"HTTP Version Not Supported"// 505
 
 
-namespace WS 
-{
-	
 enum e_statusCode
 {
 	STATUS_CONTINUE					= 100,
@@ -106,6 +103,9 @@ enum e_statusCode
 	STATUS_GATEWAY_TIMEOUT			= 504,
 	STATUS_HTTPVERSION_NOT_SUPPORTED= 505
 };
+	
+namespace WS 
+{
 	
 class MessageErrorException : public std::exception
 {
