@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 11:54:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 16:54:26 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 	ResponseHTTP::ResponseHTTP()
-		: m_requestLine(),
+		: m_statusLine(),
 		m_server(NULL),
 		m_method(0),
 		m_header(),
@@ -41,7 +41,7 @@ namespace WS
 
 
 	ResponseHTTP::ResponseHTTP(Server * server, char * buffer)
-		: m_requestLine(),
+		: m_statusLine(),
 		m_server(server),
 		m_method(0),
 		m_header(),
@@ -54,8 +54,15 @@ namespace WS
 
 
 	ResponseHTTP::ResponseHTTP(const ResponseHTTP & copy)
+			: m_statusLine(copy.m_statusLine),
+		m_server(copy.m_server),
+		m_method(copy.m_method),
+		m_length(copy.m_length),
+		m_buffer(copy.m_buffer)
 	{
-		*this = copy;
+		m_header << copy.m_header;
+		m_body << copy.m_body;
+
 	}
 
 	ResponseHTTP::~ResponseHTTP()
@@ -69,7 +76,7 @@ namespace WS
 			clear();
 			m_headerFields = other.m_headerFields;
 			m_server = other.m_server;
-			m_requestLine = other.m_requestLine;
+			m_statusLine = other.m_statusLine;
 			m_method = other.m_method;
 			m_length = other.m_length;
 			m_header << other.m_header;
@@ -82,11 +89,14 @@ namespace WS
 
 	void	ResponseHTTP::clear()
 	{
+		std::cout << "OK" << std::endl;
+		std::cout << m_method << std::endl;
 		m_method = 0;
+		std::cout << "OK" << std::endl;
+
 		m_length = 0;
 		m_headerFields.clear();
-		m_requestLine.clear();
-		m_headerFields.clear();
+		m_statusLine.clear();
 		m_body.clear();
 		m_header.clear();
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
@@ -164,10 +174,16 @@ namespace WS
 	*/
 	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase)
 	{
+		std::cout << "before :" <<  StatusCode << ReasonPhrase << std::endl;
 		clear();
+		std::cout << "after : " << StatusCode << ReasonPhrase << std::endl;
 		m_set_minimalHeaderFields();
-		m_requestLine.statusCode = StatusCode;
-		m_requestLine.reasonPhrase = ReasonPhrase;
+		m_statusLine.statusCode = StatusCode;
+		m_statusLine.reasonPhrase = ReasonPhrase;
+
+		std::cout << m_statusLine.statusCode << m_statusLine.reasonPhrase << std::endl;
+
+		debug_print();
 		m_formated_Error();
 	}
 
@@ -206,6 +222,7 @@ namespace WS
 	void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 	{
 		std::cout << "in methode GET" << std::endl;
+		throw MessageErrorException(STATUS_BAD_REQUEST);
 
 		if (request.hasBody())
 			throw MessageErrorException(STATUS_BAD_REQUEST);
@@ -255,7 +272,7 @@ namespace WS
 
 	void	ResponseHTTP::m_formated_StatusLine()
 	{
-		m_header << START_LINE_HTTP_VERSION << SP << m_requestLine.statusCode << SP << m_requestLine.reasonPhrase << CRLF;
+		m_header << START_LINE_HTTP_VERSION << SP << m_statusLine.statusCode << SP << m_statusLine.reasonPhrase << CRLF;
 	}
 
 	void	ResponseHTTP::m_formated_HeaderFields()
@@ -327,7 +344,7 @@ namespace WS
 		body << "<meta charset=\"UTF-8\">" << '\n';
 		body << "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" << '\n';
 		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << '\n';
-		body << "<title>" << m_requestLine.statusCode << " " << m_requestLine.reasonPhrase << "</title>" << '\n';
+		body << "<title>" << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << "</title>" << '\n';
 		body << "</head>" << '\n';
 		body << "<body>" << '\n';
 		body << "</body>" << '\n';

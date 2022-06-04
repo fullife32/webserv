@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/04 14:16:57 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/06/04 16:50:56 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,6 @@ SRCS =	main.cpp		\
 		ServerConf.cpp \
 		ParseConf.cpp \
 		GetConf.cpp \
-		main_testRequest.cpp \
 		ParseRequest.cpp \
 		MessageStruct.cpp \
 		RequestHTTP.cpp \
@@ -32,6 +31,7 @@ SRCS =	main.cpp		\
 		Multiplex.cpp \
 		Client.cpp \
 
+# main_testRequest.cpp		\
 
 # The file where make will look for all the sources (in addition to the root
 # directory of the Makefile)

@@ -1,6 +1,6 @@
 docker/
 start.sh
-.vscode/s
+.vscode/
 test_virg
 .objs/
 *.o

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/04 14:19:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 14:22:31 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 	client datas received with accept() and the events waited.
 */
 class Client : public Socket {
+
+public:
+	Server				&m_server;
+
 private:
 
 	bool				m_toRemove; // ?
@@ -35,20 +39,14 @@ private:
 	WS::ResponseHTTP	m_response;
 	char				m_buffer[MESSAGE_BUFFER_SIZE + 1];
 
-
-public:
-	Server				&m_server;
-
-	Client( int fd, sockaddr_storage cli, socklen_t size, Server &server );
-	Client( Client const &other );
-	~Client();
-
-private:
-
 	Client();
 	Client &operator=( Client const &other );
 
 public:
+	Client( int fd, sockaddr_storage cli, socklen_t size, Server &server );
+	Client( Client const &other );
+	~Client();
+
 
 	static Client	acceptClient( int fdServer, Server &server );
 

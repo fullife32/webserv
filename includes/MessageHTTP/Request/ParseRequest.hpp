@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 10:06:44 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 15:35:22 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ class ParseRequest : public HeaderFields
 		std::string		getBody();
 		std::map<std::string, std::string>	getHeaderFields();
 
+		void			m_prepareRequestBuilding();
 
 	private:
 	
-		void			m_prepareRequestBuilding();
 		void			m_separateHeaderBody(); // separe les datas dans m_header et m_body
 		void			m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
 		void			m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
@@ -56,11 +56,13 @@ class ParseRequest : public HeaderFields
 
 	//debug
 
-		void			PRINT()
+	public:
+		void			debug_print()
 		{
-			std::cout << "HEADER" <<  std::endl << m_data << std::endl;
-			std::cout << "BODY" <<  std::endl << m_body << std::endl;
-			std::cout << "REQUESTLINE" <<  std::endl;
+			std::cout << "PARSE REQUEST DEBUG PRINT *******************************" << std::endl;
+			std::cout << "HEADER: " <<  std::endl << m_data << std::endl;
+			std::cout << "BODY: " <<  std::endl << m_body << std::endl;
+			std::cout << "REQUESTLINE: " <<  std::endl;
 			std::cout << "	method: " << m_requestLine.method << std::endl;
 			std::cout << "	version: " << m_requestLine.version.name <<  m_requestLine.version.major_version << "." <<  m_requestLine.version.minor_version << std::endl;
 			std::cout << "	servername: " << m_requestLine.url.serverName << std::endl;

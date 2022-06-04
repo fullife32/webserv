@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 11:32:19 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 15:45:57 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,16 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 	RequestHTTP::RequestHTTP()
-		: m_startLine(),
+		: m_requestLine(),
 		m_parseRequest()
 	{}
 
 
 	RequestHTTP::RequestHTTP(const RequestHTTP & copy)
-		: m_startLine(copy.m_startLine),
+		: m_requestLine(copy.m_requestLine),
 		m_parseRequest(copy.m_parseRequest)
-	{}
+	{
+	}
 
 	RequestHTTP::~RequestHTTP()
 	{}
@@ -42,7 +43,8 @@ namespace WS
 
 	void	RequestHTTP::buildRequest()
 	{
-		m_startLine = m_parseRequest.getRequestLine();
+		m_parseRequest.m_prepareRequestBuilding();
+		m_requestLine = m_parseRequest.getRequestLine();
 		m_headerFields = m_parseRequest.getHeaderFields();
 		m_body = m_parseRequest.getBody();
 	}
@@ -52,7 +54,7 @@ namespace WS
 
 	void	RequestHTTP::setRequestLine(const RequestLine & requestline)
 	{
-		m_startLine = requestline;
+		m_requestLine = requestline;
 	}
 
 	void	RequestHTTP::setBody(const std::string & body)
@@ -65,7 +67,7 @@ namespace WS
 
 	int		RequestHTTP::getMethod() const
 	{
-		std::map <std::string, int>::const_iterator	found = m_methods.find(m_startLine.method);
+		std::map <std::string, int>::const_iterator	found = m_methods.find(m_requestLine.method);
 		if (found == m_methods.end())
 		{
 			
@@ -78,7 +80,7 @@ namespace WS
 
 	std::string	RequestHTTP::getUrl() const
 	{
-		return (m_startLine.target);
+		return (m_requestLine.target);
 	}
 
 
@@ -86,7 +88,7 @@ namespace WS
 
 	bool	RequestHTTP::hasQueryString() const
 	{
-		if (m_startLine.target.find("?") != std::string::npos)
+		if (m_requestLine.target.find("?") != std::string::npos)
 			return true;
 		return false;
 	}

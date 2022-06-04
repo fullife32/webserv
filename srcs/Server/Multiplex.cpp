@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/04 14:02:37 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 14:50:47 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	Multiplex::handleServer( int i, std::map<int, Server> &servers, std::map<in
 		else {
 			try {
 				Client	tmpClient(Client::acceptClient(it->second.getFd(), it->second));
+			std::cout << tmpClient.getFd() << std::endl;
 				clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
 				addClientToPoll(clients.rbegin()->second);
 				// Debug
@@ -104,6 +105,8 @@ void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
 	if (it != clients.end()) {
 		if (m_events[i].events & EPOLLIN) {
 			// go to virginie's function here
+			it->second.receive_data();
+			
 			if (it->second.getToChangeEvent())
 				try {
 					changeClientEvent(it->second, EPOLLOUT);
@@ -120,6 +123,7 @@ void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
 		}
 		else if (m_events[i].events & EPOLLOUT) {
 			// go to virginie's function here
+			it->second.send_data();
 		}
 	}
 }

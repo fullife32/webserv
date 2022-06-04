@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 14:17:55 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 16:29:49 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ void	test_stream()
 }
 
 
-// int main(int ac, char **argv)
-// {
+int main(int ac, char **argv)
+{
 
 
 	// testing multi open same file with an insert for one and read for the other
@@ -114,11 +114,13 @@ void	test_stream()
 	// return (0);
 
 
-	char	buf[BUFFER_SIZE + 1];
+	char	buf[MESSAGE_BUFFER_SIZE + 1];
 	int 	fd;
 	int		size_read;
 	WS::RequestHTTP		request;
-	WS::ResponseHTTP	response;
+	WS::ResponseHTTP	response(NULL, buf);
+	
+	memset(buf, '\0', MESSAGE_BUFFER_SIZE);
 	
 
 	if (ac != 2)
@@ -133,14 +135,14 @@ void	test_stream()
 // 	}	
 	
 
-// 	// get buffer like recv
-// 	do
-// 	{
-// 		size_read = read(fd, &buf, BUFFER_SIZE - 1);
-// 		if (size_read != -1)
-// 			request.append(buf);
-// 		memset(buf, '\0', BUFFER_SIZE);
-// 	} while (size_read > 0);
+	// get buffer like recv
+	do
+	{
+		size_read = read(fd, &buf, MESSAGE_BUFFER_SIZE);
+		if (size_read != -1)
+			request.append(buf);
+		memset(buf, '\0', MESSAGE_BUFFER_SIZE);
+	} while (size_read > 0);
 	
 
 	// end recv : client try to build request and response
@@ -170,4 +172,4 @@ void	test_stream()
 // 	// 	write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
 // 	// }
 
-// }
+}

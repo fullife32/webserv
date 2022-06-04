@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 11:49:53 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 16:56:26 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 	private:
 
 		// classCGI				m_cgi;
-		StatusLine				m_requestLine;
+		StatusLine				m_statusLine;
 		Server *				m_server;
 		int						m_method;
 		std::stringstream		m_header;
@@ -100,11 +100,16 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 	// DEBUG
 	public:
-		virtual void	debug_print_startline()
+		virtual void	debug_print()
 		{
-			HTTPversion	*v = &m_requestLine.version;
-
-			std::cout << "HTTPversion = " << v->name << " " << v->major_version << "." << v->minor_version << std::endl;
+			std::cout << " RESPONSE DEBUG PRINT ************************************" << std::endl;
+			std::cout << "HEADER: " << m_header.str()  << std::endl;
+			std::cout << "BODY: " << m_body << std::endl;
+			// m_body >> std::cout;
+			std::cout << "REQUESTLINE: " <<  std::endl;
+			std::cout << "	status code: " << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << std::endl;
+			std::cout << "	version: " << m_statusLine.version.name <<  m_statusLine.version.major_version << "." <<  m_statusLine.version.minor_version << std::endl;
+			std::cout << std::endl;		
 		}
 
 

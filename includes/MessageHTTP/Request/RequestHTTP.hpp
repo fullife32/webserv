@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 11:46:41 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 15:39:54 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 			std::map<std::string, std::string>	m_headerFields;	
 	*/
 	private:
-		RequestLine							m_startLine;
+		RequestLine							m_requestLine;
 		ParseRequest						m_parseRequest;
 		std::string							m_body;
 
@@ -60,13 +60,22 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 
 		
 		// debug
-		virtual void	debug_print_startline()
+		 void	debug_print()
 		{
-			HTTPversion	*v = &m_startLine.version;
 
-			std::cout << "HTTPversion = " << v->name << " " << v->major_version << "." << v->minor_version << std::endl;
-			std::cout << "URL = " << m_startLine.target << std::endl;
-			std::cout << "method = " << m_startLine.method << std::endl;
+			std::cout << " REQUEST DEBUG PRINT ************************************" << std::endl;
+			std::cout << "HEADER: " <<  std::endl  << std::endl;
+			std::cout << "BODY: " <<  std::endl << m_body << std::endl;
+			std::cout << "REQUESTLINE: " <<  std::endl;
+			std::cout << "	method: " << m_requestLine.method << std::endl;
+			std::cout << "	version: " << m_requestLine.version.name <<  m_requestLine.version.major_version << "." <<  m_requestLine.version.minor_version << std::endl;
+			std::cout << "	servername: " << m_requestLine.url.serverName << std::endl;
+			std::cout << "	path: " << m_requestLine.url.path << std::endl;
+			std::cout << "	filename: " << m_requestLine.url.filename << std::endl;
+			std::cout << "	extension: " << m_requestLine.url.fileExtension << std::endl;
+			std::cout << "	query: " << m_requestLine.url.query << std::endl;
+			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
+			std::cout << std::endl;
 		}
 
 

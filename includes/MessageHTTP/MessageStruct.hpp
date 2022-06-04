@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 09:54:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 16:49:51 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ namespace WS {
 	{
 		HTTPversion		version;
 		int				statusCode;
-		std::string 	reasonPhrase; // pointeur sur std::map<int, sting> status code error ? ou enum de code ?
+		std::string 	reasonPhrase;
 	
 		void	clear();
 	};

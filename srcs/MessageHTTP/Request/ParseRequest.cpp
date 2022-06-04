@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 09:59:55 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 15:46:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,38 +60,38 @@ void	ParseRequest::m_prepareRequestBuilding()
 	std::vector<std::string>	split;
 	std::string					FirstLine;
 
+
 	m_separateHeaderBody();
 
+	// std::cout << "HEADER =" << m_header << std::endl;
+	// std::cout << "BODY = " << m_body << std::endl;
 	split = splitString(m_header, NEWLINE);
 	if (split.size() == 0)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
+
+	std::cout << split[0] << std::endl;
 	FirstLine = split[0];
 	split.erase(split.begin());
 
 	m_formated_RequestLine(FirstLine);
 	m_formated_HeaderFields(split);
 	m_check_host_HeaderFields(FirstLine);
+		std::cout << "OK" << std::endl;
 }
 
 
 RequestLine	ParseRequest::getRequestLine()
 {
-	if (m_header.empty())
-		m_prepareRequestBuilding();
 	return(m_requestLine);
 	
 }
 std::string	ParseRequest::getBody()
 {
-	if (m_header.empty())
-		m_prepareRequestBuilding();
 	return (m_body);
 }
 		
 std::map<std::string, std::string>	ParseRequest::getHeaderFields()
 {
-	if (m_header.empty())
-		m_prepareRequestBuilding();
 	return (m_headerFields);
 }
 
@@ -175,7 +175,7 @@ void	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & head
 void	ParseRequest::m_check_host_HeaderFields(const std::string & url)
 {
 	// find Header Field "host"
-	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find("host");
+	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find("Host");
 	
 	if (found_host == m_headerFields.end()) ///// FAUT IL OBLIGATOIREMENT LE HOST ? normalement oui avec http1.1
 		throw MessageErrorException(STATUS_BAD_REQUEST);
