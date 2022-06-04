@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/02 19:31:07 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:43:58 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,8 @@ int	main(int ac, char **av) {
 
 	if (ServerConf::startParse(path, confs) == 1)
 		return 1;
-	std::cout << "Method allowed ? " << confs.at(0).isMethodAllowed("vo", "/", 1) << std::endl;
-	std::string url;
-	std::cout << "Redirecting ? " << confs.at(0).isRedirecting("vo", "/", url) << " > " << url << std::endl;
-	std::cout << "Location \"\" ? " << confs.at(0).getLocationPath("vo", "") << std::endl;
-	std::cout << "Location / ? " << confs.at(0).getLocationPath("vo", "/") << std::endl;
-	std::cout << "Location bidule ? " << confs.at(0).getLocationPath("vo", "/bidule") << std::endl;
-	std::cout << "Error page 404 ? " << confs.at(0).getErrorPage("vo", "/", 404) << std::endl;
-	std::cout << "Error page non exist ? " << confs.at(0).getErrorPage("vo", "/", 400) << std::endl;
-	std::cout << std::endl;
+
+	// ServerConf::getConfTest(confs); // TODO DEBUG
 
 	std::map<int, Server>	servers;
 

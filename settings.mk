@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/04 11:55:03 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/06/04 14:16:57 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,11 @@
 NAME = webserv
 
 # The list of the all the sources, because $(wildcard *.c) is too dangerous
-SRCS =	main.cpp \
+SRCS =	main.cpp		\
+		ServerConf.cpp \
+		ParseConf.cpp \
+		GetConf.cpp \
+		main_testRequest.cpp \
 		ParseRequest.cpp \
 		MessageStruct.cpp \
 		RequestHTTP.cpp \
@@ -23,9 +27,6 @@ SRCS =	main.cpp \
 		ErrorMessage.cpp \
 		DateFormat.cpp \
 		Print.cpp \
-		ServerConf.cpp \
-		ParseConf.cpp \
-		GetConf.cpp \
 		Socket.cpp \
 		Server.cpp \
 		Multiplex.cpp \

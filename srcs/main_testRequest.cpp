@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 11:45:49 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 14:17:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ void	test_stream()
 }
 
 
-int main(int ac, char **argv)
-{
+// int main(int ac, char **argv)
+// {
 
 
 	// testing multi open same file with an insert for one and read for the other
@@ -124,23 +124,23 @@ int main(int ac, char **argv)
 	if (ac != 2)
 		return (0);
 
-	// open file for test
-	fd = open(argv[1], O_RDONLY);
-	if (fd == -1)
-	{
-		std::cerr << std::strerror(errno) << std::endl;
-		return (-1);
-	}	
+// 	// open file for test
+// 	fd = open(argv[1], O_RDONLY);
+// 	if (fd == -1)
+// 	{
+// 		std::cerr << std::strerror(errno) << std::endl;
+// 		return (-1);
+// 	}	
 	
 
-	// get buffer like recv
-	do
-	{
-		size_read = read(fd, &buf, BUFFER_SIZE - 1);
-		if (size_read != -1)
-			request.append(buf);
-		memset(buf, '\0', BUFFER_SIZE);
-	} while (size_read > 0);
+// 	// get buffer like recv
+// 	do
+// 	{
+// 		size_read = read(fd, &buf, BUFFER_SIZE - 1);
+// 		if (size_read != -1)
+// 			request.append(buf);
+// 		memset(buf, '\0', BUFFER_SIZE);
+// 	} while (size_read > 0);
 	
 
 	// end recv : client try to build request and response
@@ -165,9 +165,9 @@ int main(int ac, char **argv)
 	// 	buffer = response.getNextChunk();
 	// }
 	
-	// for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)
-	// {
-	// 	write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
-	// }
+// 	// for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)
+// 	// {
+// 	// 	write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
+// 	// }
 
-}
+// }

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/16 18:56:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/02 11:43:59 by lvirgini         ###   ########.fr       */
+/*   Created: 2022/05/19 11:49:59 by lvirgini          #+#    #+#             */
+/*   Updated: 2022/06/04 14:17:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,22 +63,4 @@ void	popFirst( std::string & str ) {
 	if (str.empty())
 		return;
 	str = str.substr(1);
-}
-
-template <class T>
-void	printVector(const std::vector<T> & vec)
-{
-	typename std::vector<T>::const_iterator	it;
-
-	for (it = vec.begin(); it != vec.end(); it++)
-		std::cout << *it << std::endl;
-}
-
-template <class T>
-void	printMap(const std::map<T, T> & map)
-{
-	typename std::map<T, T>::const_iterator	it;
-
-	for (it = map.begin(); it != map.end(); it++)
-		std::cout << "key=" << (*it).first << " value=" << (*it).second << std::endl;
 }

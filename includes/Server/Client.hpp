@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/04 11:34:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/04 14:19:27 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ private:
 	bool				m_toChangeEvent; // ?
 	sockaddr_storage 	m_cli;
 	socklen_t			m_size;
-	Server				&m_server;
 	WS::RequestHTTP		m_request;
 	WS::ResponseHTTP	m_response;
 	char				m_buffer[MESSAGE_BUFFER_SIZE + 1];
 
 
 public:
+	Server				&m_server;
 
 	Client( int fd, sockaddr_storage cli, socklen_t size, Server &server );
 	Client( Client const &other );
@@ -46,7 +46,6 @@ public:
 private:
 
 	Client();
-
 	Client &operator=( Client const &other );
 
 public:
