@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 19:35:29 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/05 21:49:20 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ size_t	ServerConf::getBodySize(std::string server_name, std::string location) co
 	return baseStruct.client_max_body_size;
 }
 
-std::vector<std::string>	ServerConf::getIndexList(std::string server_name, std::string location) const {
+std::string	ServerConf::getIndex(std::string server_name, std::string location) const {
 	s_base	baseStruct;
 	bool	yes;
 
@@ -163,7 +163,7 @@ std::vector<std::string>	ServerConf::getIndexList(std::string server_name, std::
 		baseStruct = getServerByName(server_name);
 	else
 		baseStruct = getLocationByName(server_name, location, yes);
-	return baseStruct.index;
+	return baseStruct.root + location + baseStruct.index; // TODO be sure that location exists ?
 }
 
 std::string	ServerConf::isUploadPath(std::string server_name, std::string location) const {

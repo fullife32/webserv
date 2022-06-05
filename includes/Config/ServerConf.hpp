@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 18:57:37 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/05 21:45:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ public:
 	size_t			getBodySize(std::string server_name, std::string location) const;
 	size_t  		isRedirecting(std::string server_name, std::string location, std::string &url) const;
 	bool			isAutoindexOn(std::string server_name, std::string location) const;
-	std::vector<std::string>	getIndexList(std::string server_name, std::string location) const;
+	std::string		getIndex(std::string server_name, std::string location) const;
 	std::string		isUploadPath(std::string server_name, std::string location) const;
 
 

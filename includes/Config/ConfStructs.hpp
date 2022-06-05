@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:32:14 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/02 15:29:15 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/05 21:44:00 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ struct s_base {
 	std::pair<size_t, std::string>			redirect;
 	std::string								root;
 	bool									autoindex;
-	std::vector<std::string>				index;
+	std::string								index;
 	std::string								upload_pass;
 };
 
