@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 16:56:26 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:22:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		std::stringstream		m_header;
 		std::fstream			m_body;
 		size_t					m_length;
-		char					*m_buffer;
 		//TODO error page check if exist else create it
 		//TODO test DELETE / 
 		
@@ -45,7 +44,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 	/* constructor ------------------------------------------------ */
 		ResponseHTTP();
-		ResponseHTTP(Server * server, char *m_buffer);
+		ResponseHTTP(Server * server);
 		ResponseHTTP(const ResponseHTTP & copy);
 
 	/* destructor  ------------------------------------------------ */
@@ -57,7 +56,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 
 	/* get		    ------------------------------------------------ */
-		size_t	getNextChunk();
+		size_t	getNextChunk(char * buffer);
 
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
@@ -70,10 +69,8 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		void		clear();
 		size_t		size() ;
 
-
 		void		buildError(int StatusCode, const std::string &  ReasonPhrase);
 		void		buildResponse(const RequestHTTP & request);
-
 
 	private:
 
@@ -103,9 +100,11 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		virtual void	debug_print()
 		{
 			std::cout << " RESPONSE DEBUG PRINT ************************************" << std::endl;
-			std::cout << "HEADER: " << m_header.str()  << std::endl;
-			std::cout << "BODY: " << m_body << std::endl;
-			// m_body >> std::cout;
+			// std::string	S;
+			// m_header >> S;
+			// std::cout << "HEADER: " << S.data() << std::endl;
+			// m_body >> S;
+			// std::cout << "BODY: " << S.data() << std::endl;
 			std::cout << "REQUESTLINE: " <<  std::endl;
 			std::cout << "	status code: " << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << std::endl;
 			std::cout << "	version: " << m_statusLine.version.name <<  m_statusLine.version.major_version << "." <<  m_statusLine.version.minor_version << std::endl;

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 16:49:51 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:19:46 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ namespace WS {
 			value_type	m_headerFields;
 
 		public:
+
 			void			clear();
 			void			set_headerFields(const std::string & headerField, const std::string & value);
 			void			set_headerFields(const value_type & headerFlieds);
@@ -106,13 +107,13 @@ namespace WS {
 	};
 	
 
-
 	/* Message Methods static map  --------------------------------- */
 
 	class MessageMethods
 	{
 		protected:
 			static	std::map <std::string, int>		m_methods;
+	
 	};
 	
 std::map <std::string, int>		init_map_method();

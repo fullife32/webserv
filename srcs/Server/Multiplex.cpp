@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/04 14:50:47 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:12:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,30 +100,43 @@ void	Multiplex::addClientToPoll( Client &client ) const {
 		throw Multiplex::PlexFail(); // change message
 }
 
+/*
+	iterates on the client events:
+		EPOLLIN : the client sends a request
+		EPOLLOUT : the client waits for a response
+*/
 void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
-	std::map<int, Client>::iterator it = clients.find(m_events[i].data.fd);
-	if (it != clients.end()) {
+	std::map<int, Client>::iterator currentClient = clients.find(m_events[i].data.fd);
+	if (currentClient != clients.end()) {
 		if (m_events[i].events & EPOLLIN) {
-			// go to virginie's function here
-			it->second.receive_data();
-			
-			if (it->second.getToChangeEvent())
-				try {
-					changeClientEvent(it->second, EPOLLOUT);
-				} catch (Multiplex::PlexFail const &except) {
-					std::cerr << except.what() << std::endl;
-				}
-			else if (it->second.getToRemove()) {
-				try {
-					deleteClient(clients, it);
-				} catch (Multiplex::PlexFail const &except) {
-					std::cerr << except.what() << std::endl;
-				}
-			}
+			currentClient->second.receive_data();
+			m_checkClientChangeEvent(currentClient, clients);
 		}
 		else if (m_events[i].events & EPOLLOUT) {
-			// go to virginie's function here
-			it->second.send_data();
+			currentClient->second.send_data();
+			m_checkClientChangeEvent(currentClient, clients);
+		}
+	}
+}
+
+/*
+	if a client has finished its request he waits for a response : the event becomes EPOLLOUT.
+	if the client has received his answer : the client is deleted.
+*/
+void	Multiplex::m_checkClientChangeEvent( std::map<int, Client>::iterator currentClient,  std::map<int, Client> &clients) 
+{
+	if (currentClient->second.getToChangeEvent()) {
+		try {
+			changeClientEvent(currentClient->second, EPOLLOUT);
+		} catch (Multiplex::PlexFail const &except) {
+			std::cerr << except.what() << std::endl;
+		}
+	}
+	else if (currentClient->second.getToRemove()) {
+		try {
+			deleteClient(clients, currentClient);
+		} catch (Multiplex::PlexFail const &except) {
+			std::cerr << except.what() << std::endl;
 		}
 	}
 }

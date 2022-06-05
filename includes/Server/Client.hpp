@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/04 14:22:31 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:17:01 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ public:
 	bool			getToRemove() const;
 	bool			getToChangeEvent() const;
 
-	void			setToRemove(); // end send() or recev == 0;
+	void			setToRemove(); // end send() or recv == -1;
 	void			setToChangeEvent(); // end recv()
 
 	void			receive_data();
