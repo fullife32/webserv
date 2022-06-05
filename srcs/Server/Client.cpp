@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 14:24:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 15:55:19 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void		Client::receive_data() {
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		try {
 			m_request.buildRequest();
+			m_request.debug_print();
 			m_response.buildResponse(m_request);
 		}
 		catch (WS::MessageErrorException & e) {

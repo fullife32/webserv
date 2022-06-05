@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 15:35:22 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:52:02 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ class ParseRequest : public HeaderFields
 		void			m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
 		void			m_check_host_HeaderFields(const std::string & url);
 		void			m_formated_Url(std::string url);
+		
+	public:
 
 	//debug
 

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 15:45:57 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 17:08:48 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ namespace WS
 	}
 
 
-	std::string	RequestHTTP::getUrl() const
+	URL		RequestHTTP::getUrl() const
 	{
-		return (m_requestLine.target);
+		return (m_requestLine.url);
 	}
 
 
@@ -88,16 +88,13 @@ namespace WS
 
 	bool	RequestHTTP::hasQueryString() const
 	{
-		if (m_requestLine.target.find("?") != std::string::npos)
-			return true;
-		return false;
+		return !(m_requestLine.url.query.empty());
 	}
 
 	bool	RequestHTTP::hasBody() const 
 	{
-		if (m_body.empty())
-			return false;
-		return true;
+		// std::cout << "IN HAS BODY " << m_body << !(m_body.empty()) << std::endl;
+		return !(m_body.empty());
 	}
 	
 } // end namespace

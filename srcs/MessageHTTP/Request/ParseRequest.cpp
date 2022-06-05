@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 15:46:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 15:25:00 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,21 +62,16 @@ void	ParseRequest::m_prepareRequestBuilding()
 
 
 	m_separateHeaderBody();
-
-	// std::cout << "HEADER =" << m_header << std::endl;
-	// std::cout << "BODY = " << m_body << std::endl;
 	split = splitString(m_header, NEWLINE);
 	if (split.size() == 0)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
 
-	std::cout << split[0] << std::endl;
 	FirstLine = split[0];
 	split.erase(split.begin());
 
 	m_formated_RequestLine(FirstLine);
 	m_formated_HeaderFields(split);
 	m_check_host_HeaderFields(FirstLine);
-		std::cout << "OK" << std::endl;
 }
 
 
@@ -105,13 +100,13 @@ std::map<std::string, std::string>	ParseRequest::getHeaderFields()
 
 		throw exception if empty line is not found (400: Bad Request)
 */
-void			ParseRequest::m_separateHeaderBody()
+void		ParseRequest::m_separateHeaderBody()
 {
 	size_t		separation = m_data.find(EMPTY_LINE);
 	
 	if (separation == std::string::npos)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	m_body =   std::string(&m_data[separation + 2], &m_data[m_data.size()]);
+	m_body =   std::string(&m_data[separation + 4], &m_data[m_data.size()]);
 	m_header = std::string(&m_data[0], &m_data[separation]);
 }
 
@@ -131,13 +126,13 @@ void 		ParseRequest::m_formated_RequestLine(const std::string & startline)
 	if (split.size() < 2 || split.size() > 3)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
 
+	if (split[1].size() > REQUEST_URL_MAX_SIZE)
+		throw MessageErrorException(414);
+
 	m_requestLine.method = split[0];
-	m_requestLine.target = split[1];
+	m_formated_Url(split[1]);
 	if (split.size() == 3)
 		m_requestLine.version.formatedVersion(split[2]);
-
-	if (m_requestLine.target.size() > REQUEST_URL_MAX_SIZE)
-		throw MessageErrorException(414);
 }
 
 /*
@@ -197,31 +192,30 @@ void	ParseRequest::m_check_host_HeaderFields(const std::string & url)
 
 void	ParseRequest::m_formated_Url(std::string target)
 {
-	size_t		found_fragment = target.find("#");
-	size_t		found_query = target.find("?");
+	size_t		found_fragment = target.find('#');
+	size_t		found_query = target.find('?');
 	size_t		found_file;
 	size_t		found_extension;
 
-
 	if (found_fragment != std::string::npos)
 	{
-		m_requestLine.url.fragment = std::string(&target[found_fragment + 1], *target.end());
+		m_requestLine.url.fragment = std::string(&target[found_fragment + 1], &target[target.size()]);
 		target.erase(found_fragment);
 	}	
 	if (found_query != std::string::npos)
 	{
-		m_requestLine.url.query = std::string(&target[found_query + 1], *target.end());
+		m_requestLine.url.query = std::string(&target[found_query + 1], &target[target.size()]);
 		target.erase(found_query);
 	}
 
-	found_file = target.find_last_of("/");
+	found_file = target.find_last_of('/');
 	if (found_file != std::string::npos && found_file != target.size())
 	{
-		found_extension = target.find_last_of('.', found_file);
-		if (found_extension != std::string::npos && found_extension != target.size())
+		found_extension = target.find_last_of('.');
+		if (found_extension != std::string::npos && found_extension != target.size() && found_extension > found_file)
 		{
-			m_requestLine.url.fileExtension = std::string(&target[found_extension + 1], *target.end());
-			m_requestLine.url.filename = std::string(&target[found_file + 1], *target.end());
+			m_requestLine.url.fileExtension = std::string(&target[found_extension + 1], &target[target.size()]);
+			m_requestLine.url.filename = std::string(&target[found_file + 1], &target[target.size()]);
 			target.erase(found_file);
 		}
 	}

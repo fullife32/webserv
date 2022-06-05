@@ -6,12 +6,13 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 16:29:49 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:47:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Webserv.hpp"
 #include "MessageHTTP.hpp"
+#include "ParseRequest.hpp"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -81,9 +82,8 @@ void	test_stream()
 }
 
 
-int main(int ac, char **argv)
+void test_fstream()
 {
-
 
 	// testing multi open same file with an insert for one and read for the other
 	// std::fstream	fst("srcs");
@@ -113,19 +113,23 @@ int main(int ac, char **argv)
 	// }
 	// return (0);
 
+}
+
+
+void test_request_response(int ac, char **argv)
+{
 
 	char	buf[MESSAGE_BUFFER_SIZE + 1];
 	int 	fd;
 	int		size_read;
 	WS::RequestHTTP		request;
-	WS::ResponseHTTP	response(NULL, buf);
+	WS::ResponseHTTP	response(NULL);
 	
 	memset(buf, '\0', MESSAGE_BUFFER_SIZE);
 	
 
 	if (ac != 2)
-		return (0);
-
+		return ;
 // 	// open file for test
 // 	fd = open(argv[1], O_RDONLY);
 // 	if (fd == -1)
@@ -171,5 +175,20 @@ int main(int ac, char **argv)
 // 	// {
 // 	// 	write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
 // 	// }
+}
+int main(int ac, char **argv)
+{
+
+	WS::ParseRequest	r;
+
+
+	// r.m_formated_Url("//////");
+	// r.m_formated_Url("///");
+	// r.m_formated_Url("/");
+	// r.m_formated_Url("/path/.index.html.rc");
+	// r.m_formated_Url("/path/with/most/directory/and/there/is/not/a/file");
+	// r.m_formated_Url("/path/with/most/directory/file.txt?queryString=jeNeSaisPas#fragmentUtils???");
+	r.debug_print();
+
 
 }

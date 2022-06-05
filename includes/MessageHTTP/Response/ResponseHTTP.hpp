@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 14:22:56 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 16:18:09 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,13 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		void	m_set_minimalHeaderFields();
 
 	/* formated Response   ------------------------------------------ */
-		void	m_formated_Response(const std::string & url);
+		void	m_formated_Response(const URL & url);
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
 		void	m_formated_CGI_Response(const RequestHTTP & request);
 		void	m_formated_Error();
 		void	m_formated_ErrorBody(std::stringstream & body);
-		void	m_openFile_Body(const std::string & url);
+		void	m_openFile_Body(const URL & url);
 
 	/* Methods    ------------------------------------------------ */
 		void	m_parseMethod(const RequestHTTP & request);

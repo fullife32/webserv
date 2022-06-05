@@ -6,11 +6,12 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 14:23:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 17:20:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageHTTP.hpp"
+#include "ServerConf.hpp"
 #include <unistd.h>
 
 /*
@@ -91,6 +92,7 @@ namespace WS
 			m_body.close();
 		m_body.clear();
 		m_header.str("");
+		m_header.clear();
 	}
 
 	size_t		ResponseHTTP::size() 
@@ -113,7 +115,7 @@ namespace WS
 		len = strlen(buffer);
 
 		if (m_body.is_open() && m_body.read(buffer + len, MESSAGE_BUFFER_SIZE - len))
-			return MESSAGE_BUFFER_SIZE;
+			return strlen(buffer);
 			
 		len = strlen(buffer);
 		if (len == 0)
@@ -151,10 +153,7 @@ namespace WS
 		m_set_minimalHeaderFields();
 		m_method = request.getMethod();
 		m_parseMethod(request);
-		if (request.hasQueryString() == true)
-			m_formated_CGI_Response(request);
-		else		
-			m_formated_Response(request.getUrl());
+
 	}
 
 	/*
@@ -206,11 +205,14 @@ namespace WS
 	void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 	{
 		std::cout << "in methode GET" << std::endl;
-		throw MessageErrorException(STATUS_BAD_REQUEST);
 
 		if (request.hasBody())
 			throw MessageErrorException(STATUS_BAD_REQUEST);
-		// TODO: 411 ERROR
+		if (request.hasQueryString())
+			m_formated_CGI_Response(request);
+		else		
+			m_formated_Response(request.getUrl());
+
 	}
 
 	void	ResponseHTTP::m_method_POST(const RequestHTTP & request)
@@ -240,7 +242,7 @@ namespace WS
 			try openFile from URL
 			formated Header : Status Line and Header Fields.
 	*/
-	void	ResponseHTTP::m_formated_Response(const std::string & url)
+	void	ResponseHTTP::m_formated_Response(const URL & url)
 	{
 		m_header.clear();
 		m_openFile_Body(url);
@@ -251,7 +253,7 @@ namespace WS
 
 	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
 	{
-	
+		std::cout << "there is a query string in the request" << std::endl;
 	}
 
 	void	ResponseHTTP::m_formated_StatusLine()
@@ -270,24 +272,34 @@ namespace WS
 		try opening file from URL.
 			throw MessageError
 	*/
-	void	ResponseHTTP::m_openFile_Body(const std::string & url)
+	void	ResponseHTTP::m_openFile_Body(const URL & url)
 	{
-		std::cout << "OPENFILE " <<  url << std::endl; ///
+		int	FileSize; // TODO: maybe long ?
+
+		std::cout << "OPENFILE URL formated = " << url.formatedPath() << std::endl; ///
+		
+		std::string  location(m_server->getConf().getLocationPath(url.serverName, url.formatedPath()));
+		
+		// m_body.open("test_config/simple/simple.html");
 		try
 		{
-			m_body.open(url.data(), std::fstream::binary);
+			m_body.open(location.data());
 		}
 		catch(const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
 			throw	MessageErrorException(400); ////
 		}
-
+		std::cout << "is open = " << m_body.is_open() << std::endl;
 
 		// save content length for ifstream
 		m_body.seekg (0, m_body.end);
-		setContentLength(m_body.tellg());
+		FileSize = m_body.tellg();
+
+		std::cout << "FileSize = " << FileSize << std::endl;
+		setContentLength(FileSize == -1 ? 0 : FileSize);
 		m_body.seekg (0, m_body.beg);
+
 	}
 
 /* -------------------------------------------------------------------------- */

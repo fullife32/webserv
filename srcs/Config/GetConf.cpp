@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetConf.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 19:35:29 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/05 17:20:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,12 @@ const s_base	&ServerConf::getLocationByName( std::string serverName, std::string
 	const s_server &server = getServerByName(serverName);
 
 	std::map<std::string, s_location>::const_iterator it = server.location.find(locationName);
+
+	std::cout << locationName << std::endl;
+
+	if (it != server.location.end())
+		std::cout << (*it).first << std::endl;
+
 
 	if (it != server.location.end() && (*it).first == locationName) {
 		yes = true;
@@ -44,9 +50,13 @@ std::string	ServerConf::getLocationPath(std::string server_name, std::string loc
 	std::string	path = "";
 	bool		yes;
 
+	std::cout << "in getLocationPath" << std::endl;
+
+	std::cout << "location = " << location << std::endl;
+	std::cout << "serverName = " << server_name << std::endl;
 	if (location == "/") {
 		baseStruct = getServerByName(server_name);
-		return baseStruct.root;
+		return baseStruct.root; // TODO: + index par default
 	}
 	baseStruct = getLocationByName(server_name, location, yes);
 	if (yes == false)

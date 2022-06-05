@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 09:38:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 16:20:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,35 @@ namespace WS
 	}
 
 
+	/* URL        ------------------------------------------------ */
+
+	void	URL::clear()
+	{
+		serverName.clear();
+		path.clear();
+		filename.clear();
+		fileExtension.clear();
+		query.clear();
+		fragment.clear();
+	}
+
+	std::string		URL::formatedPath() const
+	{
+
+		std::string result = path;
+
+		if (path.size() > 1 && path[0] == '/')
+			result.erase(0, 1);
+		return (result + "/" + filename);
+	}
+
+
 	/* Start Line ------------------------------------------------ */
 
 	void	RequestLine::clear()
 	{
 		version.clear();
-		target.clear();
+		url.clear();
 		method.clear();
 	}
 

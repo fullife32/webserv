@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 15:39:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:58:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 
 	/* get / set    ------------------------------------------------ */
 		int				getMethod() const;
-		std::string		getUrl() const;
+		URL				getUrl() const;
 		void			setRequestLine(const RequestLine & requestLine);
 		void			setBody(const std::string & body);
 

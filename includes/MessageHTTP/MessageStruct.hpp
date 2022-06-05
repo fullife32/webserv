@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 14:19:46 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/05 16:18:12 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ namespace WS {
 		std::string	query;		//											?queryString=value
 		std::string fragment;	//																#fragment
 
-		std::string		formatedPath() const ;
+		std::string		formatedPath() const ; //TODO: maybe not
+		void			clear();
+
 	};
 
 	/* Request Line -------m----------------------------------------- */
@@ -61,7 +63,6 @@ namespace WS {
 	{
 		HTTPversion		version;
 		URL				url;
-		std::string		target; // URL
 		std::string		method; // ACTIONS : GET, POST, DELETE
 
 		void	clear();
