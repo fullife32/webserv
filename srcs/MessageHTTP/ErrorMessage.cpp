@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:42:57 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/20 16:03:03 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 18:48:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,14 @@ namespace WS
 /*                               Exception                                    */
 /* -------------------------------------------------------------------------- */
 
-MessageErrorException::MessageErrorException(int error)
+MessageErrorException::MessageErrorException(int error, URL url)
 	: std::exception(),
-	m_current_error(error)
+	m_current_error(error),
+	m_url(url)
 {
 	if (m_errors.empty())
 		m_errors= init_mapError();
+	
 }
 
 int				MessageErrorException::getError() const throw ()
@@ -37,6 +39,11 @@ std::string		MessageErrorException::getMappedError() const throw ()
 	return m_errors[m_current_error];
 }
 
+
+URL		MessageErrorException::getUrl() const throw ()
+{
+	return m_url;
+}
 
 /* -------------------------------------------------------------------------- */
 

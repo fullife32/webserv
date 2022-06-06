@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/04 11:51:39 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 17:20:12 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <map>
 # include <string>
+# include "MessageStruct.hpp"
 
 #define	S_STATUS_CONTINUE 				"Continue"						// 100
 #define	S_STATUS_SWITCHING_PROTOCOL		"Switching Protocols"			// 101
@@ -111,16 +112,20 @@ class MessageErrorException : public std::exception
 {
 	private:
 		const int							m_current_error;
+		URL									m_url;
 		static std::map<int, std::string>	m_errors;
+
 
 	public:
 
 	/* constructor ------------------------------------------------ */
-		MessageErrorException(int	error);
+		MessageErrorException(int	error, URL url = URL());
+		virtual ~MessageErrorException() throw () {} ;
 
 	/* functions    ----------------------------------------------- */
 		int				getError() const throw() ;
 		std::string		getMappedError() const throw() ;
+		URL				getUrl() const throw () ;
 };
 
 

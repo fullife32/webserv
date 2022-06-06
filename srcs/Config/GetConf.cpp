@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/06 11:02:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:52:17 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,13 @@ const char	*ServerConf::getIp() const {
 
 size_t	ServerConf::getPort() const {
 	return m_main.second.listen.second;
+}
+
+bool    ServerConf::doesLocationExists(std::string server_name, std::string location) const {
+    std::string path = getLocationPath(server_name, location);
+    if (path.empty())
+        return false;
+    return true;
 }
 
 bool	ServerConf::isMethodAllowed( std::string server_name, std::string location, int method ) const { // TODO never sent empty location

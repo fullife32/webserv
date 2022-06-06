@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 16:18:09 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 18:46:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		std::stringstream		m_header;
 		std::fstream			m_body;
 		size_t					m_length;
+		bool					m_isAutoindex;
 		//TODO error page check if exist else create it
 		//TODO test DELETE / 
 		
@@ -69,31 +70,38 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		void		clear();
 		size_t		size() ;
 
-		void		buildError(int StatusCode, const std::string &  ReasonPhrase);
+		void		buildError(int StatusCode, const std::string & ReasonPhrase, const URL & url);
 		void		buildResponse(const RequestHTTP & request);
 
 	private:
 
 		// set
 		void	m_set_minimalHeaderFields();
+		void	m_setOpenFileBodySize();
 
 	/* formated Response   ------------------------------------------ */
 		void	m_formated_Response(const URL & url);
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
 		void	m_formated_CGI_Response(const RequestHTTP & request);
-		void	m_formated_Error();
+
+		void	m_formated_Error(const URL & url);
 		void	m_formated_ErrorBody(std::stringstream & body);
-		void	m_openFile_Body(const URL & url);
+
+		void	m_openFile_Body(const std::string & location);
+		bool	m_openFile_Error(const std::string & location);
+
+		
+		void	m_build_autoIndex(std::string location);
 
 	/* Methods    ------------------------------------------------ */
 		void	m_parseMethod(const RequestHTTP & request);
 		void	m_method_GET(const RequestHTTP & request);
 		void	m_method_POST(const RequestHTTP & request);
-		void	m_method_DELETE();
+		void	m_method_DELETE(const URL & url);
 
-		void	m_foundLocation();
-
+		std::string	m_foundLocation(const URL & url);
+		void	m_checkBodySize(const URL & url, size_t request_bodySize, size_t ContentLenght);
 
 	// DEBUG
 	public:

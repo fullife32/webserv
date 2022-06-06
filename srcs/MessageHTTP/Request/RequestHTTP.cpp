@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 17:08:48 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:54:51 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,11 @@ namespace WS
 		return (m_requestLine.url);
 	}
 
+	size_t	RequestHTTP::getBodySize() const
+	{
+		return m_body.size();
+	}
+
 
 /* -------------------------------------------------------------------------- */
 
@@ -93,7 +98,6 @@ namespace WS
 
 	bool	RequestHTTP::hasBody() const 
 	{
-		// std::cout << "IN HAS BODY " << m_body << !(m_body.empty()) << std::endl;
 		return !(m_body.empty());
 	}
 	

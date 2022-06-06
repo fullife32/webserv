@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 10:51:36 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 18:46:47 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 /*
 	POUR LES METHOD : 405 NOT ALLOWED que ce soit une methode qui n'est pas autorisee
 	ou qu'elle n'existe pas.
-
-
 */
 
 namespace WS
@@ -100,44 +98,6 @@ namespace WS
 		return (m_length);
 	}
 
-	/*
-		Prepare le buffer pour envoi a send()
-			envoi d'abord le header puis le body de la page
-			clear et envoi NULL une fois tout envoyé.
-	*/
-	size_t	ResponseHTTP::getNextChunk(char * buffer)
-	{
-		size_t	len;
-
-		if (m_header.read(buffer, MESSAGE_BUFFER_SIZE))
-			return strlen(buffer);
-
-		len = strlen(buffer);
-
-		if (m_body.is_open() && m_body.read(buffer + len, MESSAGE_BUFFER_SIZE - len))
-			return strlen(buffer);
-			
-		len = strlen(buffer);
-		if (len == 0)
-			clear();
-		return (len);
-	}
-
-/* -------------------------------------------------------------------------- */
-/*                     Get Set                                               */
-/* -------------------------------------------------------------------------- */
-
-	/*
-		Set Content-Lenght headerFields and keep size in intern variable
-	*/
-	void	ResponseHTTP::setContentLength(size_t size)
-	{
-		std::stringstream StringSize;
-
-		StringSize << size;
-		m_length = size;
-		set_headerFields("Content-Length", StringSize.str()); 
-	}
 
 /* -------------------------------------------------------------------------- */
 /*                     Build Response                                         */
@@ -159,27 +119,15 @@ namespace WS
 	/*
 		Construit la reponse en fonction de l'erreur rencontree.
 	*/
-	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase)
+	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase, const URL & url)
 	{
 		clear();
 		m_set_minimalHeaderFields();
 		m_statusLine.statusCode = StatusCode;
 		m_statusLine.reasonPhrase = ReasonPhrase;
-
-		m_formated_Error();
+		m_formated_Error(url);
 		debug_print();
 	}
-
-	/*
-		Set the minimals Header Fields needed for an answer.
-			Date and Server
-	*/
-	void	ResponseHTTP::m_set_minimalHeaderFields()
-	{
-		set_headerFields("Date", getStringTime());
-		set_headerFields("Server", SERVER_NAME);
-	}
-
 
 /* -------------------------------------------------------------------------- */
 /*                     Method Parser                                          */
@@ -195,9 +143,9 @@ namespace WS
 		{
 			case (GET) : m_method_GET(request); break;
 			case (POST) : m_method_POST(request); break;
-			case (DELETE) : m_method_DELETE(); break;
+			case (DELETE) : m_method_DELETE(request.getUrl()); break;
 			default :
-				throw MessageErrorException(STATUS_NOT_IMPLEMENTED);
+				throw MessageErrorException(STATUS_NOT_IMPLEMENTED, request.getUrl());
 		}
 	}
 
@@ -209,13 +157,14 @@ namespace WS
 		if (request.hasBody())
 			throw MessageErrorException(STATUS_BAD_REQUEST);
 		if (request.hasQueryString())
+			// fonction class CGI(ResponseHTTP )
 			m_formated_CGI_Response(request);
 		else		
 			m_formated_Response(request.getUrl());
 
 	}
 
-	void	ResponseHTTP::m_method_POST(const RequestHTTP & request)
+	void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Content-Type
 	{
 		std::cout << "in methode POST" << std::endl;
 
@@ -224,11 +173,11 @@ namespace WS
 		if (request.hasBody() == false)
 			throw MessageErrorException(STATUS_BAD_REQUEST); // TODO: a checker
 		ContentLenght = atoi(request.get_value_headerFields("Content-Lenght").data());
-		if (ContentLenght == 0)
-			throw MessageErrorException(STATUS_LENGHT_REQUIRED);
+		
+		m_checkBodySize(request.getUrl(), request.getBodySize(), ContentLenght);
 		
 	}
-	void	ResponseHTTP::m_method_DELETE()
+	void	ResponseHTTP::m_method_DELETE(const URL & url)
 	{
 		std::cout << "in methode DELETE" << std::endl;
 	}
@@ -245,7 +194,7 @@ namespace WS
 	void	ResponseHTTP::m_formated_Response(const URL & url)
 	{
 		m_header.clear();
-		m_openFile_Body(url);
+		m_openFile_Body(m_foundLocation(url));
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
 	}
@@ -268,44 +217,6 @@ namespace WS
 		m_header << CRLF;
 	}
 
-	/*
-		try opening file from URL.
-			throw MessageError
-	*/
-	void	ResponseHTTP::m_openFile_Body(const URL & url)
-	{
-		int	FileSize; // TODO: maybe long ?
-			throw	MessageErrorException(500); ////
-
-		std::cout << "OPENFILE URL formated = " << url.formatedPath() << std::endl; ///
-		
-		std::string  location = m_server->getConf().getLocationPath(url.serverName, url.formatedPath());
-		
-		// if (location.empty())
-		// 	location = m_server->getConf().g
-		std::cout << "location :" << location << std::endl;
-		// m_body.open("test_config/simple/simple.html");
-		try
-		{
-			// m_body.open(location.data());
-			m_body.open("test_config/simple/simple.html");
-		}
-		catch(const std::exception& e)
-		{
-			std::cerr << e.what() << '\n';
-			throw	MessageErrorException(200); ////
-		}
-		std::cout << "is open = " << m_body.is_open() << std::endl;
-
-		// save content length for ifstream
-		m_body.seekg (0, m_body.end);
-		FileSize = m_body.tellg();
-
-		std::cout << "FileSize = " << FileSize << std::endl;
-		setContentLength(FileSize == -1 ? 0 : FileSize);
-		m_body.seekg (0, m_body.beg);
-
-	}
 
 /* -------------------------------------------------------------------------- */
 /*                     Formated Error Response                                */
@@ -315,19 +226,17 @@ namespace WS
 		formated Error Response:
 			create a simple body html for Error
 	*/
-	void	ResponseHTTP::m_formated_Error()
+	void	ResponseHTTP::m_formated_Error(const URL & url)
 	{
-		std::stringstream	body;
-		// std::string			ErrorUrl = m_server->getErrorPage();
+		std::stringstream		body;
+		std::string				ErrorUrl = m_server->getConf().getErrorPage(url.serverName, url.path, m_statusLine.statusCode);
+
 
 		m_formated_StatusLine();
-		// if ErrorUrl.empty()
-		// {
+		if (ErrorUrl.empty())
 			m_formated_ErrorBody(body);
-
-		// }
-		// else
-		// 	m_openFile_Body(ErrorUrl);
+		else
+			m_openFile_Body(ErrorUrl);
 		m_formated_HeaderFields();
 
 		m_header << body.str();
@@ -371,22 +280,122 @@ namespace WS
 
 
 
-void		ResponseHTTP::m_foundLocation()
+std::string			ResponseHTTP::m_foundLocation(const URL & url)
 {
+	ServerConf 		m_serverConf = m_server->getConf();
+	std::string		formatedPath = url.formatedPath();
+	int				redirection;
 
 
-	// if (server->allowedMethod(m_method) == false)
-	// 	throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED);
-	
-	// 	server.isFound()
+	if (m_serverConf.doesLocationExists(url.serverName, formatedPath) == false)
+		throw MessageErrorException(STATUS_NOT_FOUND, url);
+	if (m_serverConf.isMethodAllowed(url.serverName, formatedPath, m_method) == false)
+		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, url);
+	redirection = m_serverConf.isRedirecting(url.serverName, formatedPath, formatedPath);
+	if (redirection != 0)
+	{
+		m_statusLine.statusCode = redirection;
+		m_statusLine.reasonPhrase = ""; // TODO: good reasonphrase
+		set_headerFields("Location", formatedPath);
+	}
+	else
+	{
+		if (url.filename.empty())
+		{
+			formatedPath = m_serverConf.getIndex(url.serverName, formatedPath);
+			if (formatedPath.empty())
+			{
+				m_isAutoindex = m_serverConf.isAutoindexOn(url.serverName, formatedPath);
+				if (m_isAutoindex == false)
+					throw MessageErrorException(STATUS_FORBIDDEN, url);
+			}
+		}
+
+	}
+	return (formatedPath);
 }
 
 
+void		ResponseHTTP::m_checkBodySize(const URL & url, size_t request_bodySize, size_t ContentLenght)
+{
+	if (ContentLenght == 0)
+		throw MessageErrorException(STATUS_LENGHT_REQUIRED, url);
+		
+	size_t	maxBodySize = (m_server->getConf().getBodySize(url.serverName, url.formatedPath()));
+
+	if (maxBodySize != 0 && request_bodySize > maxBodySize)
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, url); // TODO:close client
+	if (ContentLenght != request_bodySize)
+		throw MessageErrorException(STATUS_BAD_REQUEST, url);
+}
+
+	/*
+		try opening file from URL.
+			throw MessageError
+	*/
+	bool	ResponseHTTP::m_openFile_Error(const std::string & location)
+	{
+		if (location.empty())
+			return false;
+		try
+		{
+			m_body.open(location.data());
+		}
+		catch(const std::exception& e)  //// TODO: What to do ? 
+		{
+			std::cerr << e.what() << '\n';
+			throw	MessageErrorException(100);
+		}
+		if ( m_body.is_open() == false)
+			return false;
+		m_setOpenFileBodySize();
+		return true;
+	}
+
+
+	void	ResponseHTTP::m_openFile_Body(const std::string & location)
+	{
+
+		std::cout << "OPENFILE location = " << location << std::endl;
+		if (m_isAutoindex)
+			;// m_build_autoIndex(location);
+		else
+		{
+			try
+			{
+				m_body.open(location.data());
+			}
+			catch(const std::exception& e)  //// TODO: What to do ? 
+			{
+				std::cerr << e.what() << '\n';
+				throw	MessageErrorException(100);
+			}
+		}
+	
+		std::cout << "is open = " << m_body.is_open() << std::endl;
+		if (m_body.is_open() == false)
+			throw MessageErrorException(STATUS_NOT_FOUND); // TODO: URL
+		m_setOpenFileBodySize();
+	}
+
+
+void	ResponseHTTP::m_setOpenFileBodySize()
+{
+		int	FileSize; // TODO: maybe long ?
+
+		m_body.seekg (0, m_body.end);
+		FileSize = m_body.tellg();
+
+		std::cout << "FileSize = " << FileSize << std::endl;
+		setContentLength(FileSize == -1 ? 0 : FileSize);
+		m_body.seekg (0, m_body.beg);
+
+}
 
 std::map< std::string, std::string> m_listContentType;
 
 
-void	m_init_listContentType()
+void	m_init_listContentType() // TODO: 415 Unsupported Media Type
 {
 
 	m_listContentType[".aac"] = "audio/aac";
@@ -404,5 +413,6 @@ void	m_init_listContentType()
 	m_listContentType[".png"] = "image/png";
 	m_listContentType[".svg"] = "image/svg+xml";
 }
+
 
 } // end namespace

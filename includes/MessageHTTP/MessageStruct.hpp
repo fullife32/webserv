@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 16:18:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 18:22:35 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,13 @@ namespace WS {
 	
 	struct URL
 	{
-		std::string	serverName;	// example.com
-		std::string	path;		//				/location/here
-		std::string filename;	//								/file.html
-		std::string	fileExtension;//								.html
-		std::string	query;		//											?queryString=value
-		std::string fragment;	//																#fragment
+		std::string	serverName;		// example.com
+		std::string	path;			//				/location/here
+		std::string filename;		//								/file.html
+		std::string	fileExtension;	//									 .html
+		std::string	pathInfo;		//					if .cgi				.cgi/path/info
+		std::string	query;			//													?queryString=value
+		std::string fragment;		//																		#fragment
 
 		std::string		formatedPath() const ; //TODO: maybe not
 		void			clear();

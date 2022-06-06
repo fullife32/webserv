@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/06 11:02:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:52:40 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ public:
 	bool			isAutoindexOn(std::string server_name, std::string location) const;
 	std::string		getIndex(std::string server_name, std::string location) const;
 	std::string		isUploadPath(std::string server_name, std::string location) const;
+	bool    		doesLocationExists(std::string server_name, std::string location) const;
 
 
 	class ConfFail : public std::exception {
