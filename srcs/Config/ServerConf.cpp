@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 17:15:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:02:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,7 @@ static void	showConfLocation(s_location location) {
 		std::cout << "		Redirect: " << location.redirect.first << " > " << location.redirect.second << std::endl;
 	std::cout << "		Root: " << location.root << std::endl;
 	std::cout << "		Autoindex: " << location.autoindex << std::endl;
-	std::cout << "		Index:";
-	for (std::vector<std::string>::iterator itIndex = location.index.begin(); itIndex != location.index.end(); ++itIndex)
-		std::cout << " " << (*itIndex);
-	std::cout << std::endl;
+	std::cout << "		Index:" << location.index << std::endl;
 	if (location.upload_pass != "")
 		std::cout << "		Upload_pass: " << location.upload_pass << std::endl;
 	std::cout << "		Method:";
@@ -67,10 +64,7 @@ static void	showConfServer(s_server &server) {
 		std::cout << "	Redirect: " << server.redirect.first << " > " << server.redirect.second << std::endl;
 	std::cout << "	Root: " << server.root << std::endl;
 	std::cout << "	Autoindex: " << server.autoindex << std::endl;
-	std::cout << "	Index:";
-	for (std::vector<std::string>::iterator itIndex = server.index.begin(); itIndex != server.index.end(); ++itIndex)
-		std::cout << " " << (*itIndex);
-	std::cout << std::endl;
+	std::cout << "	Index:" << server.index << std::endl;
 	if (server.upload_pass != "")
 		std::cout << "	Upload_pass: " << server.upload_pass << std::endl;
 	for (std::map<std::string, struct s_location>::const_iterator it = server.location.begin(); it != server.location.end(); ++it) {
@@ -158,11 +152,11 @@ void	ServerConf::getConfTest(std::vector<ServerConf> &confs) {
 	std::cout << "Is Autoindex other / ? " << confs.at(0).isAutoindexOn("other_simple.com", "/") << std::endl;
 	std::cout << std::endl;
 
-	std::cout << "Index / ? " << confs.at(0).getIndexList("", "/").back() << std::endl;
-	std::cout << "Index /test ? " << confs.at(0).getIndexList("", "/test").back() << std::endl;
-	std::cout << "Index /exec ? " << confs.at(0).getIndexList("", "/exec").back() << std::endl;
-	std::cout << "Index /upload ? " << confs.at(0).getIndexList("", "/upload").back() << std::endl;
-	std::cout << "Index other / ? " << confs.at(0).getIndexList("other_simple.com", "/").back() << std::endl;
+	std::cout << "Index / ? " << confs.at(0).getIndex("", "/") << std::endl;
+	std::cout << "Index /test ? " << confs.at(0).getIndex("", "/test") << std::endl;
+	std::cout << "Index /exec ? " << confs.at(0).getIndex("", "/exec") << std::endl;
+	std::cout << "Index /upload ? " << confs.at(0).getIndex("", "/upload") << std::endl;
+	std::cout << "Index other / ? " << confs.at(0).getIndex("other_simple.com", "/") << std::endl;
 	std::cout << std::endl;
 
 	std::cout << "Is Upload path / ? " << confs.at(0).isUploadPath("", "/") << std::endl;
@@ -272,9 +266,8 @@ void	ServerConf::replaceConfig(s_server &server, s_location &location) {
 		server.root = location.root;
 	if (server.autoindex == false || location.autoindex != false)
 		server.autoindex = location.autoindex;
-	if (location.index.size() != 2 || (location.index.size() == 2 &&
-	(location.index[0] != "index" || location.index[1] != "index.html")))
-		server.index.insert(server.index.end(), location.index.begin(), location.index.end());
+	if (location.index != "index.html")
+		server.index = location.index;
 	if (location.upload_pass != "")
 		server.upload_pass = location.upload_pass;
 }
@@ -287,13 +280,13 @@ void	ServerConf::mandatoryCheck( struct s_server &config ) {
 		replaceConfig(config, (*it).second);
 	if (config.root == "")
 		config.root = "html";
-	if (config.index.empty() == true)
-		config.index.push_back("index.html");
+	if (config.index == "")
+		config.index = "index.html";
 	for (std::map<std::string,s_location>::iterator it = config.location.begin(); it != config.location.end(); ++it) {
 		if ((*it).second.root == "")
 			(*it).second.root = config.root;
-		if ((*it).second.index.empty())
-			(*it).second.index.push_back("index.html");
+		if ((*it).second.index == "")
+			(*it).second.index = "index.html";
 		if ((*it).second.method.empty()) {
 			(*it).second.method.push_back("GET");
 			(*it).second.method.push_back("POST");
@@ -356,6 +349,7 @@ void	ServerConf::initServerConf( struct s_server &config ) {
 	config.client_max_body_size = DEFAULT_BODY;
 	config.root = "";
 	config.autoindex = false;
+	config.index = "";
 	config.upload_pass = "";
 }
 
@@ -412,6 +406,7 @@ void	ServerConf::initLocationConf( struct s_location &config ) {
 	config.client_max_body_size = DEFAULT_BODY;
 	config.root = "";
 	config.autoindex = false;
+	config.index = "";
 	config.upload_pass = "";
 }
 

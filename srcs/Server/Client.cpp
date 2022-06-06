@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 15:55:19 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:02:34 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void		Client::receive_data() {
 
 	std::cout << "RECEIVE DATA" << std::endl;
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
-	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0);
+	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0); // TODO; recv first == 0 le client s est deconnecte
 
 	if (size == -1)
 	{
@@ -76,7 +76,7 @@ void		Client::receive_data() {
 	m_request.append(m_buffer);
 	if (size == 0 || size < MESSAGE_BUFFER_SIZE)
 	{
-		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);////
 		try {
 			m_request.buildRequest();
 			m_request.debug_print();
@@ -92,17 +92,22 @@ void		Client::receive_data() {
 
 void		Client::send_data() {
 
-	size_t	bufferSize;
-	size_t	sendSize;
+	static size_t	bufferSize = 0;
+	static size_t	sendSize = 0;
+
 
 	std::cout << "SEND DATA" << std::endl;
 
-	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
-	bufferSize = m_response.getNextChunk(m_buffer);
+
+	if (sendSize == bufferSize)
+	{
+		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+		bufferSize = m_response.getNextChunk(m_buffer);
+	}
 	if (bufferSize == 0)
 		setToRemove();
 	sendSize = send(m_fd, m_buffer, bufferSize, 0);
-	if (sendSize != bufferSize || sendSize == (size_t)-1)
+	if (sendSize == (size_t)-1)
 		setToRemove(); // TODO: what to do ? 
 
 
