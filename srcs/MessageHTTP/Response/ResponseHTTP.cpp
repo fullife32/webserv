@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 17:20:44 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 10:51:36 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,20 +275,25 @@ namespace WS
 	void	ResponseHTTP::m_openFile_Body(const URL & url)
 	{
 		int	FileSize; // TODO: maybe long ?
+			throw	MessageErrorException(500); ////
 
 		std::cout << "OPENFILE URL formated = " << url.formatedPath() << std::endl; ///
 		
-		std::string  location(m_server->getConf().getLocationPath(url.serverName, url.formatedPath()));
+		std::string  location = m_server->getConf().getLocationPath(url.serverName, url.formatedPath());
 		
+		// if (location.empty())
+		// 	location = m_server->getConf().g
+		std::cout << "location :" << location << std::endl;
 		// m_body.open("test_config/simple/simple.html");
 		try
 		{
-			m_body.open(location.data());
+			// m_body.open(location.data());
+			m_body.open("test_config/simple/simple.html");
 		}
 		catch(const std::exception& e)
 		{
 			std::cerr << e.what() << '\n';
-			throw	MessageErrorException(400); ////
+			throw	MessageErrorException(200); ////
 		}
 		std::cout << "is open = " << m_body.is_open() << std::endl;
 

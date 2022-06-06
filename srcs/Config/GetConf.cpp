@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 17:20:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 10:38:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,9 @@ std::string	ServerConf::getLocationPath(std::string server_name, std::string loc
 	std::string	path = "";
 	bool		yes;
 
-	std::cout << "in getLocationPath" << std::endl;
-
-	std::cout << "location = " << location << std::endl;
-	std::cout << "serverName = " << server_name << std::endl;
 	if (location == "/") {
 		baseStruct = getServerByName(server_name);
-		return baseStruct.root; // TODO: + index par default
+		return baseStruct.root;
 	}
 	baseStruct = getLocationByName(server_name, location, yes);
 	if (yes == false)

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 16:20:56 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 10:36:43 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,10 @@ namespace WS
 
 		std::string result = path;
 
-		if (path.size() > 1 && path[0] == '/')
-			result.erase(0, 1);
+		// if (path.size() > 1 && path[0] == '/')
+		// 	result.erase(0, 1);
+		if (filename.empty())
+			return (result);
 		return (result + "/" + filename);
 	}
 
