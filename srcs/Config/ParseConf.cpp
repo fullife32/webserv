@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 18:18:34 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 21:47:01 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/06 17:13:56 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,8 @@ void	ServerConf::parseAutoindex( std::vector<std::string> &tokens, struct s_base
 void	ServerConf::parseIndex( std::vector<std::string> &tokens, struct s_base &block ) {
 	if (tokens.size() != 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
-	// TODO without point wrong format ?
+	if (std::find(tokens[1].begin(), tokens[1].end(), '.') == tokens[1].end())
+		throw ServerConf::ConfFail(WRONG_INDEX_FORMAT, tokens[1]);
 	block.index = tokens[1];
 }
 
