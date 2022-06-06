@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/02 15:26:37 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/06 13:13:20 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,16 @@ int	Multiplex::waitPlex() {
 	}
 	m_nbReady = epoll_wait(m_fd, m_events, MAXEVENTS, EPOLL_TIMEOUT);
 	if (m_nbReady == -1) {
-		std::cerr << "epoll_wait failed" << std::endl;
+		std::cout << "pass" << std::endl;
 		return -1;
+
 	}
 	return m_nbReady;
 }
 
 void	Multiplex::handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients ) {
 	for (int i = 0; i < m_nbReady; i++) {
-		handleServer(i, servers, clients); // cut search in two with epoll fd, < servers, > clients ?
+		handleServer(i, servers, clients); // TODO cut search in two with epoll fd, < servers, > clients ?
 		handleClients(i, clients);
 	}
 	freeEvents();

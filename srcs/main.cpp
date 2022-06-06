@@ -6,12 +6,13 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 19:43:58 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/06 13:12:24 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <map>
+#include <signal.h>
 #include "Server.hpp"
 #include "ServerConf.hpp"
 #include "Multiplex.hpp"
@@ -74,6 +75,7 @@ int	main(int ac, char **av) {
 
 	std::map<int, Client>	clients;
 
+	// signal(SIGINT, SIG_IGN);
 	for (;;) {
 		if (plex.waitPlex() == -1)
 			break;
