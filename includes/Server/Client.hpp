@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 11:56:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/03 19:47:49 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ private:
 	bool				m_toChangeEvent; // ?
 	sockaddr_storage 	m_cli;
 	socklen_t			m_size;
-	Server				&m_server;
 
 public:
 
@@ -45,6 +44,7 @@ private:
 
 public:
 
+	Server			&m_server;
 	static Client	acceptClient( int fdServer, Server &server );
 
 	bool			getToRemove() const;

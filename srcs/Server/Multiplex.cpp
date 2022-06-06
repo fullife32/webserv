@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/24 11:56:14 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/02 15:26:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	Multiplex::createPlex() {
 	m_fd = epoll_create1(0); //FD_CLOEXEC if need to close after exec
 	if (m_fd == -1)
 		throw Multiplex::PlexFail();
-	std::cout << m_fd << ": epoll list created" << std::endl;
+	std::cout << m_fd << ": epoll list created" << std::endl; // TODO DEBUG
 }
 
 int	Multiplex::waitPlex() {
