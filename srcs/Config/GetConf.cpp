@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 21:49:20 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:43:13 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,13 @@ std::string	ServerConf::getLocationPath(std::string server_name, std::string loc
 		return std::string();
 	else
 		return baseStruct.root + location;
+}
+
+bool	ServerConf::doesLocationExists(std::string server_name, std::string location) const {
+	std::string path = getLocationPath(server_name, location);
+	if (path.empty())
+		return false;
+	return true;
 }
 
 const char	*ServerConf::getIp() const {

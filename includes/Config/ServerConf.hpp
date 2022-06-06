@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 21:45:37 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:43:02 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ public:
 	const s_base	&getLocationByName( std::string serverName, std::string locationName, bool &yes ) const;
 	const s_server	&getServerByName( std::string serverName ) const;
 	std::string  	getLocationPath(std::string server_name, std::string location) const;
+	bool			doesLocationExists(std::string server_name, std::string location) const;
 	const char		*getIp() const;
 	size_t			getPort() const;
 	bool			isMethodAllowed( std::string server_name, std::string location, int method ) const;
