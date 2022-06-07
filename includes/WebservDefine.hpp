@@ -1,26 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Utils.hpp                                          :+:      :+:    :+:   */
+/*   WebservDefine.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/19 11:52:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 14:37:40 by lvirgini         ###   ########.fr       */
+/*   Created: 2022/06/02 16:27:56 by lvirgini          #+#    #+#             */
+/*   Updated: 2022/06/02 16:38:14 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_HPP
-# define UTILS_HPP
+#ifndef WEBSERVDEFINE_HPP
+# define WEBSERVDEFINE_HPP
 
-#include <string>
-#include <vector>
+# define METHOD_GET			"GET"
+# define METHOD_POST		"POST"	
+# define METHOD_DELETE		"DELETE"
+# define METHOD_HEAD		"HEAD"
+# define METHOD_PUT			"PUT"
+# define METHOD_CONNECT		"CONNECT"
+# define METHOD_OPTIONS		"OPTIONS"
+# define METHOD_TRACE		"TRACE"
 
-# define BUFFER_TIME	30
+	enum e_RequestMethod
+	{
+		GET = 0,
+		POST,
+		DELETE,
+		HEAD,
+		PUT,
+		CONNECT,
+		OPTIONS,
+		TRACE
+	};
 
-
-std::vector<std::string>	splitString(const std::string & str, const std::string & separator);
-
-std::string					getStringTime();
 
 #endif

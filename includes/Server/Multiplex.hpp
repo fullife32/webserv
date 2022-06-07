@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Multiplex.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/05/26 20:25:57 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/05 13:58:13 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ public:
 	void	freeEvents();
 	void	closePlex();
 
+private:
+
+	void	m_checkClientChangeEvent(std::map<int, Client>::iterator currentClient, std::map<int, Client> &clients);
 	class PlexFail : public std::exception {
 	public:
 		PlexFail() { }

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 10:23:45 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:53:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,64 @@ namespace WS
 	}
 
 
+	/* URL        ------------------------------------------------ */
+
+
+	URL::URL(const URL & copy)
+	{
+		serverName = copy.serverName;
+		path = copy.path;
+		filename = copy.filename;
+		fileExtension = copy.fileExtension;
+		pathInfo = copy.pathInfo;
+		query = copy.query;
+		fragment = copy.fragment;
+	}	
+
+	URL & URL::operator=(const URL & other)
+	{
+		if (this != &other)
+		{
+			serverName = other.serverName;
+			path = other.path;
+			filename = other.filename;
+			fileExtension = other.fileExtension;
+			pathInfo = other.pathInfo;
+			query = other.query;
+			fragment = other.fragment;
+		}
+		return *this;
+	}	
+
+	void	URL::clear()
+	{
+		serverName.clear();
+		path.clear();
+		filename.clear();
+		fileExtension.clear();
+		query.clear();
+		fragment.clear();
+	}
+
+	std::string		URL::formatedPath() const
+	{
+
+		std::string result = path;
+
+		// if (path.size() > 1 && path[0] == '/')
+		// 	result.erase(0, 1);
+		if (filename.empty())
+			return (result);
+		return (result + "/" + filename);
+	}
+
+
 	/* Start Line ------------------------------------------------ */
 
 	void	RequestLine::clear()
 	{
 		version.clear();
-		target.clear();
+		url.clear();
 		method.clear();
 	}
 
@@ -78,6 +130,41 @@ namespace WS
 		statusCode = 0;
 		reasonPhrase.clear();
 	}
+
+	/* Header Fields  ------------------------------------------------ */
+
+	void		HeaderFields::clear()
+	{
+		m_headerFields.clear();
+	}
+
+
+	void		HeaderFields::set_headerFields(const HeaderFields::value_type & headerFields)
+	{
+		m_headerFields = headerFields;
+	}
+
+	void	HeaderFields::set_headerFields(const std::string & headerField, const std::string & value)
+	{
+		m_headerFields[headerField] = value;
+	}
+
+
+	HeaderFields::value_type		HeaderFields::get_headerFields() const
+	{
+		return m_headerFields;
+	}
+
+
+	std::string		HeaderFields::get_value_headerFields(const std::string & key) const
+	{
+		HeaderFields::value_type::const_iterator found = m_headerFields.find(key);
+
+		if (found == m_headerFields.end())
+			return (std::string());
+		return (*found).second;
+	}
+
 
 
 	/* Message Methods static map  --------------------------------- */

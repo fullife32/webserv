@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/03 19:43:58 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:39:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(int ac, char **av) {
 	if (ServerConf::startParse(path, confs) == 1)
 		return 1;
 
-	// ServerConf::getConfTest(confs); // TODO DEBUG
+	ServerConf::getConfTest(confs); // TODO DEBUG
 
 	std::map<int, Server>	servers;
 

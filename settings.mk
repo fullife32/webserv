@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    settings.mk                                        :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
+#    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/06 14:23:35 by rotrojan         ###   ########.fr        #
+#    Updated: 2022/06/07 15:25:55 by rotrojan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,8 @@ SRCS =	main.cpp		\
 		MessageStruct.cpp \
 		RequestHTTP.cpp \
 		ResponseHTTP.cpp \
+		ResponseHTTP_get_set.cpp \
+		ResponseHTTP_formatting.cpp \
 		Split.cpp \
 		ErrorMessage.cpp \
 		DateFormat.cpp \
@@ -31,6 +33,7 @@ SRCS =	main.cpp		\
 		Multiplex.cpp \
 		Client.cpp \
 
+# main_testRequest.cpp		\
 
 # The file where make will look for all the sources (in addition to the root
 # directory of the Makefile)
