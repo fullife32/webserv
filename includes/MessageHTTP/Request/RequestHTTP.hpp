@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 14:59:23 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 16:42:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 # define REQUESTHTTP_HPP
 
 # include "MessageHTTP.hpp"
-
-namespace WS {
-
 
 class RequestHTTP : public MessageMethods, public HeaderFields
 {
@@ -80,8 +77,5 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 
 
 }; // end class RequestHTTP
-
-
-} // end namespace
 
 #endif

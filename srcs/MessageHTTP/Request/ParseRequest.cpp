@@ -6,13 +6,11 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:13:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 16:40:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageHTTP.hpp"
-
-namespace WS {
 
 /* -------------------------------------------------------------------------- */
 /*                     Constructor Destructor                                 */
@@ -226,6 +224,3 @@ void	ParseRequest::m_formated_Url(std::string target)
 	}
 	m_requestLine.url.path = target;
 }
-
-
-} // end namespace

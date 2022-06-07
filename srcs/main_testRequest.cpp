@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 14:47:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 17:50:31 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,8 @@ void test_request_response(int ac, char **argv)
 	char	buf[MESSAGE_BUFFER_SIZE + 1];
 	int 	fd;
 	int		size_read;
-	WS::RequestHTTP		request;
-	WS::ResponseHTTP	response(NULL);
+	RequestHTTP		request;
+	ResponseHTTP	response(NULL);
 	
 	memset(buf, '\0', MESSAGE_BUFFER_SIZE);
 	
@@ -155,7 +155,7 @@ void test_request_response(int ac, char **argv)
 		request.buildRequest();
 		response.buildResponse(request);
 	}
-	catch (WS::MessageErrorException & e)
+	catch (MessageErrorException & e)
 	{
 		response.buildError(e.getError(), e.getMappedError());
 	}
@@ -179,7 +179,17 @@ void test_request_response(int ac, char **argv)
 int main(int ac, char **argv)
 {
 
-	WS::ParseRequest	r;
+	// int fd = open("test_config/simple/simple.html", O_RDONLY);
+
+	// fd.read
+	// std::fstream	fs;
+	// fs.open(fd)
+	// char *buf[1000];
+
+	// fs.read(buf, 1000 - 1);
+	// std::cout << buf << std::endl
+
+	// ParseRequest	r;
 
 
 	// r.m_formated_Url("//////");
@@ -188,7 +198,7 @@ int main(int ac, char **argv)
 	// r.m_formated_Url("/path/.index.html.rc");
 	// r.m_formated_Url("/path/with/most/directory/and/there/is/not/a/file");
 	// r.m_formated_Url("/path/with/most/directory/file.txt?queryString=jeNeSaisPas#fragmentUtils???");
-	r.debug_print();
+	// r.debug_print();
 
 
 }

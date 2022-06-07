@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 11:39:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 16:43:10 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -409,9 +409,3 @@ void	ServerConf::initLocationConf( struct s_location &config ) {
 	config.index = "";
 	config.upload_pass = "";
 }
-
-
-// void	ServerConf::debug_print()
-// {
-// 	std::cout << m_main
-// }
