@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 18:42:10 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:13:13 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ void	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & head
 void	ParseRequest::m_check_host_HeaderFields(const std::string & url)
 {
 	// find Header Field "host"
-	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find("Host");
+	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find(HF_HOST);
 	
 	if (found_host == m_headerFields.end()) ///// FAUT IL OBLIGATOIREMENT LE HOST ? normalement oui avec http1.1
 		throw MessageErrorException(STATUS_BAD_REQUEST); // TODO URL ?

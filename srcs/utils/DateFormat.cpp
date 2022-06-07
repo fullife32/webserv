@@ -6,11 +6,11 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 18:56:58 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/19 14:37:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:00:57 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Utils.hpp"
+#include "utils.hpp"
 #include <ctime>
 #include <iostream>
 #include <cstring>

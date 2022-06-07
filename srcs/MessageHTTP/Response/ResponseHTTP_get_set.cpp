@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 11:19:05 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:16:27 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,6 @@ namespace WS
 	{
 		return m_url.serverName;
 	}
-
-
-
-
-
-
 
 
 } // end namespace

@@ -6,16 +6,14 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 14:24:45 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:04:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ERRORMESSAGE_HPP
 # define ERRORMESSAGE_HPP
 
-# include <map>
-# include <string>
-# include "MessageHTTP.hpp" 
+# include "MessageStruct.hpp" 
 
 #define	S_STATUS_CONTINUE 				"Continue"						// 100
 #define	S_STATUS_SWITCHING_PROTOCOL		"Switching Protocols"			// 101

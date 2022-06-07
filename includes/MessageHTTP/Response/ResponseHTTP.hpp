@@ -6,26 +6,31 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 14:25:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:05:39 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEHTTP_HPP
 # define RESPONSEHTTP_HPP
 
-# include "MessageHTTP.hpp"
 # include "Server.hpp"
+# include "MessageHTTP.hpp"
 
 namespace WS {
 
-class ResponseHTTP : public MessageMethods, public HeaderFields //  , public ErrorMap
+class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 {
 	/*
 		protected variables herited from MessageMethods: list of all Methods
 			static	std::map <std::string, int>		m_methods;
 
-		protected variables herited from HeaderFields: list of all Methods
-			std::map<std::string, std::string>	m_headerFields;	
+		protected variables herited from HeaderFields: list of all Errors
+			static std::map<int, std::string>	m_errors;
+
+		protected variables herited from HeaderFields: map of HeaderFields
+			std::map<std::string, std::string>	m_headerFields;
+
+		
 	*/
 	private:
 
@@ -38,7 +43,6 @@ class ResponseHTTP : public MessageMethods, public HeaderFields //  , public Err
 		size_t					m_length;
 		bool					m_isAutoindex;
 		URL						m_url;
-		//TODO error page check if exist else create it
 		//TODO test DELETE / 
 		
 

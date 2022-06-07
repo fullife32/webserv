@@ -6,14 +6,21 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 14:12:36 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:15:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MESSAGESTRUCT_HPP
 # define MESSAGESTRUCT_HPP
 
-#include "MessageHTTP.hpp"
+#include <map>
+#include <string>
+
+#define	HF_HOST				"Host"
+#define HF_CONTENT_LENGTH	"Content-Length"
+#define HF_CONTENT_TYPE		"Content-Type"
+#define HF_USER_AGENT		"User-Agent"
+#define HF_LOCATION			"Location"
 
 namespace WS {
 

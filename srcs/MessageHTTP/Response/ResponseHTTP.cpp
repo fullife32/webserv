@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 13:53:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:16:00 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,8 +183,9 @@ namespace WS
 		
 		if (request.hasBody() == false)
 			throw MessageErrorException(STATUS_BAD_REQUEST); // TODO: a checker
-		ContentLenght = atoi(request.get_value_headerFields("Content-Lenght").data());
-		
+		ContentLenght = atoi(request.get_value_headerFields(HF_CONTENT_LENGTH).data());
+		if (request.get_value_headerFields(HF_CONTENT_TYPE).empty()) 
+			throw MessageErrorException(STATUS_BAD_REQUEST);// TODO: if no Content type ?
 		m_checkBodySize(request.getBodySize(), ContentLenght);
 		
 	}
@@ -216,8 +217,8 @@ std::string			ResponseHTTP::m_foundLocation()
 	if (redirection != 0)
 	{
 		m_statusLine.statusCode = redirection;
-		m_statusLine.reasonPhrase = ""; // TODO: good reasonphrase
-		set_headerFields("Location", formatedPath);
+		m_statusLine.reasonPhrase = m_errors[redirection];
+		set_headerFields(HF_LOCATION, formatedPath);
 	}
 	else
 	{
