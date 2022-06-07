@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Split.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:49:59 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 19:42:14 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:01:12 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Utils.hpp"
+#include "utils.hpp"
 #include <vector>
 #include <string>
 #include <map>

@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 21:54:02 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:17:00 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,10 @@ void	ServerConf::getConfTest(std::vector<ServerConf> &confs) {
 	std::string url;
 	std::cout << "Location \"\" ? " << confs.at(0).getLocationPath("", "") << std::endl;
 	std::cout << "Location / ? " << confs.at(0).getLocationPath("simple.com", "/") << std::endl;
+	std::cout << "Location /i/ ? " << confs.at(0).getLocationPath("simple.com", "/i") << std::endl;
 	std::cout << "Location other / ? " << confs.at(0).getLocationPath("other_simple.com", "/") << std::endl;
 	std::cout << "Location /exec ? " << confs.at(0).getLocationPath("", "/exec") << std::endl;
+	std::cout << "Location /exec/coucou ? " << confs.at(0).getLocationPath("", "/exec/coucou") << std::endl;
 	std::cout << "Location other /exec ? " << confs.at(0).getLocationPath("other_simple.com", "/exec") << std::endl;
 	std::cout << std::endl;
 
@@ -248,8 +250,12 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 bool	ServerConf::insertInSub(s_server &newServer, std::vector<ServerConf> &confs) {
 	for (std::vector<ServerConf>::iterator it = confs.begin(); it != confs.end(); ++it) {
 		if ((*it).getIp() == newServer.listen.first
+		&& (*it).getPort() == newServer.listen.second
+		&& ((*it).m_main.first == newServer.server_name || newServer.server_name.empty()))
+			throw ServerConf::ConfFail(SAME_HOST, "server_name");
+		else if ((*it).getIp() == newServer.listen.first
 		&& (*it).getPort() == newServer.listen.second) {
-			(*it).m_subs.insert(make_pair(newServer.server_name, newServer)); // TODO: make private
+			(*it).m_subs.insert(make_pair(newServer.server_name, newServer));
 			return true;
 		}
 	}
@@ -262,31 +268,27 @@ void	ServerConf::replaceConfig(s_server &server, s_location &location) {
 		server.client_max_body_size = location.client_max_body_size;
 	if (location.redirect.first != 0)
 		server.redirect = location.redirect;
-	if (location.root != "")
+	if (!location.root.empty())
 		server.root = location.root;
 	if (server.autoindex == false || location.autoindex != false)
 		server.autoindex = location.autoindex;
-	if (location.index != "index.html")
+	if (!location.index.empty())
 		server.index = location.index;
 	if (location.upload_pass != "")
 		server.upload_pass = location.upload_pass;
 }
 
 void	ServerConf::mandatoryCheck( struct s_server &config ) {
-	if (config.listen.first == "")
+	if (config.listen.first.empty())
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "listen");
 	std::map<std::string,s_location>::iterator it = config.location.find("/");
 	if (it != config.location.end())
 		replaceConfig(config, (*it).second);
-	if (config.root == "")
+	if (config.root.empty())
 		config.root = "html";
-	if (config.index == "")
-		config.index = "index.html";
+	if (config.index.empty())
+		config.index = "index.html"; // TODO return index.html by default if found in location ??
 	for (std::map<std::string,s_location>::iterator it = config.location.begin(); it != config.location.end(); ++it) {
-		if ((*it).second.root == "")
-			(*it).second.root = config.root;
-		if ((*it).second.index == "")
-			(*it).second.index = "index.html";
 		if ((*it).second.method.empty()) {
 			(*it).second.method.push_back("GET");
 			(*it).second.method.push_back("POST");

@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/06 13:09:10 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:18:00 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ public:
 	void	freeEvents();
 	void	closePlex();
 
+private:
+
+	void	m_checkClientChangeEvent(std::map<int, Client>::iterator currentClient, std::map<int, Client> &clients);
 	class PlexFail : public std::exception {
 	public:
 		PlexFail() { }

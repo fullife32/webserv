@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 21:45:37 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:07:54 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,9 @@ enum e_config_error {
 	AUTOINDEX_FORMAT,
 	WRONG_METHOD,
 	WRONG_PATH_FORMAT,
-	WRONG_EXT_FORMAT
+	WRONG_EXT_FORMAT,
+	SAME_HOST,
+	WRONG_INDEX_FORMAT
 };
 
 typedef	std::map<std::string,void(*)(std::vector<std::string>&,s_base&)> parseFunction_t;
@@ -67,6 +69,8 @@ public:
 	ServerConf( std::vector<std::string> server_name, s_server serverConf );
 	ServerConf( ServerConf const &other );
 	~ServerConf();
+void	debug_print(); // TODO: to dell
+
 
 private:
 	ServerConf();
@@ -109,19 +113,22 @@ public:
 	static void	parseUploadPass( std::vector<std::string> &tokens, struct s_base &block );
 
 	// Getter functions
-	const s_base	&getLocationByName( std::string serverName, std::string locationName, bool &yes ) const;
-	const s_server	&getServerByName( std::string serverName ) const;
-	std::string  	getLocationPath(std::string server_name, std::string location) const;
+private:
+	const s_server	&getServerByName( const std::string &server_name ) const;
+	const s_base	&getLocationByName( const std::string &server_name, const std::string &location_name, bool &yes, std::string &rest ) const;
+
+public:
+	std::string  	getLocationPath( const std::string &server_name, const std::string &location ) const;
 	const char		*getIp() const;
 	size_t			getPort() const;
-	bool			isMethodAllowed( std::string server_name, std::string location, int method ) const;
-	std::string 	getCgiPath(std::string server_name, std::string location, std::string extension) const;
-	std::string		getErrorPage(std::string server_name, std::string location, size_t errorNumber) const;
-	size_t			getBodySize(std::string server_name, std::string location) const;
-	size_t  		isRedirecting(std::string server_name, std::string location, std::string &url) const;
-	bool			isAutoindexOn(std::string server_name, std::string location) const;
-	std::string		getIndex(std::string server_name, std::string location) const;
-	std::string		isUploadPath(std::string server_name, std::string location) const;
+	bool			isMethodAllowed( const std::string &server_name, const std::string &location, int method ) const;
+	std::string 	getCgiPath( const std::string &server_name, const std::string &location, const std::string &extension ) const;
+	std::string		getErrorPage( const std::string &server_name, const std::string &location, size_t errorNumber ) const;
+	size_t			getBodySize( const std::string &server_name, const std::string &location ) const;
+	size_t  		isRedirecting( const std::string &server_name, const std::string &location, std::string &url ) const;
+	bool			isAutoindexOn( const std::string &server_name, const std::string &location ) const;
+	std::string		getIndex( const std::string &server_name, const std::string &location ) const;
+	std::string		isUploadPath( const std::string &server_name, const std::string &location ) const;
 
 
 	class ConfFail : public std::exception {
@@ -153,7 +160,9 @@ public:
 				"Invalid autoindex format (on | off)",
 				"Invalid method (GET | POST | DELETE)",
 				"Invalid path format (/path)",
-				"Invalid extension format (.extension)"
+				"Invalid extension format (.extension)",
+				"Sub server found with same host as a main server or no host",
+				"Invalid index format"
 			};
 			static std::string	ret;
 			if (m_word != "")
