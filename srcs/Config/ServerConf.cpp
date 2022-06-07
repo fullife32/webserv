@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 18:08:05 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:17:00 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -411,9 +411,3 @@ void	ServerConf::initLocationConf( struct s_location &config ) {
 	config.index = "";
 	config.upload_pass = "";
 }
-
-
-// void	ServerConf::debug_print()
-// {
-// 	std::cout << m_main
-// }
