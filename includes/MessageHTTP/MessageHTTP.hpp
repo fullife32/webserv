@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/29 11:24:35 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 11:20:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 14:01:37 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,7 @@
 # include "MessageStruct.hpp"
 # include "ErrorMessage.hpp"
 # include "ParseRequest.hpp"
-
 # include "RequestHTTP.hpp"
 # include "ResponseHTTP.hpp"
-
-
 
 #endif

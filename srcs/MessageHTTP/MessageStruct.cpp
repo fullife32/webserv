@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 10:28:55 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:53:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,30 @@ namespace WS
 	/* URL        ------------------------------------------------ */
 
 
-	URL::URL(const URL & other)
+	URL::URL(const URL & copy)
 	{
-		serverName = other.serverName;
-		serverName = other.serverName;
-		path = other.path;
-		filename = other.filename;
-		fileExtension = other.fileExtension;
-		pathInfo = other.pathInfo;
-		query = other.query;
-		fragment = other.fragment;
+		serverName = copy.serverName;
+		path = copy.path;
+		filename = copy.filename;
+		fileExtension = copy.fileExtension;
+		pathInfo = copy.pathInfo;
+		query = copy.query;
+		fragment = copy.fragment;
+	}	
+
+	URL & URL::operator=(const URL & other)
+	{
+		if (this != &other)
+		{
+			serverName = other.serverName;
+			path = other.path;
+			filename = other.filename;
+			fileExtension = other.fileExtension;
+			pathInfo = other.pathInfo;
+			query = other.query;
+			fragment = other.fragment;
+		}
+		return *this;
 	}	
 
 	void	URL::clear()

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 11:36:18 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 13:53:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,14 +163,15 @@ namespace WS
 	void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 	{
 		std::cout << "in methode GET" << std::endl;
-
+		
+		m_url = request.getUrl();
 		if (request.hasBody())
 			throw MessageErrorException(STATUS_BAD_REQUEST);
 		if (request.hasQueryString())
 			// fonction class CGI(ResponseHTTP )
 			m_formated_CGI_Response(request);
 		else		
-			m_formated_Response(request.getUrl());
+			m_formated_Response();
 
 	}
 
@@ -184,105 +185,17 @@ namespace WS
 			throw MessageErrorException(STATUS_BAD_REQUEST); // TODO: a checker
 		ContentLenght = atoi(request.get_value_headerFields("Content-Lenght").data());
 		
-		m_checkBodySize(request.getUrl(), request.getBodySize(), ContentLenght);
+		m_checkBodySize(request.getBodySize(), ContentLenght);
 		
 	}
+
+	
 	void	ResponseHTTP::m_method_DELETE(const URL & url)
 	{
 		std::cout << "in methode DELETE" << std::endl;
 	}
 	
-/* -------------------------------------------------------------------------- */
-/*                     Formated Response                                      */
-/* -------------------------------------------------------------------------- */
-	
-	/*
-		Formated Response : 
-			try openFile from URL
-			formated Header : Status Line and Header Fields.
-	*/
-	void	ResponseHTTP::m_formated_Response(const URL & url)
-	{
-		m_header.clear();
-		m_openFile_Body(m_foundLocation(url));
-		m_formated_StatusLine();
-		m_formated_HeaderFields();
-	}
 
-
-	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
-	{
-		std::cout << "there is a query string in the request" << std::endl;
-	}
-
-	void	ResponseHTTP::m_formated_StatusLine()
-	{
-		m_header << START_LINE_HTTP_VERSION << SP << m_statusLine.statusCode << SP << m_statusLine.reasonPhrase << CRLF;
-	}
-
-	void	ResponseHTTP::m_formated_HeaderFields()
-	{
-		for (std::map<std::string, std::string>::iterator it = m_headerFields.begin(); it != m_headerFields.end(); it++)
-			m_header << (*it).first << ": " << (*it).second << CRLF;
-		m_header << CRLF;
-	}
-
-
-/* -------------------------------------------------------------------------- */
-/*                     Formated Error Response                                */
-/* -------------------------------------------------------------------------- */
-
-	/*
-		formated Error Response:
-			create a simple body html for Error
-	*/
-	void	ResponseHTTP::m_formated_Error(const URL & url)
-	{
-		std::stringstream		body;
-		std::string				ErrorUrl = m_server->getErrorPage(url.serverName, url.path, m_statusLine.statusCode);
-
-
-		m_formated_StatusLine();
-		if (ErrorUrl.empty())
-			m_formated_ErrorBody(body);
-		else
-			m_openFile_Error(ErrorUrl);
-		m_formated_HeaderFields();
-
-		m_header << body.str();
-	}
-
-
-	void	ResponseHTTP::m_formated_ErrorBody(std::stringstream & body)
-	{
-		// if (ErrorUrl.empty())
-
-		std::string	background_color;
-
-		if (m_statusLine.statusCode >= 300 && m_statusLine.statusCode < 400)
-			background_color = "\"background-color: bisque;";
-		else if (m_statusLine.statusCode >= 400 && m_statusLine.statusCode < 500)
-			background_color = "\"background-color: coral;";
-		else
-			background_color = "\"background-color: tomato;";
-
-		body << "<!DOCTYPE html>" << '\n';
-		body << "<html lang=\"en\" style= " << background_color << ">\n";
-		body << "<head>" << '\n';
-		body << "<meta charset=\"UTF-8\">" << '\n';
-		body << "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" << '\n';
-		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << '\n';
-		body << "<title>" << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << "</title>" << '\n';
-		body << "</head>" << '\n';
-		body <<  "<body style=\"font-size: xxx-large;font-family: monospace;text-align: -webkit-center; >\"; >" << '\n';
-		body << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << '\n';
-		body << "</body>" << '\n';
-		body << "</html>" << '\n';
-		body << CRLF << CRLF;
-
-		setContentLength(body.str().size());
-		set_headerFields("Content-Type", "text/html");
-	}
 
 /* -------------------------------------------------------------------------- */
 /*                     Find Location                                          */
@@ -290,17 +203,16 @@ namespace WS
 
 
 
-std::string			ResponseHTTP::m_foundLocation(const URL & url)
+std::string			ResponseHTTP::m_foundLocation()
 {
-	std::string		formatedPath = url.formatedPath();
+	std::string		formatedPath = m_url.formatedPath();
 	int				redirection;
 
-
-	if (m_server->doesLocationExists(url.serverName, formatedPath) == false)
-		throw MessageErrorException(STATUS_NOT_FOUND, url);
-	if (m_server->isMethodAllowed(url.serverName, formatedPath, m_method) == false)
-		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, url);
-	redirection = m_server->isRedirecting(url.serverName, formatedPath, formatedPath);
+	// if (m_server->doesLocationExists(url.serverName, formatedPath) == false) // TODO: check what to do ? 
+	// 	throw MessageErrorException(STATUS_NOT_FOUND, url);
+	if (m_server->isMethodAllowed(m_url.serverName, formatedPath, m_method) == false)
+		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, m_url);
+	redirection = m_server->isRedirecting(m_url.serverName, formatedPath, formatedPath);
 	if (redirection != 0)
 	{
 		m_statusLine.statusCode = redirection;
@@ -309,33 +221,34 @@ std::string			ResponseHTTP::m_foundLocation(const URL & url)
 	}
 	else
 	{
-		if (url.filename.empty())
+		std::cout << "GET FILENAME " << m_url.filename << std::endl;
+		if (m_url.filename.empty())
 		{
-			formatedPath = m_server->getIndex(url.serverName, formatedPath);
+			formatedPath = m_server->getIndex(m_url.serverName, formatedPath); // TODO:
+			std::cout << "GET INDEX = " << formatedPath << std::endl;
 			if (formatedPath.empty())
 			{
-				m_isAutoindex = m_server->isAutoindexOn(url.serverName, formatedPath);
+				m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, formatedPath);
 				if (m_isAutoindex == false)
-					throw MessageErrorException(STATUS_FORBIDDEN, url);
+					throw MessageErrorException(STATUS_FORBIDDEN, m_url);
 			}
 		}
-
 	}
 	return (formatedPath);
 }
 
 
-void		ResponseHTTP::m_checkBodySize(const URL & url, size_t request_bodySize, size_t ContentLenght)
+void		ResponseHTTP::m_checkBodySize(size_t request_bodySize, size_t ContentLenght)
 {
 	if (ContentLenght == 0)
-		throw MessageErrorException(STATUS_LENGHT_REQUIRED, url);
+		throw MessageErrorException(STATUS_LENGHT_REQUIRED, m_url);
 		
-	size_t	maxBodySize = (m_server->getBodySize(url.serverName, url.formatedPath()));
+	size_t	maxBodySize = (m_server->getBodySize(m_url.serverName, m_url.formatedPath()));
 
 	if (maxBodySize != 0 && request_bodySize > maxBodySize)
-		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, url); // TODO:close client
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url); // TODO:close client
 	if (ContentLenght != request_bodySize)
-		throw MessageErrorException(STATUS_BAD_REQUEST, url);
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 }
 
 	/*

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 10:33:35 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 14:12:36 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ namespace WS {
 
 		URL() {};
 		URL(const URL & other);
+		URL & operator=(const URL & other);
+
 				
 		std::string		formatedPath() const ; //TODO: maybe not
 		void			clear();

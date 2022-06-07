@@ -6,19 +6,19 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 11:22:38 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 14:25:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEHTTP_HPP
 # define RESPONSEHTTP_HPP
 
-#include "MessageHTTP.hpp"
+# include "MessageHTTP.hpp"
 # include "Server.hpp"
 
 namespace WS {
 
-class ResponseHTTP : public MessageMethods, public HeaderFields
+class ResponseHTTP : public MessageMethods, public HeaderFields //  , public ErrorMap
 {
 	/*
 		protected variables herited from MessageMethods: list of all Methods
@@ -31,7 +31,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 		// classCGI				m_cgi;
 		StatusLine				m_statusLine;
-		const ServerConf *			m_server;
+		const ServerConf *		m_server;
 		int						m_method;
 		std::stringstream		m_header;
 		std::fstream			m_body;
@@ -87,7 +87,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		void	m_setOpenFileBodySize();
 
 	/* formated Response   ------------------------------------------ */
-		void	m_formated_Response(const URL & url);
+		void	m_formated_Response();
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
 		void	m_formated_CGI_Response(const RequestHTTP & request);
@@ -107,8 +107,8 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		void	m_method_POST(const RequestHTTP & request);
 		void	m_method_DELETE(const URL & url);
 
-		std::string	m_foundLocation(const URL & url);
-		void	m_checkBodySize(const URL & url, size_t request_bodySize, size_t ContentLenght);
+		std::string	m_foundLocation();
+		void	m_checkBodySize(size_t request_bodySize, size_t ContentLenght);
 
 	// DEBUG
 	public:

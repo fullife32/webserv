@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/06 18:47:49 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/06/07 14:00:07 by lvirgini         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS =	main.cpp		\
 		RequestHTTP.cpp \
 		ResponseHTTP.cpp \
 		ResponseHTTP_get_set.cpp \
+		ResponseHTTP_formatting.cpp \
 		Split.cpp \
 		ErrorMessage.cpp \
 		DateFormat.cpp \
