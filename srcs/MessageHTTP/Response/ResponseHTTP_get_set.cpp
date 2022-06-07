@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 18:48:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:19:05 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,31 @@ namespace WS
 // 	return 
 // }
 
+
+	const URL & ResponseHTTP::get_url() const
+	{
+		return m_url;
+	}
+
+	std::string ResponseHTTP::get_queryString() const
+	{
+		return m_url.query;
+	}
+
+	std::string ResponseHTTP::get_pathInfo() const
+	{
+		return m_url.pathInfo;
+	}
+
+	int			ResponseHTTP::get_method() const
+	{
+		return m_method;
+	}
+
+	std::string ResponseHTTP::get_serverName() const
+	{
+		return m_url.serverName;
+	}
 
 
 

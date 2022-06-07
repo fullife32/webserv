@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:42:57 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 18:48:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:32:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ MessageErrorException::MessageErrorException(int error, URL url)
 {
 	if (m_errors.empty())
 		m_errors= init_mapError();
-	
 }
 
 int				MessageErrorException::getError() const throw ()

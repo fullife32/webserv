@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/06 11:02:34 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:24:47 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "ErrorMessage.hpp"
 
 Client::Client( int fd, sockaddr_storage cli, socklen_t size, Server &server )
-: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_response(&m_server) {
+: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_response(&(m_server.getConf())) {
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
  }
 
@@ -70,7 +70,7 @@ void		Client::receive_data() {
 	if (size == -1)
 	{
 		setToChangeEvent();
-		m_response.buildError(STATUS_INTERNAL_SERVER_ERROR, S_STATUS_INTERNAL_SERVER_ERROR);
+		m_response.buildError(STATUS_INTERNAL_SERVER_ERROR, S_STATUS_INTERNAL_SERVER_ERROR, m_response.get_url());
 		return ;
 	}
 	m_request.append(m_buffer);
@@ -83,7 +83,7 @@ void		Client::receive_data() {
 			m_response.buildResponse(m_request);
 		}
 		catch (WS::MessageErrorException & e) {
-			m_response.buildError(e.getError(), e.getMappedError());
+			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
 		}
 		setToChangeEvent();
 	}	

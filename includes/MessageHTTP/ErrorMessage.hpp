@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 17:20:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:30:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 
 # include <map>
 # include <string>
-# include "MessageStruct.hpp"
+# include "MessageHTTP.hpp" 
+
+//TODO: ERRORlist
 
 #define	S_STATUS_CONTINUE 				"Continue"						// 100
 #define	S_STATUS_SWITCHING_PROTOCOL		"Switching Protocols"			// 101

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 10:36:43 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 10:28:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,19 @@ namespace WS
 
 
 	/* URL        ------------------------------------------------ */
+
+
+	URL::URL(const URL & other)
+	{
+		serverName = other.serverName;
+		serverName = other.serverName;
+		path = other.path;
+		filename = other.filename;
+		fileExtension = other.fileExtension;
+		pathInfo = other.pathInfo;
+		query = other.query;
+		fragment = other.fragment;
+	}	
 
 	void	URL::clear()
 	{

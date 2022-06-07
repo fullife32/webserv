@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 18:46:18 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:22:38 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 		// classCGI				m_cgi;
 		StatusLine				m_statusLine;
-		Server *				m_server;
+		const ServerConf *			m_server;
 		int						m_method;
 		std::stringstream		m_header;
 		std::fstream			m_body;
 		size_t					m_length;
 		bool					m_isAutoindex;
+		URL						m_url;
 		//TODO error page check if exist else create it
 		//TODO test DELETE / 
 		
@@ -45,7 +46,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 	/* constructor ------------------------------------------------ */
 		ResponseHTTP();
-		ResponseHTTP(Server * server);
+		ResponseHTTP(const ServerConf * server);
 		ResponseHTTP(const ResponseHTTP & copy);
 
 	/* destructor  ------------------------------------------------ */
@@ -57,12 +58,18 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 
 
 	/* get		    ------------------------------------------------ */
-		size_t	getNextChunk(char * buffer);
+		size_t		getNextChunk(char * buffer);
+		const URL & get_url() const ;
+		std::string get_queryString() const ;
+		std::string get_pathInfo() const ;
+		int			get_method() const ;
+		std::string get_serverName() const ;
+
 
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
 		void		setContentLength(size_t size);
-		void		setServer(Server & server);
+		void		setServer(ServerConf & server);
 	
 	
 	/* functions    ------------------------------------------------ */
@@ -88,11 +95,11 @@ class ResponseHTTP : public MessageMethods, public HeaderFields
 		void	m_formated_Error(const URL & url);
 		void	m_formated_ErrorBody(std::stringstream & body);
 
+		void	m_build_autoIndex(std::string location);
+
 		void	m_openFile_Body(const std::string & location);
 		bool	m_openFile_Error(const std::string & location);
 
-		
-		void	m_build_autoIndex(std::string location);
 
 	/* Methods    ------------------------------------------------ */
 		void	m_parseMethod(const RequestHTTP & request);

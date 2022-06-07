@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/05 14:52:02 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:19:22 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ namespace WS
 class ParseRequest : public HeaderFields
 {
 
-	private: // make private
+	private:
 		std::string							m_data;
 		std::string							m_header;
 		std::string							m_body;

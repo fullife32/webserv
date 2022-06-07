@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/06 18:46:47 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:36:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,18 +33,21 @@ namespace WS
 		m_method(0),
 		m_header(),
 		m_body(),
-		m_length(0)
+		m_length(0),
+		m_isAutoindex(false)
 	{}
 
 
-	ResponseHTTP::ResponseHTTP(Server * server)
+	ResponseHTTP::ResponseHTTP(const ServerConf * server)
 		: MessageMethods(), HeaderFields(),
 		m_statusLine(),
 		m_server(server),
 		m_method(0),
 		m_header(),
 		m_body(),
-		m_length(0)
+		m_length(0),
+		m_isAutoindex(false),
+		m_url()
 	{}
 
 
@@ -53,7 +56,9 @@ namespace WS
 		m_statusLine(copy.m_statusLine),
 		m_server(copy.m_server),
 		m_method(copy.m_method),
-		m_length(copy.m_length)
+		m_length(copy.m_length),
+		m_isAutoindex(copy.m_isAutoindex),
+		m_url(copy.m_url)
 	{
 		m_header << copy.m_header;
 		m_body << copy.m_body;
@@ -63,20 +68,21 @@ namespace WS
 	{}
 
 
-	ResponseHTTP & ResponseHTTP::operator=(const ResponseHTTP & other)
-	{
-		if (this != &other)
-		{
-			clear();
-			m_headerFields = other.m_headerFields;
-			m_server = other.m_server;
-			m_statusLine = other.m_statusLine;
-			m_method = other.m_method;
-			m_length = other.m_length;
-			m_header << other.m_header;
-		}
-		return *this;
-	}
+	// ResponseHTTP & ResponseHTTP::operator=(const ResponseHTTP & other)
+	// {
+	// 	if (this != &other)
+	// 	{
+	// 		clear();
+	// 		m_headerFields = other.m_headerFields;
+	// 		m_statusLine = other.m_statusLine;
+	// 		m_server = other.m_server;
+	// 		m_method = other.m_method;
+	// 		m_length = other.m_length;
+
+	// 		m_header << other.m_header;
+	// 	}
+	// 	return *this;
+	// }
 
 /* -------------------------------------------------------------------------- */
 
@@ -91,6 +97,8 @@ namespace WS
 		m_body.clear();
 		m_header.str("");
 		m_header.clear();
+		m_isAutoindex = false;
+		m_url = URL();
 	}
 
 	size_t		ResponseHTTP::size() 
@@ -122,10 +130,12 @@ namespace WS
 	void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase, const URL & url)
 	{
 		clear();
+	
 		m_set_minimalHeaderFields();
 		m_statusLine.statusCode = StatusCode;
 		m_statusLine.reasonPhrase = ReasonPhrase;
-		m_formated_Error(url);
+		m_url = url;
+		m_formated_Error(m_url);
 		debug_print();
 	}
 
@@ -229,14 +239,14 @@ namespace WS
 	void	ResponseHTTP::m_formated_Error(const URL & url)
 	{
 		std::stringstream		body;
-		std::string				ErrorUrl = m_server->getConf().getErrorPage(url.serverName, url.path, m_statusLine.statusCode);
+		std::string				ErrorUrl = m_server->getErrorPage(url.serverName, url.path, m_statusLine.statusCode);
 
 
 		m_formated_StatusLine();
 		if (ErrorUrl.empty())
 			m_formated_ErrorBody(body);
 		else
-			m_openFile_Body(ErrorUrl);
+			m_openFile_Error(ErrorUrl);
 		m_formated_HeaderFields();
 
 		m_header << body.str();
@@ -282,16 +292,15 @@ namespace WS
 
 std::string			ResponseHTTP::m_foundLocation(const URL & url)
 {
-	ServerConf 		m_serverConf = m_server->getConf();
 	std::string		formatedPath = url.formatedPath();
 	int				redirection;
 
 
-	if (m_serverConf.doesLocationExists(url.serverName, formatedPath) == false)
+	if (m_server->doesLocationExists(url.serverName, formatedPath) == false)
 		throw MessageErrorException(STATUS_NOT_FOUND, url);
-	if (m_serverConf.isMethodAllowed(url.serverName, formatedPath, m_method) == false)
+	if (m_server->isMethodAllowed(url.serverName, formatedPath, m_method) == false)
 		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, url);
-	redirection = m_serverConf.isRedirecting(url.serverName, formatedPath, formatedPath);
+	redirection = m_server->isRedirecting(url.serverName, formatedPath, formatedPath);
 	if (redirection != 0)
 	{
 		m_statusLine.statusCode = redirection;
@@ -302,10 +311,10 @@ std::string			ResponseHTTP::m_foundLocation(const URL & url)
 	{
 		if (url.filename.empty())
 		{
-			formatedPath = m_serverConf.getIndex(url.serverName, formatedPath);
+			formatedPath = m_server->getIndex(url.serverName, formatedPath);
 			if (formatedPath.empty())
 			{
-				m_isAutoindex = m_serverConf.isAutoindexOn(url.serverName, formatedPath);
+				m_isAutoindex = m_server->isAutoindexOn(url.serverName, formatedPath);
 				if (m_isAutoindex == false)
 					throw MessageErrorException(STATUS_FORBIDDEN, url);
 			}
@@ -321,7 +330,7 @@ void		ResponseHTTP::m_checkBodySize(const URL & url, size_t request_bodySize, si
 	if (ContentLenght == 0)
 		throw MessageErrorException(STATUS_LENGHT_REQUIRED, url);
 		
-	size_t	maxBodySize = (m_server->getConf().getBodySize(url.serverName, url.formatedPath()));
+	size_t	maxBodySize = (m_server->getBodySize(url.serverName, url.formatedPath()));
 
 	if (maxBodySize != 0 && request_bodySize > maxBodySize)
 		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, url); // TODO:close client
@@ -343,8 +352,9 @@ void		ResponseHTTP::m_checkBodySize(const URL & url, size_t request_bodySize, si
 		}
 		catch(const std::exception& e)  //// TODO: What to do ? 
 		{
-			std::cerr << e.what() << '\n';
-			throw	MessageErrorException(100);
+			std::cerr << e.what() << " DO NOTHING ? " << '\n';
+			//throw	MessageErrorException(100);
+			return false;
 		}
 		if ( m_body.is_open() == false)
 			return false;
