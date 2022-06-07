@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/06 11:02:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 11:39:32 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,8 +248,12 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 bool	ServerConf::insertInSub(s_server &newServer, std::vector<ServerConf> &confs) {
 	for (std::vector<ServerConf>::iterator it = confs.begin(); it != confs.end(); ++it) {
 		if ((*it).getIp() == newServer.listen.first
+		&& (*it).getPort() == newServer.listen.second
+		&& ((*it).m_main.first == newServer.server_name || newServer.server_name.empty()))
+			throw ServerConf::ConfFail(SAME_HOST, "server_name");
+		else if ((*it).getIp() == newServer.listen.first
 		&& (*it).getPort() == newServer.listen.second) {
-			(*it).m_subs.insert(make_pair(newServer.server_name, newServer)); // TODO: make private
+			(*it).m_subs.insert(make_pair(newServer.server_name, newServer));
 			return true;
 		}
 	}
@@ -262,11 +266,11 @@ void	ServerConf::replaceConfig(s_server &server, s_location &location) {
 		server.client_max_body_size = location.client_max_body_size;
 	if (location.redirect.first != 0)
 		server.redirect = location.redirect;
-	if (location.root != "")
+	if (!location.root.empty())
 		server.root = location.root;
 	if (server.autoindex == false || location.autoindex != false)
 		server.autoindex = location.autoindex;
-	if (location.index != "index.html")
+	if (!location.index.empty())
 		server.index = location.index;
 	if (location.upload_pass != "")
 		server.upload_pass = location.upload_pass;
@@ -283,10 +287,6 @@ void	ServerConf::mandatoryCheck( struct s_server &config ) {
 	if (config.index == "")
 		config.index = "index.html";
 	for (std::map<std::string,s_location>::iterator it = config.location.begin(); it != config.location.end(); ++it) {
-		if ((*it).second.root == "")
-			(*it).second.root = config.root;
-		if ((*it).second.index == "")
-			(*it).second.index = "index.html";
 		if ((*it).second.method.empty()) {
 			(*it).second.method.push_back("GET");
 			(*it).second.method.push_back("POST");
