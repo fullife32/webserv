@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetConf.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 11:47:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:07:58 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,38 +26,43 @@ const s_server	&ServerConf::getServerByName( const std::string &server_name ) co
 	return m_main.second;
 }
 
-const s_base	&ServerConf::getLocationByName( const std::string &server_name, const std::string &location_name, bool &yes ) const {
-	const s_server &server = getServerByName(server_name);
-	std::string	firstPart = (std::string)location_name;
-	std::string secondPart;
+const s_base	&ServerConf::getLocationByName( const std::string &server_name, const std::string &location_name, bool &yes, std::string &rest ) const {
+	const s_server	&server = getServerByName(server_name);
+	std::string		firstPart = (std::string)location_name;
+	std::string 	secondPart;
 
-	std::map<std::string, s_location>::const_iterator it = server.location.find(location_name);
-
-	if (it != server.location.end() && (*it).first == location_name) {
-		yes = true;
-		return (*it).second;
+	while (firstPart.empty() == false) {
+		std::map<std::string, s_location>::const_iterator it = server.location.find(firstPart);
+		if (it != server.location.end() && (*it).first == firstPart) {
+			yes = true;
+			rest = secondPart;
+			return (*it).second;
+		}
+		secondPart.insert(0, firstPart.substr(firstPart.rfind('/')));
+		firstPart.erase(firstPart.rfind('/'));
 	}
 	yes = false;
+	rest = secondPart;
 	return server;
 }
 
-std::string	ServerConf::getLocationPath( const std::string &server_name, const std::string &location ) const { // TODO to know if location exists
+std::string	ServerConf::getLocationPath( const std::string &server_name, const std::string &location ) const {
 	s_base		baseStruct;
-	s_server	server;
-	std::string	root = "";
-	bool		yes;
+	std::string	path;
+	std::string	rest;
+	bool		yes = false;
 
 	if (location == "/") {
 		baseStruct = getServerByName(server_name);
 		return baseStruct.root + location;
 	}
-	server = (s_server &)getServerByName(server_name);
-	baseStruct = getLocationByName(server_name, location, yes);
-	if (baseStruct.root.empty())
-		root = server.root + location + "/";
+	path = getServerByName(server_name).root;
+	baseStruct = getLocationByName(server_name, location, yes, rest);
+	if (yes == true && baseStruct.root.empty() == false)
+		path = baseStruct.root + rest; //TODO "/" between root and rest ?
 	else
-		root = baseStruct.root;
-	return root;
+		path += location;
+	return path  + "/";
 }
 
 const char	*ServerConf::getIp() const {
@@ -68,12 +73,13 @@ size_t	ServerConf::getPort() const {
 	return m_main.second.listen.second;
 }
 
-bool	ServerConf::isMethodAllowed(  const std::string &server_name, const std::string &location, int method ) const { // TODO never sent empty location
+bool	ServerConf::isMethodAllowed(  const std::string &server_name, const std::string &location, int method ) const {
 	const char *methods[] = {"GET", "POST", "DELETE"};
+	std::string	rest;
 	bool		yes;
 
 	std::string	word(methods[method]);
-	const s_location &locationStruct = (const s_location&)getLocationByName(server_name, location, yes);
+	const s_location &locationStruct = (const s_location&)getLocationByName(server_name, location, yes, rest);
 
 	if (yes == false)
 		return true;
@@ -85,10 +91,10 @@ bool	ServerConf::isMethodAllowed(  const std::string &server_name, const std::st
 }
 
 std::string ServerConf::getCgiPath( const std::string &server_name, const std::string &location, const std::string &extension) const {
-	std::string	path = "";
-	bool	yes;
+	std::string	rest;
+	bool		yes;
 
-	const s_location &locationStruct = (const s_location&)getLocationByName(server_name, location, yes);
+	const s_location &locationStruct = (const s_location&)getLocationByName(server_name, location, yes, rest); // TODO how to redirect to the correct php file ?
 
 	if (yes == false)
 		return std::string();
@@ -100,86 +106,108 @@ std::string ServerConf::getCgiPath( const std::string &server_name, const std::s
 	return std::string();
 }
 
-std::string	ServerConf::getErrorPage( const std::string &server_name, const std::string &location, size_t errorNumber) const { // TODO be carefull if location / exist ??
-	s_base	baseStruct;
-	std::string	path = "";
-	bool	yes = false;
+std::string	ServerConf::getErrorPage( const std::string &server_name, const std::string &location, size_t errorNumber) const {
+	s_base		baseStruct;
+	std::string	path;
+	std::string	rest;
+	bool		yes = false;
 
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
-		baseStruct = getLocationByName(server_name, location, yes);
+		baseStruct = getLocationByName(server_name, location, yes, rest);
+	path = getServerByName(server_name).root;
 	std::map<size_t, std::string>::const_iterator it = baseStruct.error_page.find(errorNumber);
 
-	if (it == baseStruct.error_page.end() && yes == true) {
+	if (it == baseStruct.error_page.end()) {
 		baseStruct = getServerByName(server_name);
 		std::map<size_t, std::string>::const_iterator itServer = baseStruct.error_page.find(errorNumber);
 		if (itServer == baseStruct.error_page.end())
 			return std::string();
-		return baseStruct.root + (*itServer).second;
+		return path + (*itServer).second;
 	}
-	else if (yes == true)
-		path = getLocationPath(server_name, location);
+	else if (yes == true && baseStruct.root.empty() == false)
+		path = baseStruct.root;
 	return path + (*it).second;
 }
 
-size_t	ServerConf::isRedirecting( const std::string &server_name, const std::string &location, std::string &url) const { // TODO never sent empty location
-	s_base	baseStruct;
-	bool	yes;
+size_t	ServerConf::isRedirecting( const std::string &server_name, const std::string &location, std::string &url) const {
+	s_base		baseStruct;
+	std::string	rest;
+	bool		yes;
 
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
-		baseStruct = getLocationByName(server_name, location, yes);
+		baseStruct = getLocationByName(server_name, location, yes, rest);
 	if (baseStruct.redirect.first != 0) {
-		url = baseStruct.redirect.second;
-		return baseStruct.redirect.first;
+		url = baseStruct.redirect.second; // TODO construct path if absolute ?
+		return baseStruct.redirect.first; // TODO redirect if rest not empty ?
 	}
-	url = "";
+	url = std::string();
 	return 0;
 }
 
 bool	ServerConf::isAutoindexOn( const std::string &server_name, const std::string &location ) const {
-	s_base	baseStruct;
-	bool	yes;
+	s_base		baseStruct;
+	std::string	rest;
+	bool		yes;
 
-	baseStruct = getLocationByName(server_name, location, yes);
+	if (location == "/") {
+		baseStruct = getServerByName(server_name);
+		return baseStruct.autoindex;
+	}
+	baseStruct = getLocationByName(server_name, location, yes, rest);
+	if (yes == false)
+		return false; // TODO server autoindex by default ?
 	return baseStruct.autoindex;
 }
 
 size_t	ServerConf::getBodySize( const std::string &server_name, const std::string &location ) const {
-	s_base	baseStruct;
-	bool	yes;
+	s_base		baseStruct;
+	std::string	rest;
+	bool		yes;
 
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
-		baseStruct = getLocationByName(server_name, location, yes);
+		baseStruct = getLocationByName(server_name, location, yes, rest);
 	return baseStruct.client_max_body_size;
 }
 
 std::string	ServerConf::getIndex( const std::string &server_name, const std::string &location ) const {
-	s_base	baseStruct;
-	bool	yes;
+	s_base		baseStruct;
+	std::string	rest;
+	bool		yes = true;
 
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
+<<<<<<< HEAD
+		baseStruct = getLocationByName(server_name, location, yes, rest);
+	if (yes == false)
+		return std::string();
+	else if ((rest.empty() || rest == "/") && baseStruct.index.empty() == false)
+		return getLocationPath(server_name, location) + baseStruct.index;
+	return std::string();
+=======
 		baseStruct = getLocationByName(server_name, location, yes);
 	return getLocationPath(server_name, location) + "/" + baseStruct.index; // TODO be sure that location exists ?
+>>>>>>> fb64e7a10be63bca760d91873df693175387a896
 }
 
 std::string	ServerConf::isUploadPath( const std::string &server_name, const std::string &location ) const {
 	s_base		baseStruct;
+	std::string	rest;
 	bool		yes = true;
-	std::string	path = "";
 
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
-		baseStruct = getLocationByName(server_name, location, yes);
-	if (yes == false || baseStruct.upload_pass == "")
+		baseStruct = getLocationByName(server_name, location, yes, rest);
+	if (yes == false) // TODO accept rest of location ??
 		return std::string();
-	path = getLocationPath(server_name, location) + baseStruct.upload_pass;
-	return path;
+	else if ((rest.empty() || rest == "/") && baseStruct.upload_pass.empty() == false)
+		return getLocationPath(server_name, location) + baseStruct.upload_pass + "/";
+	return std::string(); // TODO Is upload pass a specification to add at the end and if doesn't exists return only root + location ??
 }
