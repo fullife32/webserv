@@ -6,29 +6,23 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 09:28:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:15:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MESSAGESTRUCT_HPP
 # define MESSAGESTRUCT_HPP
 
-#include "MessageHTTP.hpp"
+#include <map>
+#include <string>
+
+#define	HF_HOST				"Host"
+#define HF_CONTENT_LENGTH	"Content-Length"
+#define HF_CONTENT_TYPE		"Content-Type"
+#define HF_USER_AGENT		"User-Agent"
+#define HF_LOCATION			"Location"
 
 namespace WS {
-
-
-	enum e_RequestMethod
-	{
-		GET = 0,
-		POST,
-		DELETE,
-		HEAD,
-		PUT,
-		CONNECT,
-		OPTIONS,
-		TRACE
-	};
 
 
 	/* HTTPversion  ------------------------------------------------ */
@@ -53,14 +47,36 @@ namespace WS {
 		void	clear();
 	};
 
+	/* URL						  ---------------------------------- */
+	
+	struct URL
+	{
+		std::string	serverName;		// example.com
+		std::string	path;			//				/location/here
+		std::string filename;		//								/file.html
+		std::string	fileExtension;	//									 .html
+		std::string	pathInfo;		//					if .cgi				.cgi/path/info
+		std::string	query;			//													?queryString=value
+		std::string fragment;		//																		#fragment
 
-	/* Request Line ------------------------------------------------ */
+
+		URL() {};
+		URL(const URL & other);
+		URL & operator=(const URL & other);
+
+				
+		std::string		formatedPath() const ; //TODO: maybe not
+		void			clear();
+
+	};
+
+	/* Request Line -------m----------------------------------------- */
 
 
 	struct RequestLine
 	{
 		HTTPversion		version;
-		std::string		target; // URL
+		URL				url;
 		std::string		method; // ACTIONS : GET, POST, DELETE
 
 		void	clear();
@@ -78,11 +94,33 @@ namespace WS {
 	{
 		HTTPversion		version;
 		int				statusCode;
-		std::string 	reasonPhrase; // pointeur sur std::map<int, sting> status code error ? ou enum de code ?
+		std::string 	reasonPhrase;
 	
 		void	clear();
 	};
 
+
+
+	/* Header Fields  ------------------------------------------------ */
+
+	class HeaderFields
+	{
+		typedef std::map<std::string, std::string> 	value_type;
+
+		protected:
+			value_type	m_headerFields;
+
+		public:
+
+			void			clear();
+			void			set_headerFields(const std::string & headerField, const std::string & value);
+			void			set_headerFields(const value_type & headerFlieds);
+
+			std::string		get_value_headerFields(const std::string & key) const ;
+			value_type		get_headerFields() const ;
+
+	};
+	
 
 	/* Message Methods static map  --------------------------------- */
 
@@ -90,8 +128,9 @@ namespace WS {
 	{
 		protected:
 			static	std::map <std::string, int>		m_methods;
+	
 	};
-
+	
 std::map <std::string, int>		init_map_method();
 
 

@@ -6,15 +6,14 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/31 12:39:55 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:04:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef ERRORMESSAGE_HPP
 # define ERRORMESSAGE_HPP
 
-# include <map>
-# include <string>
+# include "MessageStruct.hpp" 
 
 #define	S_STATUS_CONTINUE 				"Continue"						// 100
 #define	S_STATUS_SWITCHING_PROTOCOL		"Switching Protocols"			// 101
@@ -59,9 +58,6 @@
 #define S_STATUS_HTTPVERSION_NOT_SUPPORTED	"HTTP Version Not Supported"// 505
 
 
-namespace WS 
-{
-	
 enum e_statusCode
 {
 	STATUS_CONTINUE					= 100,
@@ -107,20 +103,35 @@ enum e_statusCode
 	STATUS_HTTPVERSION_NOT_SUPPORTED= 505
 };
 	
-class MessageErrorException : public std::exception
+namespace WS 
+{
+
+class ErrorMap
+{
+	protected:
+		static std::map<int, std::string>	m_errors;
+
+		ErrorMap();
+};
+
+
+class MessageErrorException : public std::exception, public ErrorMap
 {
 	private:
 		const int							m_current_error;
-		static std::map<int, std::string>	m_errors;
+		URL									m_url;
+
 
 	public:
 
 	/* constructor ------------------------------------------------ */
-		MessageErrorException(int	error);
+		MessageErrorException(int	error, URL url = URL());
+		virtual ~MessageErrorException() throw () {} ;
 
 	/* functions    ----------------------------------------------- */
 		int				getError() const throw() ;
 		std::string		getMappedError() const throw() ;
+		URL				getUrl() const throw () ;
 };
 
 
@@ -129,3 +140,4 @@ std::map <int, std::string>		init_mapError()  throw() ;
 }
 
 #endif
+

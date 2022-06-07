@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/05/30 09:54:16 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/06 11:54:51 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,16 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 	RequestHTTP::RequestHTTP()
-		: m_startLine(),
+		: m_requestLine(),
 		m_parseRequest()
 	{}
 
 
 	RequestHTTP::RequestHTTP(const RequestHTTP & copy)
-		: m_startLine(copy.m_startLine),
+		: m_requestLine(copy.m_requestLine),
 		m_parseRequest(copy.m_parseRequest)
-	{}
+	{
+	}
 
 	RequestHTTP::~RequestHTTP()
 	{}
@@ -35,14 +36,15 @@ namespace WS
 /* -------------------------------------------------------------------------- */
 
 
-	void	RequestHTTP::append(const std::string & buffer)
+	void	RequestHTTP::append(const char * buffer)
 	{
 		m_parseRequest.append(buffer);
 	}
 
 	void	RequestHTTP::buildRequest()
 	{
-		m_startLine = m_parseRequest.getRequestLine();
+		m_parseRequest.m_prepareRequestBuilding();
+		m_requestLine = m_parseRequest.getRequestLine();
 		m_headerFields = m_parseRequest.getHeaderFields();
 		m_body = m_parseRequest.getBody();
 	}
@@ -52,7 +54,7 @@ namespace WS
 
 	void	RequestHTTP::setRequestLine(const RequestLine & requestline)
 	{
-		m_startLine = requestline;
+		m_requestLine = requestline;
 	}
 
 	void	RequestHTTP::setBody(const std::string & body)
@@ -60,18 +62,12 @@ namespace WS
 		m_body = body;
 	}
 
-	void	RequestHTTP::setHeaderFields(const std::map<std::string, std::string> & headerFields)
-	{
-		m_headerFields = headerFields;
-	}
-
-
 /* -------------------------------------------------------------------------- */
 // get
 
 	int		RequestHTTP::getMethod() const
 	{
-		std::map <std::string, int>::const_iterator	found = m_methods.find(m_startLine.method);
+		std::map <std::string, int>::const_iterator	found = m_methods.find(m_requestLine.method);
 		if (found == m_methods.end())
 		{
 			
@@ -82,10 +78,27 @@ namespace WS
 	}
 
 
-	std::string	RequestHTTP::getUrl() const
+	URL		RequestHTTP::getUrl() const
 	{
-		return (m_startLine.target);
+		return (m_requestLine.url);
 	}
 
+	size_t	RequestHTTP::getBodySize() const
+	{
+		return m_body.size();
+	}
+
+
+/* -------------------------------------------------------------------------- */
+
+	bool	RequestHTTP::hasQueryString() const
+	{
+		return !(m_requestLine.url.query.empty());
+	}
+
+	bool	RequestHTTP::hasBody() const 
+	{
+		return !(m_body.empty());
+	}
 	
 } // end namespace

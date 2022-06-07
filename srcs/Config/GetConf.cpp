@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 18:00:57 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:07:58 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,12 +183,17 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
+<<<<<<< HEAD
 		baseStruct = getLocationByName(server_name, location, yes, rest);
 	if (yes == false)
 		return std::string();
 	else if ((rest.empty() || rest == "/") && baseStruct.index.empty() == false)
 		return getLocationPath(server_name, location) + baseStruct.index;
 	return std::string();
+=======
+		baseStruct = getLocationByName(server_name, location, yes);
+	return getLocationPath(server_name, location) + "/" + baseStruct.index; // TODO be sure that location exists ?
+>>>>>>> fb64e7a10be63bca760d91873df693175387a896
 }
 
 std::string	ServerConf::isUploadPath( const std::string &server_name, const std::string &location ) const {

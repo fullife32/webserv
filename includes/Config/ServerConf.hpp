@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 15:18:36 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:07:54 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ public:
 	ServerConf( std::vector<std::string> server_name, s_server serverConf );
 	ServerConf( ServerConf const &other );
 	~ServerConf();
+void	debug_print(); // TODO: to dell
+
 
 private:
 	ServerConf();

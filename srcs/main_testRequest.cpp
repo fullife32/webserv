@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main_testRequest.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/03 19:43:44 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/05 14:47:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Webserv.hpp"
 #include "MessageHTTP.hpp"
+#include "ParseRequest.hpp"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -23,10 +24,9 @@
 #include <fstream>
 #include <sstream>
 
-#define BUFFER_SIZE	2
 #define DEBUG_WEBSERV
 
-
+#define BUFFER_SIZE	32
 
 
 void	test_stream()
@@ -82,23 +82,54 @@ void	test_stream()
 }
 
 
-// int main(int ac, char **argv)
-// {
+void test_fstream()
+{
+
+	// testing multi open same file with an insert for one and read for the other
+	// std::fstream	fst("srcs");
+	// std::fstream	fst2("testParseRequest");
+	// std::fstream	fst3("testParseRequest");
+
+	// std::cout << "is open " << fst.is_open() << std::endl;
+	// std::cout << "is open " << fst2.is_open() << std::endl;
+	// std::cout << "is open " << fst3.is_open() << std::endl;
+
+	// std::cout << "good : " << fst.good() << std::endl;
+	// std::cout << "good : " << fst2.good() << std::endl;
+	// std::cout << "good : " << fst3.good() << std::endl;
 
 
-// 	char	buf[BUFFER_SIZE];
-// 	int 	fd;
-// 	int		size_read;
-// 	WS::RequestHTTP		request;
-// 	WS::ResponseHTTP	response;
+	// fst3.seekg(0, fst3.end);
+
+	// char	buf[BUFFER_SIZE + 1];
+
+	// memset(buf, 0, BUFFER_SIZE);
+
+	// while (fst2.read(buf, BUFFER_SIZE))
+	// {
+	// 	fst3 << "coucou";
+	// 	std::cout << buf;
+	// 	memset(buf, 0, BUFFER_SIZE);
+	// }
+	// return (0);
+
+}
+
+
+void test_request_response(int ac, char **argv)
+{
+
+	char	buf[MESSAGE_BUFFER_SIZE + 1];
+	int 	fd;
+	int		size_read;
+	WS::RequestHTTP		request;
+	WS::ResponseHTTP	response(NULL);
+	
+	memset(buf, '\0', MESSAGE_BUFFER_SIZE);
 	
 
-// 	// test_stream();
-// 	// return 0;
-
-// 	if (ac != 2)
-// 		return (0);
-
+	if (ac != 2)
+		return ;
 // 	// open file for test
 // 	fd = open(argv[1], O_RDONLY);
 // 	if (fd == -1)
@@ -108,41 +139,56 @@ void	test_stream()
 // 	}	
 	
 
-// 	// get buffer like recv
-// 	do
-// 	{
-// 		size_read = read(fd, &buf, BUFFER_SIZE - 1);
-// 		if (size_read != -1)
-// 			request.append(buf);
-// 		memset(buf, '\0', BUFFER_SIZE);
-// 	} while (size_read > 0);
+	// get buffer like recv
+	do
+	{
+		size_read = read(fd, &buf, MESSAGE_BUFFER_SIZE);
+		if (size_read != -1)
+			request.append(buf);
+		memset(buf, '\0', MESSAGE_BUFFER_SIZE);
+	} while (size_read > 0);
 	
 
-// 	// end recv : client try to build request and response
-// 	try
-// 	{
-// 		request.buildRequest();
-// 		response.buildResponse(request);
-// 	}
-// 	catch (WS::MessageErrorException & e)
-// 	{
-// 		response.buildError(e.getError(), e.getMappedError());
-// 	}
+	// end recv : client try to build request and response
+	try
+	{
+		request.buildRequest();
+		response.buildResponse(request);
+	}
+	catch (WS::MessageErrorException & e)
+	{
+		response.buildError(e.getError(), e.getMappedError());
+	}
 
-// 	// std::cout << response.getNextChunk(response.size()) << std::endl;
+	// std::cout << response.getNextChunk(response.size()) << std::endl;
 
-// 	// write like send()
+	// write like send()
 
-// 	const char *buffer = response.getNextChunk(31);
-// 	while (buffer != NULL)
-// 	{
-// 		std::cout << buffer;
-// 		buffer = response.getNextChunk(31);
-// 	}
+	// const char *buffer = response.getNextChunk();
+	// while (buffer != NULL)
+	// {
+	// 	std::cout << buffer;
+	// 	buffer = response.getNextChunk();
+	// }
 	
 // 	// for (size_t bufferSize = 0; bufferSize < response.size(); bufferSize += 13)
 // 	// {
 // 	// 	write(1, (response.getNextChunk(bufferSize)), response.getNextChunkSize(bufferSize));
 // 	// }
+}
+int main(int ac, char **argv)
+{
 
-// }
+	WS::ParseRequest	r;
+
+
+	// r.m_formated_Url("//////");
+	// r.m_formated_Url("///");
+	// r.m_formated_Url("/");
+	// r.m_formated_Url("/path/.index.html.rc");
+	// r.m_formated_Url("/path/with/most/directory/and/there/is/not/a/file");
+	// r.m_formated_Url("/path/with/most/directory/file.txt?queryString=jeNeSaisPas#fragmentUtils???");
+	r.debug_print();
+
+
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/03 19:40:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/04 14:19:34 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ public:
 	Server( Server const &other );
 	~Server();
 
+	Server &operator=( Server const &other );
 private:
 	
 	Server();
-	Server &operator=( Server const &other );
 
 public:
 	
