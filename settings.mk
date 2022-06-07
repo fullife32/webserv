@@ -6,7 +6,7 @@
 #    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/03 19:41:34 by eassouli         ###   ########.fr        #
+#    Updated: 2022/06/06 14:23:35 by rotrojan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,6 @@ SRCS =	main.cpp		\
 		ServerConf.cpp \
 		ParseConf.cpp \
 		GetConf.cpp \
-		main_testRequest.cpp \
 		ParseRequest.cpp \
 		MessageStruct.cpp \
 		RequestHTTP.cpp \
