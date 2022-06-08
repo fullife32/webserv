@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 18:18:00 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 14:20:22 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #include <map>
 #include <cstdlib>
 #include <sys/epoll.h>
+#include <signal.h>
+#include <sys/signalfd.h>
 #include "Client.hpp"
 #include "Server.hpp"
 
@@ -30,7 +32,7 @@
 */
 class Multiplex {
 private:
-	int			m_sig;
+	int			m_signal_fd;
 	int			m_fd;
 	int			m_nbReady;
 	epoll_event	*m_events;
@@ -49,7 +51,10 @@ public:
 
 	void	createPlex();
 	int		waitPlex();
-	void	handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients );
+	int		handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients );
+
+	void	addSignalToPoll() const;
+	void	handleSignal();
 
 	void	addServersToPoll( std::map<int, Server> &servers ) const;
 	void	handleServer( int i, std::map<int, Server> &servers, std::map<int, Client> &clients );
@@ -69,7 +74,14 @@ private:
 	public:
 		PlexFail() { }
 		virtual const char	*what() const throw() {
-			return "Plex create failed";
+			return "Selector creation failed";
+		}
+	};
+	class ClientFail : public std::exception {
+	public:
+		ClientFail() { }
+		virtual const char	*what() const throw() {
+			return "Client creation failed in selector";
 		}
 	};
 };
