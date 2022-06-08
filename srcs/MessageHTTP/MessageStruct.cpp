@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:42:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:19:10 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	HTTPversion::formatedVersion(const std::string & version)
 
 bool	HTTPversion::isSupportedVersion()
 {
+	return true; // TODO:FOR DEBUG 
 	if (major_version != 1 || minor_version != 1)
 		return false;
 	return true;
@@ -103,8 +104,6 @@ std::string		URL::formatedPath() const
 
 	std::string result = path;
 
-	// if (path.size() > 1 && path[0] == '/')
-	// 	result.erase(0, 1);
 	if (filename.empty())
 		return (result);
 	return (result + "/" + filename);

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:40:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 12:09:43 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 	void	ResponseHTTP::m_formated_Response()
 	{
 		m_header.clear();
-		m_openFile_Body(m_foundLocation() + m_url.filename);
+		m_openFile_Body(m_foundLocation());
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
 	}

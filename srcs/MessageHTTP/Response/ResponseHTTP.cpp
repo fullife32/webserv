@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 17:12:45 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:19:29 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ size_t		ResponseHTTP::size()
 void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 {
 	clear();
+	m_url = request.getUrl();
 	m_set_minimalHeaderFields();
 	m_method = request.getMethod();
 	m_parseMethod(request);
@@ -211,19 +212,22 @@ std::string		formatedPath = m_url.formatedPath();
 std::string		realPath;
 int				redirection;
 
-// if (m_server->doesLocationExists(url.serverName, formatedPath) == false) // TODO: check what to do ? 
-// 	throw MessageErrorException(STATUS_NOT_FOUND, url);
 if (m_server->isMethodAllowed(m_url.serverName, formatedPath, m_method) == false)
 	throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, m_url);
-redirection = m_server->isRedirecting(m_url.serverName, realPath, m_url.path);
+std:: cout << "1" << m_url.path << std::endl;
+redirection = m_server->isRedirecting(m_url.serverName, m_url.path, realPath);
 if (redirection != 0)
 {
+std:: cout << "2" << m_url.path << std::endl;
+
 	m_statusLine.statusCode = redirection;
 	m_statusLine.reasonPhrase = m_errors[redirection];
 	set_headerFields(HF_LOCATION, realPath);
 }
 else
 {
+std:: cout << "3" << m_url.path << std::endl;
+
 	realPath = m_server->getLocationPath(m_url.serverName, m_url.path);
 	std::cout << "GET FILENAME " << m_url.filename << std::endl;
 	if (m_url.filename.empty())
