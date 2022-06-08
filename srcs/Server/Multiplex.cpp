@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Multiplex.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 18:57:55 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 19:55:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,9 +189,9 @@ void	Multiplex::changeClientEvent( Client &client, int newEvent ) const { // whe
 void	Multiplex::deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator &it ) {
 	if (epoll_ctl(m_fd, EPOLL_CTL_DEL, it->first, NULL) == -1)
 		throw Multiplex::PlexFail(PLEX_DEL_FAIL); // change message
+	std::cout << it->second.getFd() << ": ciao, je me casse !" << std::endl; // TODO Debug
 	it->second.closeSocket();
 	clients.erase(it);
-	std::cout << it->second.getFd() << ": ciao, je me casse !" << std::endl; // TODO Debug
 }
 
 
