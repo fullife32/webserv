@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:55:34 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:27:46 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 		std::string get_pathInfo() const ;
 		int			get_method() const ;
 		std::string get_serverName() const ;
+		std::string get_fileName() const ;
+		std::string get_path() const ;
 
 
 	/* set		    ------------------------------------------------ */
