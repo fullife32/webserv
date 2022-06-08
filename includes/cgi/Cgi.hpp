@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:01:20 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/08 18:24:06 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/08 20:02:02 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ public:
 	Cgi(HeaderFields const &header_fields, ResponseHTTP const &response_http,
 	 ServerConf const &server_conf);
 	// Cannonical
-	// Cgi(Cgi const &cgi);
+	Cgi(Cgi const &cgi);
 	Cgi &operator=(Cgi const &rhs);
 	~Cgi(void);
 

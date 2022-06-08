@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:17:14 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/08 19:30:46 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ class HeaderFields
 		void				set_headerFields(const std::string & headerField, const std::string & value);
 		void				set_headerFields(const value_type & headerFlieds);
 
-		std::string const	&get_value_headerFields(const std::string & key) const ;
+		std::string const	get_value_headerFields(const std::string & key) const ;
 		HeaderFields const	&get_headerFields() const ;
 
 	protected:

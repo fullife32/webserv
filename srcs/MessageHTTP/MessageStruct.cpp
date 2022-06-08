@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:57:27 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/08 19:58:07 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ HeaderFields const		&HeaderFields::get_headerFields() const
 }
 
 
-std::string const		&HeaderFields::get_value_headerFields(const std::string & key) const
+std::string const		HeaderFields::get_value_headerFields(const std::string & key) const
 {
 	HeaderFields::value_type::const_iterator found = m_headerFields.find(key);
 

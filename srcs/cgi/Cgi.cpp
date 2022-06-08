@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/08 19:22:31 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/08 20:16:30 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ Cgi::Cgi
 	std::map<std::string, std::string> env_map;
 	env_map["AUTH_TYPE"] = ""; // ?
 	env_map["CONTENT_LENGTH"] = header_fields.get_value_headerFields(HF_CONTENT_LENGTH);
-	// env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
+	env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
 	env_map["GATEWAY_INTERFACE"] = "CGI/1.1";
 	env_map["PATH_INFO"] = response_http.get_pathInfo();
-	// env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path());
+	env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path());
 	env_map["QUERY_STRING"] = response_http.get_queryString();
 	env_map["REMOTE_ADDR"] = server_conf.getIp();
 	env_map["REMOTE_HOST"] = ""; // ?
@@ -36,24 +36,27 @@ Cgi::Cgi
 	this->_alloc_env(env_map);
 }
 
-// Cgi(Cgi const &cgi) {
-	// int i = 0;
-	// for (; this->_env[i] != NULL; ++i)
-
-	// this->_env = cgi._env;
-// }
-Cgi &Cgi::operator=(Cgi const &rhs) {
-	// if (&rhs != this) {
-		// this->_env = rhs._env;
-	// }
+Cgi::Cgi(Cgi const &cgi) {
+	*this = cgi;
 }
 
-#include <stdlib.h>
-Cgi::~Cgi(void) {
-	std::cout << "dtor" << std::endl;
-	for (int i = 0; this->_env[i] != NULL; i++) {
-		delete [] this->_env[i];
+Cgi &Cgi::operator=(Cgi const &rhs) {
+	if (&rhs != this) {
+		int size_env = 0;
+		while (rhs._env[size_env] != NULL)
+			++size_env;
+		for (int i = 0; rhs._env[i] != NULL; ++i) {
+			this->_env[i] = new char[std::strlen(rhs._env[i]) + 1];
+			std::strcpy(this->_env[i], rhs._env[i]);
+		}
+		this->_env[size_env] = NULL;
 	}
+	return (*this);
+}
+
+Cgi::~Cgi(void) {
+	for (int i = 0; this->_env[i] != NULL; i++)
+		delete [] this->_env[i];
 	delete [] this->_env;
 }
 
