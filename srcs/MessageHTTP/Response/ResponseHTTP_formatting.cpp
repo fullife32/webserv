@@ -6,15 +6,12 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:16:16 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:42:31 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageHTTP.hpp"
 
-namespace WS {
-
-		
 /* -------------------------------------------------------------------------- */
 /*                     Formated Response                                      */
 /* -------------------------------------------------------------------------- */
@@ -27,7 +24,7 @@ namespace WS {
 	void	ResponseHTTP::m_formated_Response()
 	{
 		m_header.clear();
-		m_openFile_Body(m_foundLocation() + m_url.filename);
+		m_openFile_Body(m_foundLocation());
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
 	}
@@ -36,6 +33,8 @@ namespace WS {
 	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
 	{
 		std::cout << "there is a query string in the request" << std::endl;
+
+		// try executeCGI(m_headerFields, *this, *m_server)
 	}
 
 	void	ResponseHTTP::m_formated_StatusLine()
@@ -104,7 +103,7 @@ namespace WS {
 		body << "<html lang=\"en\" style= " << background_color << ">\n";
 		body << "<head>" << CRLF;
 		body << "<meta charset=\"UTF-8\">" << CRLF;
-		body << "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" << CRLF;
+		// body << "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" << CRLF;
 		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << CRLF;
 		body << "<title>" << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << "</title>" << CRLF;
 		body << "</head>" << CRLF;
@@ -115,7 +114,5 @@ namespace WS {
 		body << CRLF;
 
 		setContentLength(body.str().size());
-		set_headerFields("Content-Type", "text/html");
+		set_headerFields(HF_CONTENT_TYPE, "text/html");
 	}
-
-} // end namespace

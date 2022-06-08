@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 11:39:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 11:55:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,10 @@ void	ServerConf::getConfTest(std::vector<ServerConf> &confs) {
 	std::string url;
 	std::cout << "Location \"\" ? " << confs.at(0).getLocationPath("", "") << std::endl;
 	std::cout << "Location / ? " << confs.at(0).getLocationPath("simple.com", "/") << std::endl;
+	std::cout << "Location /i/ ? " << confs.at(0).getLocationPath("simple.com", "/i") << std::endl;
 	std::cout << "Location other / ? " << confs.at(0).getLocationPath("other_simple.com", "/") << std::endl;
 	std::cout << "Location /exec ? " << confs.at(0).getLocationPath("", "/exec") << std::endl;
+	std::cout << "Location /exec/coucou ? " << confs.at(0).getLocationPath("", "/exec/coucou") << std::endl;
 	std::cout << "Location other /exec ? " << confs.at(0).getLocationPath("other_simple.com", "/exec") << std::endl;
 	std::cout << std::endl;
 
@@ -277,15 +279,15 @@ void	ServerConf::replaceConfig(s_server &server, s_location &location) {
 }
 
 void	ServerConf::mandatoryCheck( struct s_server &config ) {
-	if (config.listen.first == "")
+	if (config.listen.first.empty())
 		throw ServerConf::ConfFail(SERVER_MANDATORY, "listen");
 	std::map<std::string,s_location>::iterator it = config.location.find("/");
 	if (it != config.location.end())
 		replaceConfig(config, (*it).second);
-	if (config.root == "")
+	if (config.root.empty())
 		config.root = "html";
-	if (config.index == "")
-		config.index = "index.html";
+	if (config.index.empty())
+		config.index = "index.html"; // TODO return index.html by default if found in location ??
 	for (std::map<std::string,s_location>::iterator it = config.location.begin(); it != config.location.end(); ++it) {
 		if ((*it).second.method.empty()) {
 			(*it).second.method.push_back("GET");
@@ -409,9 +411,3 @@ void	ServerConf::initLocationConf( struct s_location &config ) {
 	config.index = "";
 	config.upload_pass = "";
 }
-
-
-// void	ServerConf::debug_print()
-// {
-// 	std::cout << m_main
-// }

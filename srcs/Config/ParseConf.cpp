@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 18:18:34 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/06 17:13:56 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/07 15:51:52 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static bool	isPort( std::string &port ) {
 void	ServerConf::parseListen( std::vector<std::string> &tokens, struct s_base &block ) {
 	s_server	&blockServer = (s_server&)block;
 
-	if (blockServer.listen.first != "")
+	if (blockServer.listen.first.empty() == false)
 		throw ServerConf::ConfFail(TOO_MANY_DIRECTIVE, tokens[0]);
 	if (tokens.size() != 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
@@ -110,7 +110,7 @@ void	ServerConf::parseCgi( std::vector<std::string> &tokens, struct s_base &bloc
 	else if (tokens.size() > 3)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
 	if (tokens[1][0] != '.' || (tokens[1][0] == '.' && tokens[1].size() == 1))
-		throw ServerConf::ConfFail(WRONG_EXT_FORMAT, tokens[1]);
+		throw ServerConf::ConfFail(WRONG_EXT_FORMAT, tokens[1]); // TODO accept only absolute path ?
 	blockLoc.cgi.insert(make_pair(tokens[1], tokens[2]));
 }
 
@@ -167,7 +167,7 @@ void	ServerConf::parseRedirect( std::vector<std::string> &tokens, struct s_base 
 void	ServerConf::parseRoot( std::vector<std::string> &tokens, struct s_base &block ) {
 	if (tokens.size() != 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
-	else if (block.root != "")
+	else if (block.root.empty() == false)
 		throw ServerConf::ConfFail(TOO_MANY_DIRECTIVE, tokens[0]);
 	block.root = tokens[1];
 }

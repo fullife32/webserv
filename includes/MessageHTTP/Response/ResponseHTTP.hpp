@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:46:17 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:55:34 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 # include "Server.hpp"
 # include "MessageHTTP.hpp"
-
-namespace WS {
 
 class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 {
@@ -132,7 +130,5 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 
 
 }; // end class RequestHTTP
-
-} // end namespace
 
 #endif

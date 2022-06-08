@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 11:19:22 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 16:39:30 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 # define PARSEREQUEST_HPP
 
 # include "MessageHTTP.hpp"
-
-namespace WS
-{
 
 class ParseRequest : public HeaderFields
 {
@@ -76,8 +73,6 @@ class ParseRequest : public HeaderFields
 		}
 
 }; // end class
-
-} // end namespace
 
 #endif
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 11:40:16 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:07:54 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ public:
 	// Getter functions
 private:
 	const s_server	&getServerByName( const std::string &server_name ) const;
-	const s_base	&getLocationByName( const std::string &server_name, const std::string &location_name, bool &yes ) const;
+	const s_base	&getLocationByName( const std::string &server_name, const std::string &location_name, bool &yes, std::string &rest ) const;
 
 public:
 	std::string  	getLocationPath( const std::string &server_name, const std::string &location ) const;

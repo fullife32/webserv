@@ -6,14 +6,11 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:42:57 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 14:07:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 16:44:02 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ErrorMessage.hpp"
-
-namespace WS
-{
 
 /* -------------------------------------------------------------------------- */
 /*                               Exception                                    */
@@ -106,6 +103,3 @@ std::map <int, std::string>		init_mapError()  throw()
 /* --- Init static map for error [status Code] = reason phrase ---------------- */
 
 std::map <int, std::string>		ErrorMap::m_errors = init_mapError();
-
-
-} // end namespace
