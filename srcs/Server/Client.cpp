@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 13:14:00 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:30:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void		Client::receive_data() {
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0); // TODO; recv first == 0 le client s est deconnecte
 
+	std::cout << m_buffer << std::endl;
 	if (size == -1)
 	{
 		setToChangeEvent();

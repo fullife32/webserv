@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:19:29 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:38:35 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ void	ResponseHTTP::clear()
 	m_length = 0;
 	m_headerFields.clear();
 	m_statusLine.clear();
+	m_statusLine.statusCode = STATUS_OK;
+	m_statusLine.reasonPhrase = m_errors[STATUS_OK];
 	if (m_body.is_open())
 		m_body.close();
 	m_body.clear();
@@ -241,6 +243,8 @@ std:: cout << "3" << m_url.path << std::endl;
 				throw MessageErrorException(STATUS_FORBIDDEN, m_url);
 		}
 	}
+	else 
+		realPath += m_url.filename;
 }
 return (realPath);
 }
