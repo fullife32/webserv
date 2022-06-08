@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:21:58 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 18:57:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,7 +232,7 @@ else
 		throw MessageErrorException (STATUS_NOT_FOUND);
 	if (m_url.filename.empty())
 	{
-		realPath = m_server->getIndex(m_url.serverName, m_url.path); // TODO:
+		realPath = m_server->getIndex(m_url.serverName, m_url.path);
 		if (realPath.empty())
 		{
 			m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
@@ -275,7 +275,6 @@ bool	ResponseHTTP::m_openFile_Error(const std::string & location)
 	catch(const std::exception& e)  //// TODO: What to do ? 
 	{
 		std::cerr << e.what() << " DO NOTHING ? " << '\n';
-		//throw	MessageErrorException(100);
 		return false;
 	}
 	if ( m_body.is_open() == false)

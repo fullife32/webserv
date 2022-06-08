@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 17:24:45 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 18:56:48 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void			Client::setToChangeEvent() {
 		m_toChangeEvent = true;
 }
 
-
 void		Client::receive_data() {
 
 	int	size;
@@ -81,7 +80,7 @@ void		Client::receive_data() {
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		try {
 			m_request.buildRequest();
-			m_request.debug_print();
+			// m_request.debug_print();
 			m_response.buildResponse(m_request);
 		}
 		catch (MessageErrorException & e) {
@@ -110,7 +109,7 @@ void		Client::send_data() {
 		setToRemove();
 	sendSize = send(m_fd, m_buffer, bufferSize, 0);
 	if (sendSize == (size_t)-1)
-		setToRemove(); // TODO: what to do ? 
+		setToRemove();
 
 
 }
