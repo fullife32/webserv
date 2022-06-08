@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:56:56 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 19:11:12 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ class ParseRequest : public HeaderFields
 		std::string							m_header;
 		std::string							m_body;
 		RequestLine							m_requestLine;
+		size_t								m_sizeReceive;
 		// std::map<std::string, std::string>	m_headerFields;
 	public:
 
