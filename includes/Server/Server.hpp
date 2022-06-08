@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/04 14:19:34 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:55:44 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ public:
 			char const *error_msg[] = {
 				"Socket creation failed",
 				"Socket options failed",
-				"Socket bind failed",
+				"Socket bind failed, host:port already used",
 				"Socket listen failed"
 			};
 			return error_msg[m_flag];

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   GetConf.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 12:04:52 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:24:26 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,7 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 		baseStruct = getServerByName(server_name);
 	else
 		baseStruct = getLocationByName(server_name, location, yes, rest);
- 		std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
+ 	std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
 	std::cout << "rest"  << rest << std::endl;
 	std::cout << "YES = " << yes << std::endl; 
 	if (yes == false)
@@ -195,7 +195,7 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 		 return getLocationPath(server_name, location) + baseStruct.index;
 
 	}
- 		std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
+ 	std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
 
 	return std::string();
 }

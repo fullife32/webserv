@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Multiplex.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 13:58:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 18:30:55 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,20 @@
 #include <map>
 #include <cstdlib>
 #include <sys/epoll.h>
+#include <signal.h>
+#include <sys/signalfd.h>
 #include "Client.hpp"
 #include "Server.hpp"
 
-#define MAXEVENTS 8
+# define MAXEVENTS 8
+
+enum e_plex_error {
+	PLEX_CREATE_FAIL,
+	PLEX_FD_FAIL,
+	PLEX_ADD_FAIL,
+	PLEX_MOD_FAIL,
+	PLEX_DEL_FAIL
+};
 
 /*
 	This class create an epoll list and have functions to add a new socket to
@@ -30,7 +40,7 @@
 */
 class Multiplex {
 private:
-
+	int			m_signal_fd;
 	int			m_fd;
 	int			m_nbReady;
 	epoll_event	*m_events;
@@ -49,7 +59,10 @@ public:
 
 	void	createPlex();
 	int		waitPlex();
-	void	handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients );
+	int		handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients );
+
+	void	addSignalToPoll() const;
+	void	handleSignal();
 
 	void	addServersToPoll( std::map<int, Server> &servers ) const;
 	void	handleServer( int i, std::map<int, Server> &servers, std::map<int, Client> &clients );
@@ -57,7 +70,7 @@ public:
 	void	addClientToPoll( Client &client ) const;
 	void	handleClients( int i, std::map<int, Client> &clients );
 	void	changeClientEvent( Client &client, int newEvent ) const;
-	void	deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator it );
+	void	deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator &it );
 
 	void	freeEvents();
 	void	closePlex();
@@ -65,11 +78,21 @@ public:
 private:
 
 	void	m_checkClientChangeEvent(std::map<int, Client>::iterator currentClient, std::map<int, Client> &clients);
+
 	class PlexFail : public std::exception {
+		int	m_error;
+
 	public:
-		PlexFail() { }
+		PlexFail(int error) : m_error(error) { }
 		virtual const char	*what() const throw() {
-			return "Plex create failed";
+			const char *message[] = {
+				"Selector creation failed",
+				"Client fd in selector failed",
+				"Client add in selector failed",
+				"Client change event in selector failed",
+				"Client delete in selector failed"
+			};
+			return message[m_error];
 		}
 	};
 };

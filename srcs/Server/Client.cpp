@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 18:56:48 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 19:56:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,6 @@ bool	Client::getToChangeEvent() const {
 }
 
 void			Client::setToRemove() {
-	if (m_toRemove)
-		m_toRemove = false;
-	else
 		m_toRemove = true;
 }
 void			Client::setToChangeEvent() {
@@ -65,7 +62,6 @@ void		Client::receive_data() {
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0); // TODO; recv first == 0 le client s est deconnecte
 
-	std::cout << m_buffer << std::endl;
 	if (size == -1)
 	{
 		setToChangeEvent();
@@ -105,11 +101,13 @@ void		Client::send_data() {
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		bufferSize = m_response.getNextChunk(m_buffer);
 	}
-	if (bufferSize == 0)
+	if (bufferSize == 0) {
 		setToRemove();
-	sendSize = send(m_fd, m_buffer, bufferSize, 0);
-	if (sendSize == (size_t)-1)
-		setToRemove();
+		return;
+	}
+	sendSize = send(m_fd, m_buffer, bufferSize, MSG_NOSIGNAL);
+	if (sendSize == (size_t)-1 || sendSize == 0 || bufferSize < MESSAGE_BUFFER_SIZE)
+		setToRemove(); // TODO: what to do ? 
 
 
 }

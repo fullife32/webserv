@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:56:58 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 19:39:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ ParseRequest::ParseRequest(const ParseRequest & copy) :
 	m_data(copy.m_data),
 	m_header(copy.m_header),
 	m_body(copy.m_body),
-	m_requestLine(copy.m_requestLine)
+	m_requestLine(copy.m_requestLine),
+	m_sizeReceive(0)
 {
 	m_headerFields = copy.m_headerFields;
 }
@@ -41,6 +42,7 @@ ParseRequest::~ParseRequest()
 
 std::string &	ParseRequest::append(const std::string & str)
 {
+	m_sizeReceive += str.size();
 	return m_data.append(str);
 }
 
