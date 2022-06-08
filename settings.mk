@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/07 15:25:55 by rotrojan         ###   ########.fr        #
+#    Updated: 2022/06/07 18:13:53 by rotrojan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRCS =	main.cpp		\
 		Server.cpp \
 		Multiplex.cpp \
 		Client.cpp \
+		Cgi.cpp
 
 # main_testRequest.cpp		\
 

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:19:10 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:17:27 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,13 +146,13 @@ void	HeaderFields::set_headerFields(const std::string & headerField, const std::
 }
 
 
-HeaderFields::value_type		HeaderFields::get_headerFields() const
+HeaderFields const		&HeaderFields::get_headerFields() const
 {
-	return m_headerFields;
+	return *this;
 }
 
 
-std::string		HeaderFields::get_value_headerFields(const std::string & key) const
+std::string const		&HeaderFields::get_value_headerFields(const std::string & key) const
 {
 	HeaderFields::value_type::const_iterator found = m_headerFields.find(key);
 
