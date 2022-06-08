@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 14:44:01 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:41:06 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,8 @@
 
 	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
 	{
-		// std::cout << "there is a query string in the request" << std::endl;
+		std::cout << "there is a query string in the request" << std::endl;
 		try {
-
 			Cgi cgi(request.get_headerFields(), *this, *m_server);
 			cgi.execute();
 		} catch (Cgi::CgiError &except) {
