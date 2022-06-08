@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:40:48 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:52:23 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,12 +104,10 @@ struct StatusLine
 
 class HeaderFields
 {
-	typedef std::map<std::string, std::string> 	value_type;
 
-	protected:
-		value_type	m_headerFields;
 
 	public:
+		typedef std::map<std::string, std::string> 	value_type;
 
 		void			clear();
 		void			set_headerFields(const std::string & headerField, const std::string & value);
@@ -118,6 +116,8 @@ class HeaderFields
 		std::string		get_value_headerFields(const std::string & key) const ;
 		value_type		get_headerFields() const ;
 
+	protected:
+		value_type	m_headerFields;
 };
 
 

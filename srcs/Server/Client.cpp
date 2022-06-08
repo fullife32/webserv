@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 13:30:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 16:31:15 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,16 +73,22 @@ void		Client::receive_data() {
 		m_response.buildError(STATUS_INTERNAL_SERVER_ERROR, S_STATUS_INTERNAL_SERVER_ERROR, m_response.get_url());
 		return ;
 	}
-	m_request.append(m_buffer);
-	if (size == 0 || size < MESSAGE_BUFFER_SIZE)
+	if (size == 0 && m_request.empty())
+		setToRemove();
+	else if (size == 0 || size < MESSAGE_BUFFER_SIZE)
 	{
-		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);////
+		m_request.append(m_buffer);
+		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		try {
 			m_request.buildRequest();
 			m_response.buildResponse(m_request);
 		}
 		catch (MessageErrorException & e) {
 			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
+		}
+		catch (std::exception & e) {
+			std::cerr << e.what() << std::endl;
+			setToRemove();
 		}
 		setToChangeEvent();
 	}	

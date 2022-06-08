@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:42:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:55:05 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 
 		bool			hasQueryString() const ;
 		bool			hasBody() const ;
+		bool			empty() const ;
 		size_t			getBodySize() const ;
 
 
