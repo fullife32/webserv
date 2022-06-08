@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 14:09:02 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:21:58 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 	
 	if (request.hasBody())
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	if (request.hasQueryString())
+	if (request.hasQueryString() || m_url.fileExtension == "php")
 		// fonction class CGI(ResponseHTTP )
 		m_formated_CGI_Response(request);
 	else		
