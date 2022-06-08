@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:44:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:55:38 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,9 @@ bool	RequestHTTP::hasQueryString() const
 bool	RequestHTTP::hasBody() const 
 {
 	return !(m_body.empty());
+}
+
+bool	RequestHTTP::empty() const 
+{
+	return m_parseRequest.empty();
 }

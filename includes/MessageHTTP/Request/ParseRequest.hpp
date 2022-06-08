@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:39:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:56:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ class ParseRequest : public HeaderFields
 
 	/* functions    ------------------------------------------------ */
 		std::string &	append(const std::string & str); // pour recuperer la requete entiere ( buffer)
+		bool 			empty() const ;
+
+
 
 		RequestLine		getRequestLine();
 		std::string		getBody();
