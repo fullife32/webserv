@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 16:49:51 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 16:53:06 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,14 +140,11 @@ void	Multiplex::addClientToPoll( Client &client ) const {
 void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
 	std::map<int, Client>::iterator currentClient = clients.find(m_events[i].data.fd);
 	if (currentClient != clients.end()) {
-		if (m_events[i].events & EPOLLIN) {
+		if (m_events[i].events & EPOLLIN)
 			currentClient->second.receive_data();
-			m_checkClientChangeEvent(currentClient, clients);
-		}
-		else if (m_events[i].events & EPOLLOUT) {
+		else if (m_events[i].events & EPOLLOUT)
 			currentClient->second.send_data();
-			m_checkClientChangeEvent(currentClient, clients);
-		}
+		m_checkClientChangeEvent(currentClient, clients);
 	}
 }
 
