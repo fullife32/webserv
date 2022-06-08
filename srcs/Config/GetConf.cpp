@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 18:13:07 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:24:26 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,14 +180,23 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 	std::string	rest;
 	bool		yes = true;
 
+	std::cout << location << "?" << (location == "/") << std::endl;
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
 		baseStruct = getLocationByName(server_name, location, yes, rest);
+ 	std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
+	std::cout << "rest"  << rest << std::endl;
+	std::cout << "YES = " << yes << std::endl; 
 	if (yes == false)
 		return std::string();
 	else if ((rest.empty() || rest == "/") && baseStruct.index.empty() == false)
-		return getLocationPath(server_name, location) + baseStruct.index;
+	{
+		 return getLocationPath(server_name, location) + baseStruct.index;
+
+	}
+ 	std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
+
 	return std::string();
 }
 

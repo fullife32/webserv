@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 11:24:47 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:14:00 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void		Client::receive_data() {
 
 	int	size;
 
-	std::cout << "RECEIVE DATA" << std::endl;
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0); // TODO; recv first == 0 le client s est deconnecte
 
@@ -79,10 +78,9 @@ void		Client::receive_data() {
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);////
 		try {
 			m_request.buildRequest();
-			m_request.debug_print();
 			m_response.buildResponse(m_request);
 		}
-		catch (WS::MessageErrorException & e) {
+		catch (MessageErrorException & e) {
 			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
 		}
 		setToChangeEvent();
@@ -94,10 +92,6 @@ void		Client::send_data() {
 
 	static size_t	bufferSize = 0;
 	static size_t	sendSize = 0;
-
-
-	std::cout << "SEND DATA" << std::endl;
-
 
 	if (sendSize == bufferSize)
 	{
