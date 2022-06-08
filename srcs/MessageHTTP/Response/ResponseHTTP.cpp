@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:52:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 14:09:02 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,26 +218,21 @@ int				redirection;
 
 if (m_server->isMethodAllowed(m_url.serverName, formatedPath, m_method) == false)
 	throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, m_url);
-std:: cout << "1" << m_url.path << std::endl;
 redirection = m_server->isRedirecting(m_url.serverName, m_url.path, realPath);
 if (redirection != 0)
 {
-std:: cout << "2" << m_url.path << std::endl;
-
 	m_statusLine.statusCode = redirection;
 	m_statusLine.reasonPhrase = m_errors[redirection];
 	set_headerFields(HF_LOCATION, realPath);
 }
 else
 {
-std:: cout << "3" << m_url.path << std::endl;
-
 	realPath = m_server->getLocationPath(m_url.serverName, m_url.path);
-	std::cout << "GET FILENAME " << m_url.filename << std::endl;
+	if (realPath.empty())
+		throw MessageErrorException (STATUS_NOT_FOUND);
 	if (m_url.filename.empty())
 	{
 		realPath = m_server->getIndex(m_url.serverName, m_url.path); // TODO:
-		std::cout << "GET INDEX = " << realPath << std::endl;
 		if (realPath.empty())
 		{
 			m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
