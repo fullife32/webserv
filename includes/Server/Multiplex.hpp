@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 16:39:51 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 18:30:55 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ public:
 	void	addClientToPoll( Client &client ) const;
 	void	handleClients( int i, std::map<int, Client> &clients );
 	void	changeClientEvent( Client &client, int newEvent ) const;
-	void	deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator it );
+	void	deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator &it );
 
 	void	freeEvents();
 	void	closePlex();

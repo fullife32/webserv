@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 14:20:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 18:53:58 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int	main(int ac, char **av) {
 
 	std::map<int, Client>	clients;
 
-	// signal(SIGINT, SIG_IGN);
 	for (;;) {
 		if (plex.waitPlex() == -1)
 			break;

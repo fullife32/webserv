@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 16:53:06 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 18:57:55 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Multiplex::~Multiplex() {
 }
 
 void	Multiplex::createPlex() {
-	m_fd = epoll_create1(0); //FD_CLOEXEC if need to close after exec
+	m_fd = epoll_create1(EPOLL_CLOEXEC); // EPOLL_CLOEXEC if need to close after exec
 	if (m_fd == -1)
 		throw Multiplex::PlexFail(PLEX_CREATE_FAIL);
 	handleSignal();
@@ -103,15 +103,18 @@ void	Multiplex::handleServer( int i, std::map<int, Server> &servers, std::map<in
 		if (!(m_events[i].events & EPOLLIN)) // secure client too
 			std::cerr << "Ghost event in server: " << it->second.getFd() << std::endl; // return error ?
 		else {
+			int	fd = -1;
 			try {
+				fd = it->second.getFd();
 				Client	tmpClient(Client::acceptClient(it->second.getFd(), it->second));
-			std::cout << tmpClient.getFd() << std::endl;
+				addClientToPoll(tmpClient);
 				clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
-				addClientToPoll(clients.rbegin()->second);
 				// Debug
 				std::cout << clients.rbegin()->second.getFd() << ": coucou je suis nouveau ici !" << std::endl;
 				//
 			} catch(Multiplex::PlexFail &except) {
+				if (fd != -1)
+					close(fd);
 				std::cerr << except.what() << std::endl; // TODO check to change to cerr not cout
 			}
 		}
@@ -183,14 +186,12 @@ void	Multiplex::changeClientEvent( Client &client, int newEvent ) const { // whe
 	client.setToChangeEvent();
 }
 
-void	Multiplex::deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator it ) {
-	// TODO Debug
-	std::cout << it->second.getFd() << ": ciao, je me casse !" << std::endl;
-	//
+void	Multiplex::deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator &it ) {
 	if (epoll_ctl(m_fd, EPOLL_CTL_DEL, it->first, NULL) == -1)
 		throw Multiplex::PlexFail(PLEX_DEL_FAIL); // change message
 	it->second.closeSocket();
 	clients.erase(it);
+	std::cout << it->second.getFd() << ": ciao, je me casse !" << std::endl; // TODO Debug
 }
 
 
