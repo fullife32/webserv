@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:17:48 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 15:56:58 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ std::string &	ParseRequest::append(const std::string & str)
 	return m_data.append(str);
 }
 
+
+bool			ParseRequest::empty() const 
+{
+	return m_data.empty();
+}
 
 /* -------------------------------------------------------------------------- */
 
