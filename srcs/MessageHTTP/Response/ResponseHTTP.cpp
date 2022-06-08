@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:38:35 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 13:52:54 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,10 +194,12 @@ void	ResponseHTTP::m_method_DELETE(const URL & url)
 {
 	std::cout << "in methode DELETE" << std::endl;
 
+	if (m_server->isMethodAllowed(m_url.serverName, m_url.path, m_method) == false)
+		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED);
 	std::string		deleteFile = m_foundLocation();
 
 	// if (deleteFile.empty())
-		// throw MessageErrorException();
+	// 	throw MessageErrorException();
 }
 
 
