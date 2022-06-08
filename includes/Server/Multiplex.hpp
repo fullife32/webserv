@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:24 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 14:20:22 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/08 16:39:51 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,15 @@
 #include "Client.hpp"
 #include "Server.hpp"
 
-#define MAXEVENTS 8
+# define MAXEVENTS 8
+
+enum e_plex_error {
+	PLEX_CREATE_FAIL,
+	PLEX_FD_FAIL,
+	PLEX_ADD_FAIL,
+	PLEX_MOD_FAIL,
+	PLEX_DEL_FAIL
+};
 
 /*
 	This class create an epoll list and have functions to add a new socket to
@@ -70,18 +78,21 @@ public:
 private:
 
 	void	m_checkClientChangeEvent(std::map<int, Client>::iterator currentClient, std::map<int, Client> &clients);
+
 	class PlexFail : public std::exception {
+		int	m_error;
+
 	public:
-		PlexFail() { }
+		PlexFail(int error) : m_error(error) { }
 		virtual const char	*what() const throw() {
-			return "Selector creation failed";
-		}
-	};
-	class ClientFail : public std::exception {
-	public:
-		ClientFail() { }
-		virtual const char	*what() const throw() {
-			return "Client creation failed in selector";
+			const char *message[] = {
+				"Selector creation failed",
+				"Client fd in selector failed",
+				"Client add in selector failed",
+				"Client change event in selector failed",
+				"Client delete in selector failed"
+			};
+			return message[m_error];
 		}
 	};
 };
