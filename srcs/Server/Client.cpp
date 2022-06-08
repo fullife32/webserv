@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 15:59:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/08 16:31:15 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,10 @@ void		Client::receive_data() {
 		}
 		catch (MessageErrorException & e) {
 			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
+		}
+		catch (std::exception & e) {
+			std::cerr << e.what() << std::endl;
+			setToRemove();
 		}
 		setToChangeEvent();
 	}	
