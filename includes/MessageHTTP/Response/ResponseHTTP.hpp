@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:20:10 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 15:50:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 		int						m_method;
 		std::stringstream		m_header;
 		std::fstream			m_body;
+		int						m_cgi_repsonse;
 		size_t					m_length;
 		bool					m_isAutoindex;
 		URL						m_url;

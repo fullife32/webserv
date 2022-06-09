@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 19:56:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 18:41:48 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,30 @@ void		Client::send_data() {
 		setToRemove(); // TODO: what to do ? 
 
 
+// }
+
+// void	Client::receive_data_from_CGI()
+// {
+// 	getline()
+// 	if (m_buffer.isEmpty())
+// 		recv(fd_CGI);
+// 		m_cgi is ready = true;
+// }
+
+// void	Client::send_data_CGI() {
+
+
+// 	if (m_response.CGIhasheaderToSend)
+// 		send_data()
+		
+// 	if (m_CGIisready == true )
+// 	{
+// 		static size_t	bufferSize = 0;
+
+// 		bufferSize = m_response.getNextChunk_CGI(m_buffer); // HEADER
+// 		send(m_fd, m_buffer);
+// 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+// 		m_cgi is ready = false;
+// 	}
+
 }
-
-

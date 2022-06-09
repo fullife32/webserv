@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:55:05 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 16:04:34 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 		RequestLine							m_requestLine;
 		ParseRequest						m_parseRequest;
 		std::string							m_body;
+		std::ifstream						m_body_CGI;
+		std::string							m_path_body_for_CGI;
+		int									m_bodyCGI_fd;
 
 	public:
 
@@ -44,6 +47,7 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 	/* get / set    ------------------------------------------------ */
 		int				getMethod() const;
 		URL				getUrl() const;
+		int				get_body_for_CGI() const ;
 		void			setRequestLine(const RequestLine & requestLine);
 		void			setBody(const std::string & body);
 
