@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:20:10 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 14:31:26 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "Server.hpp"
 # include "MessageHTTP.hpp"
+# include <glob.h> // TODO added by Eithan
 
 class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 {
@@ -94,6 +95,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 		void	m_formated_Response();
 		void	m_formated_StatusLine();
 		void	m_formated_HeaderFields();
+		void	m_formated_Autoindex( std::string &path );
 		void	m_formated_CGI_Response(const RequestHTTP & request);
 
 		void	m_formated_Error(const URL & url);

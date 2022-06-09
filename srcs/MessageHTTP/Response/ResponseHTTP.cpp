@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:21:58 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 18:41:11 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 	
 	if (request.hasBody())
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	if (request.hasQueryString() || m_url.fileExtension == "php")
+	if (request.hasQueryString())
 		// fonction class CGI(ResponseHTTP )
 		m_formated_CGI_Response(request);
 	else		
@@ -214,6 +214,7 @@ std::string			ResponseHTTP::m_foundLocation()
 {
 std::string		formatedPath = m_url.formatedPath();
 std::string		realPath;
+std::string		index;
 int				redirection;
 
 if (m_server->isMethodAllowed(m_url.serverName, formatedPath, m_method) == false)
@@ -224,24 +225,27 @@ if (redirection != 0)
 	m_statusLine.statusCode = redirection;
 	m_statusLine.reasonPhrase = m_errors[redirection];
 	set_headerFields(HF_LOCATION, realPath);
+	std::cout << "redirection ?????" << std::endl;
 }
 else
 {
 	realPath = m_server->getLocationPath(m_url.serverName, m_url.path);
 	if (realPath.empty())
-		throw MessageErrorException (STATUS_NOT_FOUND);
+		throw MessageErrorException (100);
 	if (m_url.filename.empty())
 	{
-		realPath = m_server->getIndex(m_url.serverName, m_url.path); // TODO:
-		if (realPath.empty())
-		{
-			m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
-			if (m_isAutoindex == false)
+		m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
+		if (m_isAutoindex == true)
+			return (realPath);
+		index = m_server->getIndex(m_url.serverName, m_url.path); // TODO:
+		if (index.empty())
 				throw MessageErrorException(STATUS_FORBIDDEN, m_url);
-		}
+		realPath = index;
 	}
 	else 
+	{
 		realPath += m_url.filename;
+	}
 }
 return (realPath);
 }

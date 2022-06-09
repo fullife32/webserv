@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP_formatting.cpp                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:42:31 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 18:52:54 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,14 @@
 	void	ResponseHTTP::m_formated_Response()
 	{
 		m_header.clear();
-		m_openFile_Body(m_foundLocation());
+		std::string path = m_foundLocation();
+
+		if (m_isAutoindex == false)
+			m_openFile_Body(path);
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
+		if (m_isAutoindex == true)
+			m_formated_Autoindex(path);
 	}
 
 
@@ -47,6 +52,43 @@
 		for (std::map<std::string, std::string>::iterator it = m_headerFields.begin(); it != m_headerFields.end(); it++)
 			m_header << (*it).first << ": " << (*it).second << CRLF;
 		m_header << CRLF;
+	}
+
+	void	ResponseHTTP::m_formated_Autoindex(std::string &path ) // TODO added by Eithan
+	{
+		size_t		headerSize = m_header.str().size();
+		std::string	actualPath(m_url.path.begin() + 1, m_url.path.end());
+
+		glob_t glob_result;
+		glob_result.gl_offs = 2;
+
+		int return_value = ::glob((path + '*').c_str(), GLOB_TILDE, NULL, &glob_result);
+
+		if (return_value != 0 && return_value != GLOB_NOMATCH)
+			throw MessageErrorException(STATUS_FORBIDDEN, m_url);
+		std::vector<std::string> filenames(glob_result.gl_pathv,
+			glob_result.gl_pathv + glob_result.gl_pathc);
+		globfree(&glob_result);
+
+		m_header << "<!DOCTYPE html>" << CRLF;
+		m_header << "<html lang=\"en\"" << CRLF;
+		m_header << "<head>" << CRLF;
+		m_header << "<meta charset=\"UTF-8\">" << CRLF;
+		m_header << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << CRLF;
+		m_header << "</head>" << CRLF;
+		m_header << "<body style=\"font-size: x-large;font-family: monospace;text-align: -webkit-left; >\"; >" << CRLF;
+		m_header << "<h3>Index of " << actualPath << "</h3>" << CRLF;
+		m_header << "<a href=\"/\">/</a>" << CRLF;
+		if (return_value != GLOB_NOMATCH) {
+			for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
+				m_header << "<br><a href=\"" <<  actualPath + "/" + (*it).erase(0, path.size()) << "\">/" << (*it) << "</a>" << CRLF;
+		}
+		m_header << "</body>" << CRLF;
+		m_header << "</html>" << CRLF;
+		m_header << CRLF;
+
+		setContentLength(m_header.str().size() - headerSize);
+		set_headerFields(HF_CONTENT_TYPE, "text/html");
 	}
 
 
