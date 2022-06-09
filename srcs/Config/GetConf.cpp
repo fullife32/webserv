@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 13:24:26 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/09 17:34:26 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 const s_server	&ServerConf::getServerByName( const std::string &server_name ) const {
 	std::vector<std::string>::const_iterator itMain = std::find(m_main.first.begin(), m_main.first.end(), server_name);
 
-	if (itMain != m_main.first.end() && (*itMain) == server_name)
+	if (itMain != m_main.first.end())
 		return m_main.second;
 	for (std::map<std::vector<std::string>, s_server>::const_iterator it = m_subs.begin(); it != m_subs.end(); ++it) {
 		std::vector<std::string>::const_iterator itSub = std::find((*it).first.begin(), (*it).first.end(), server_name);
 
-		if (itSub != m_main.first.end() && (*itSub) == server_name)
+		if (itSub != (*it).first.end())
 			return (*it).second;
 	}
 	return m_main.second;

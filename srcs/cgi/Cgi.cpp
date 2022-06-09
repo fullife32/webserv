@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/08 20:16:30 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/09 17:39:37 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 Cgi::Cgi
 (HeaderFields const &header_fields, ResponseHTTP const &response_http,
  ServerConf const &server_conf) {
+	// build environment
 	std::map<std::string, std::string> env_map;
 	env_map["AUTH_TYPE"] = ""; // ?
 	env_map["CONTENT_LENGTH"] = header_fields.get_value_headerFields(HF_CONTENT_LENGTH);
@@ -34,6 +35,16 @@ Cgi::Cgi
 	env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
 	env_map["SERVER_SOFTWARE"] = "Webserv";
 	this->_alloc_env(env_map);
+	// build args
+	this->_argv = new char*[3];
+	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
+	std::string arg1 = "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
+		+ response_http.get_fileName();
+	this->_argv[0] = new char[arg0.length() + 1];
+	std::strcpy(this->_argv[0], arg0.c_str());
+	this->_argv[1] = new char[arg1.length() + 1];
+	std::strcpy(this->_argv[1], arg1.c_str());
+	this->_argv[2] = NULL;
 }
 
 Cgi::Cgi(Cgi const &cgi) {
@@ -58,6 +69,9 @@ Cgi::~Cgi(void) {
 	for (int i = 0; this->_env[i] != NULL; i++)
 		delete [] this->_env[i];
 	delete [] this->_env;
+	for (int i = 0; this->_argv[i] != NULL; i++)
+		delete [] this->_argv[i];
+	delete [] this->_argv;
 }
 
 void Cgi::_alloc_env(std::map<std::string, std::string> &env_map) {
@@ -74,26 +88,35 @@ void Cgi::_alloc_env(std::map<std::string, std::string> &env_map) {
 
 void Cgi::execute(void) {
 
-	for (int j = 0; this->_env[j] != NULL; ++j)
-		std::cout << this->_env[j] << std::endl;
-	// int fd[2]
-	// int ret;
+	for (int i = 0; this->_argv[i] != NULL; i++) {
+		std::cout << "argv[" << i << "] = " << this->_argv[i] << std::endl;
+	}
+	/*
+	int fd_in[2];
+	int fd_out[2];
 	
-	// ret = pipe(fd);
-	// if (ret == -1)
-		// throw Cgi::CgiError(strerror(errno));
-	// pid_t pid = fork();
-	// if (pid == -1)
-		// throw Cgi::CgiError(strerror(errno));
-	// else if (pid == 0) {
-		// ret = execve(this->_from_map_to_C_env());
-		// if (ret == -1)
-			// throw Cgi::CgiError(strerror(errno));
-	// } else {
+	if (pipe(fd_in) == -1 || pipe(fd_out) == -1)
+		throw Cgi::CgiError(strerror(errno));
+	pid_t pid = fork();
+	if (pid == -1)
+		throw Cgi::CgiError(strerror(errno));
+	else if (pid == 0) { // child process
+		dup2(fd_in[0], STDIN_FILENO);
+		close(fd_in[1]);
+		dup2(fd_out[1], STDOUT_FILENO);
+		close(fd_out[0]);
+		if (execve(this->_argv[0], this->_argv, this->_env) == -1) {
+			close(fd_in[0]);
+			close(fd_out[1]);
+			throw Cgi::CgiError(strerror(errno));
+		}
+	} else { // parent process
 // response_http.m_body -> open -> write -> 
-// server_conf.getCgiPath();
-	// }
+	}
+	*/
 }
+
+// Error management
 
 Cgi::CgiError::CgiError(char const *msg): _msg(msg) {
 }

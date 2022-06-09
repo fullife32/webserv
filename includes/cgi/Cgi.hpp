@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:01:20 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/08 20:02:02 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/09 16:07:59 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ public:
 private:
 	// the environment build during construction that will be passed to execve()
 	char **_env;
+	char **_argv;
 	void _alloc_env(std::map<std::string, std::string> &env_map);
 	Cgi(void);
 };
