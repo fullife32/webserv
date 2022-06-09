@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:39:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 14:58:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ std::map<std::string, std::string>	ParseRequest::getHeaderFields()
 
 		throw exception if empty line is not found (400: Bad Request)
 */
-void		ParseRequest::m_separateHeaderBody()
+void		ParseRequest::m_separateHeaderBody() /// TODO: devenu buildHeader
 {
 	size_t		separation = m_data.find(EMPTY_LINE);
 	
@@ -123,6 +123,7 @@ void		ParseRequest::m_separateHeaderBody()
 		for now HTTPversion is facultatif
 		throw exception (400 Bad Request)
 */
+
 void 		ParseRequest::m_formated_RequestLine(const std::string & startline)
 {
 	std::vector<std::string>	split;
@@ -139,6 +140,24 @@ void 		ParseRequest::m_formated_RequestLine(const std::string & startline)
 	if (split.size() == 3)
 		m_requestLine.version.formatedVersion(split[2]);
 }
+
+
+// void 		ParseRequest::m_formated_RequestLine(const std::string & startline) // TODO: supprimer
+// {
+// 	std::vector<std::string>	split;
+	
+// 	split = splitString(startline, " ");
+// 	if (split.size() < 2 || split.size() > 3)
+// 		throw MessageErrorException(STATUS_BAD_REQUEST);
+
+// 	if (split[1].size() > REQUEST_URL_MAX_SIZE)
+// 		throw MessageErrorException(STATUS_URI_TOO_LONG);
+
+// 	m_requestLine.method = split[0];
+// 	m_formated_Url(split[1]);
+// 	if (split.size() == 3)
+// 		m_requestLine.version.formatedVersion(split[2]);
+// }
 
 /*
 **	get all header fields by separate each line of headerSplit by ':'
@@ -232,4 +251,40 @@ void	ParseRequest::m_formated_Url(std::string target)
 	m_requestLine.url.path = target;
 	if (m_requestLine.url.path.empty())
 		m_requestLine.url.path = "/";
+}
+
+/*
+		FirstLine = RequestLine
+
+
+*/
+
+
+void			ParseRequest::parseFirstLine()
+{
+	size_t	sep = m_data.find(NEWLINE);
+		if (sep == std::string::npos)
+			return ;
+		m_formated_RequestLine(std::string(&m_data[0], &m_data[sep]));
+		m_firstline_is_complete = true;
+		m_data.erase(sep);
+		if (sep ==  m_data.find(EMPTY_LINE);) // no headerFields
+			return true ;
+}
+
+bool			ParseRequest::parseHeader() // check max header size
+{
+	size_t	headerFields_sep = 0;
+
+	if (m_firstline_is_complete == false)
+		parseFirstLine;
+	}
+	headerFields_sep = m_data.find(EMPTY_LINE, firstLine);
+
+	if (headerFields_sep == std::string::npos)
+		return false;
+	m_body =   std::string(&m_data[headerFields_sep + 4], &m_data[m_data.size()]);
+	m_header = std::string(&m_data[0], &m_data[headerFields_sep]);
+
+	return (true);
 }

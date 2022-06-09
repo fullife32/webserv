@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:53:51 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 14:10:54 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -288,21 +288,16 @@ void	ResponseHTTP::m_openFile_Body(const std::string & location)
 {
 
 	std::cout << "OPENFILE location = " << location << std::endl;
-	if (m_isAutoindex)
-		;// m_build_autoIndex(location);
-	else
-	{
-		try
-		{
-			m_body.open(location.data());
-		}
-		catch(const std::exception& e)  //// TODO: What to do ? 
-		{
-			std::cerr << e.what() << '\n';
-			throw	MessageErrorException(100);
-		}
-	}
 
+	try
+	{
+		m_body.open(location.data());
+	}
+	catch(const std::exception& e)  //// TODO: What to do ? 
+	{
+		std::cerr << e.what() << '\n';
+		throw	MessageErrorException(100);
+	}
 	std::cout << "is open = " << m_body.is_open() << std::endl;
 	if (m_body.is_open() == false)
 		throw MessageErrorException(STATUS_NOT_FOUND); // TODO: URL

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 19:56:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 14:23:57 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,39 +55,64 @@ void			Client::setToChangeEvent() {
 		m_toChangeEvent = true;
 }
 
+
+void		Client::m_checkRequestHeader()
+{
+	if (m_request.hasHeader() == false)
+		m_request.buildHeader();
+}
+
+
+void		Client::m_checkCompleteReceive()
+{
+	if (m_request.isComplete())
+	{
+		m_request.buildRequest();
+		// m_request.debug_print();
+		m_response.buildResponse(m_request);
+		setToChangeEvent();
+	}
+}
+
+
 void		Client::receive_data() {
 
 	int	size;
 
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
-	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0); // TODO; recv first == 0 le client s est deconnecte
+	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0);
 
 	if (size == -1)
 	{
 		setToChangeEvent();
 		m_response.buildError(STATUS_INTERNAL_SERVER_ERROR, S_STATUS_INTERNAL_SERVER_ERROR, m_response.get_url());
-		return ;
 	}
-	m_request.append(m_buffer);
-	if (size == 0 && m_request.empty())
-		setToRemove();
-	else if (size == 0 || size < MESSAGE_BUFFER_SIZE)
+	else if (size == 0)
 	{
-		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+		if (m_request.empty()) {// connection close by the client; ???
+			setToRemove();
+		}
+		// if (m_request.isComplete() == false)
+		// {
+		// 	m_response.buildError(STATUS_BAD_REQUEST, S_STATUS_BAD_REQUEST, m_response.get_url());
+		// 	setToChangeEvent()
+		// }
+	}
+	else {
+		m_request.append(m_buffer);
 		try {
-			m_request.buildRequest();
-			// m_request.debug_print();
-			m_response.buildResponse(m_request);
+			m_checkRequestHeader();
+			m_checkCompleteReceive();
 		}
 		catch (MessageErrorException & e) {
 			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
+			setToChangeEvent();
 		}
 		catch (std::exception & e) {
 			std::cerr << e.what() << std::endl;
 			setToRemove();
 		}
-		setToChangeEvent();
-	}	
+	}
 }
 
 

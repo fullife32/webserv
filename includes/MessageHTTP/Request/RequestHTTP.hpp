@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:55:05 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 14:32:52 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,14 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 			std::map<std::string, std::string>	m_headerFields;	
 	*/
 	private:
-		RequestLine							m_requestLine;
-		ParseRequest						m_parseRequest;
-		std::string							m_body;
+		RequestLine		m_requestLine;
+		ParseRequest	m_parseRequest;
+		std::string		m_body;
+
+		
+		int				m_method;
+		bool			m_header_is_complete;
+		bool			m_body_is_complete;
 
 	public:
 
@@ -44,17 +49,27 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 	/* get / set    ------------------------------------------------ */
 		int				getMethod() const;
 		URL				getUrl() const;
+		size_t			getBodySize() const ;
+
 		void			setRequestLine(const RequestLine & requestLine);
 		void			setBody(const std::string & body);
 
 	/* functions    ------------------------------------------------ */
-		void			buildRequest();
 		void			append(const char * buffer);
+	
+		void			buildHeader();
+		void			buildRequest();
 
+	/*	booleen     ------------------------------------------------ */
 		bool			hasQueryString() const ;
 		bool			hasBody() const ;
+		bool			hasHeader() const ;
 		bool			empty() const ;
-		size_t			getBodySize() const ;
+		bool			isComplete() const ;
+
+
+
+
 
 
 		// debug

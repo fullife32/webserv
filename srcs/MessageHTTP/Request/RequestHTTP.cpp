@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:55:38 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 12:03:29 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,15 @@ void	RequestHTTP::buildRequest()
 	m_headerFields = m_parseRequest.getHeaderFields();
 	m_body = m_parseRequest.getBody();
 }
+
+void	RequestHTTP::buildHeader()
+{
+	if (m_parseRequest.buildHeader() == true)
+		m_is_header_complete == true;
+}
+
+void	RequestHTTP:: 
+
 
 /* -------------------------------------------------------------------------- */
 // set:
@@ -98,6 +107,17 @@ bool	RequestHTTP::hasBody() const
 {
 	return !(m_body.empty());
 }
+
+bool	RequestHTTP::hasHeader() const 
+{
+	return (m_is_header_complete);
+}
+
+bool	RequestHTTP::isComplete() const 
+{
+	return (m_is_header_complete && m_is_body_complete);
+}
+
 
 bool	RequestHTTP::empty() const 
 {

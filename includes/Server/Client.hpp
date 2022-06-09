@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 16:41:19 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 11:44:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ public:
 			return "Client create failed";
 		}
 	};
+
+	private:
+
+	void		m_checkRequestHeader();
+	void		m_checkCompleteReceive();
 };
 
 #endif

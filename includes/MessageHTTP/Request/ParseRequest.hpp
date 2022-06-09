@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:11:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/09 14:47:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,15 @@ class ParseRequest : public HeaderFields
 {
 
 	private:
-		std::string							m_data;
-		std::string							m_header;
-		std::string							m_body;
-		RequestLine							m_requestLine;
-		size_t								m_sizeReceive;
+		std::string		m_data;
+		std::string		m_header;
+		std::string		m_body;
+		RequestLine		m_requestLine;
+		size_t			m_sizeReceive;
+		int				m_errorCode;
+
+		bool			m_firstline_is_complete;
+
 		// std::map<std::string, std::string>	m_headerFields;
 	public:
 
@@ -40,6 +44,10 @@ class ParseRequest : public HeaderFields
 		bool 			empty() const ;
 
 
+		bool			parseHeader();
+		bool			parseFirstLine();
+
+		int				getErrorCode() const ;
 
 		RequestLine		getRequestLine();
 		std::string		getBody();
