@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 16:45:22 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:37:32 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@
 		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << CRLF;
 		body << "</head>" << CRLF;
 		body << "<body style=\"font-size: x-large;font-family: monospace;text-align: -webkit-left; >\"; >" << CRLF;
-		body << "<h3>Index of " << actualPath << "</h3>" << CRLF;
+		body << "<h3>Index of /" << actualPath << "</h3>" << CRLF;
 		body << "<a href=\"/\">/</a>" << CRLF;
 		if (return_value != GLOB_NOMATCH) {
 			for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)

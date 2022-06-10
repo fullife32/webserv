@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/09 17:29:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/10 19:17:27 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,18 +199,19 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 	return std::string();
 }
 
-std::string	ServerConf::isUploadPath( const std::string &server_name, const std::string &location ) const {
+std::string	ServerConf::getUploadPath( const std::string &server_name, const std::string &location ) const {
 	s_base		baseStruct;
 	std::string	rest;
 	bool		yes = true;
 
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
-	else
+	else {
 		baseStruct = getLocationByName(server_name, location, yes, rest);
-	if (yes == false) // TODO accept rest of location ??
-		return std::string();
-	else if ((rest.empty() || rest == "/") && baseStruct.upload_pass.empty() == false)
-		return getLocationPath(server_name, location) + baseStruct.upload_pass + "/";
-	return std::string(); // TODO Is upload pass a specification to add at the end and if doesn't exists return only root + location ??
+		if (baseStruct.upload_pass.empty())
+			baseStruct = getServerByName(server_name);
+	}
+	if (baseStruct.upload_pass.empty())
+		return baseStruct.root + "/";
+	return baseStruct.upload_pass + "/";
 }

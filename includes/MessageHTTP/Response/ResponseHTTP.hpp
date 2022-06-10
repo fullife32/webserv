@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 11:53:39 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:32:24 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 		void	m_parseMethod(const RequestHTTP & request);
 		void	m_method_GET(const RequestHTTP & request);
 		void	m_method_POST(const RequestHTTP & request);
-		void	m_method_DELETE(const URL & url);
+		void	m_method_DELETE(const RequestHTTP & request);
 
 		std::string	m_foundLocation();
 		void	m_checkBodySize(size_t request_bodySize, size_t ContentLenght);

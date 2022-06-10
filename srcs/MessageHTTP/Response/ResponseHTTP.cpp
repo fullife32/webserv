@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 17:18:51 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/10 19:36:42 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	ResponseHTTP::m_parseMethod(const RequestHTTP & request)
 	{
 		case (GET) : m_method_GET(request); break;
 		case (POST) : m_method_POST(request); break;
-		case (DELETE) : m_method_DELETE(request.getUrl()); break;
+		case (DELETE) : m_method_DELETE(request); break;
 		default :
 			throw MessageErrorException(STATUS_NOT_IMPLEMENTED, request.getUrl());
 	}
@@ -181,28 +181,43 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Con
 	size_t	ContentLenght;
 
 	if (request.hasBody() == false)
-		throw MessageErrorException(STATUS_BAD_REQUEST); // TODO: a checker
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url); // TODO: a checker
 	ContentLenght = atoi(request.get_value_headerFields(HF_CONTENT_LENGTH).data());
 	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty()) 
-		throw MessageErrorException(STATUS_BAD_REQUEST);// TODO: if no Content type ?
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);// TODO: if no Content type ?
 	m_checkBodySize(request.getBodySize(), ContentLenght);
 	
 }
 
+/*
+	DELETE METHOD:
 
-void	ResponseHTTP::m_method_DELETE(const URL & url)
+		200 OK - If the ressource was found and delete from the server.
+		204 Accepted - If the ressource wasn't found or already deleted from the
+	server.
+		If the ressource wasn't found, the client should not get a 404 status,
+	for two reasons:
+		- It would send an unimportant information about the status of the
+	ressource, that the client wanted to delete, to the client.
+		- If the ressource was already deleted or doesn't exists, the DELETE
+	method works as excepted because the ressource is not present on the server
+	anymore.
+*/
+
+void	ResponseHTTP::m_method_DELETE(const RequestHTTP & request)
 {
-	(void)url;
 	std::cout << "in methode DELETE" << std::endl;
 	std::stringstream	body;
 
+	if (request.hasBody())
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 	if (m_server->isMethodAllowed(m_url.serverName, m_url.path, m_method) == false)
-		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED);
+		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, m_url);
 
 	std::string	deleteFile = m_foundLocation();
 
-	int ret = std::remove(deleteFile.c_str());
-	bool success = !std::ifstream(deleteFile.c_str());
+	int		ret = std::remove(deleteFile.c_str());
+	bool	success = !std::ifstream(deleteFile.c_str());
 
 	if (ret == -1 || success == false) {
 		m_statusLine.statusCode = STATUS_ACCEPTED;
@@ -212,7 +227,7 @@ void	ResponseHTTP::m_method_DELETE(const URL & url)
 		body << "<!DOCTYPE html>" << CRLF;
 		body << "<html>" << CRLF;
 		body << "<body>" << CRLF;
-		body << "<h1>File deleted.</h1>" << CRLF;
+		body << "<h1>Ressource deleted.</h1>" << CRLF;
 		body << "</body>" << CRLF;
 		body << "</html>" << CRLF;
 		body << CRLF << CRLF;
