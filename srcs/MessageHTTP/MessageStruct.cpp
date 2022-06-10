@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageStruct.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:23:35 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/10 15:46:52 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,3 +183,33 @@ std::map <std::string, int>		init_map_method()
 
 
 std::map <std::string, int>		MessageMethods::m_methods = init_map_method();
+
+
+
+/* Content Type  ------------------------------------------------ */
+
+
+std::map< std::string, std::string>		init_map_ContentType()
+{
+	std::map< std::string, std::string>	map_contentType;
+
+	map_contentType[".aac"] = "audio/aac";
+	map_contentType[".avi"] = "video/x-msvideo";
+	map_contentType[".bmp"] = "image/bmp";
+	map_contentType[".css"] = "text/css";
+	map_contentType[".csv"] = "text/csv";
+	map_contentType[".gif"] = "image/gif";
+	map_contentType[".htm"] = "text/html";
+	map_contentType[".html"] = "text/html";
+	map_contentType[".ico"] = "image/x-icon";
+	map_contentType[".jpeg"] = "image/jpeg";
+	map_contentType[".jpg"] = "image/jpeg";
+	map_contentType[".mpeg"] = "video/mpeg";
+	map_contentType[".png"] = "image/png";
+	map_contentType[".svg"] = "image/svg+xml";
+	map_contentType[".php"] = "text/php";
+
+	return (map_contentType);
+}
+
+std::map< std::string, std::string> ContentTypes::m_listContentType = init_map_ContentType();

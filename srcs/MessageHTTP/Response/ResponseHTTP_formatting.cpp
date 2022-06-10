@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 11:51:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 19:42:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,18 @@
 	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
 	{
 		m_header.clear();
-		// m_openFile_Body(m_foundLocation());
-		m_formated_StatusLine();
-		m_formated_HeaderFields();
+		m_body_CGI = tmpfile();
 
-		// m_fd = open(request.get_request_body_CGI());
-		// if (m_fd == -1)
-		// 	throw(MessageErrorException(100)) // TODO a voir
 
 		// std::cout << "there is a query string in the request" << std::endl;
 
 		// try executeCGI(m_headerFields, *this, *m_server)
+
+	
+		
+		// TODO: contentTYPE et CONTENT LENGTHs
+		m_formated_StatusLine();
+		m_formated_HeaderFields();
 	}
 
 	void	ResponseHTTP::m_formated_StatusLine()
@@ -137,8 +138,6 @@
 
 	void	ResponseHTTP::m_formated_ErrorBody(std::stringstream & body)
 	{
-		// if (ErrorUrl.empty())
-
 		std::string	background_color;
 
 		std::cout << "Formated Error Body" << std::endl;

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 15:20:58 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 19:28:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,43 +27,29 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 {
 	size_t	len;
 
-	if (m_header.read(buffer, MESSAGE_BUFFER_SIZE))
-		return strlen(buffer);
-
-	len = strlen(buffer);
-
-	if (m_body.is_open() && m_body.read(buffer + len, MESSAGE_BUFFER_SIZE - len))
-		return strlen(buffer);
-		
+	m_header.get(buffer, MESSAGE_BUFFER_SIZE + 1, 0);
+	if (m_header.gcount() == MESSAGE_BUFFER_SIZE)
+		return MESSAGE_BUFFER_SIZE;
+	if (m_body.is_open())
+	{
+		len = strlen(buffer);
+		m_body.get(buffer + len, MESSAGE_BUFFER_SIZE -len + 1, 0);
+		return (strlen(buffer));
+	}
 	len = strlen(buffer);
 	if (len == 0)
 		clear();
 	return (len);
 }
 
-/*
-	Set Content-Lenght headerFields and keep size in intern variable
-*/
-void	ResponseHTTP::setContentLength(size_t size)
+
+
+void	ResponseHTTP::setContentType(std::string const & extension)
 {
-	std::stringstream StringSize;
-
-	StringSize << size;
-	m_length = size;
-	set_headerFields(HF_CONTENT_LENGTH, StringSize.str()); 
-}
-
-
-
-
-/*
-	Set the minimals Header Fields needed for an answer.
-		Date and Server
-*/
-void	ResponseHTTP::m_set_minimalHeaderFields()
-{
-	set_headerFields(HF_DATE, getStringTime());
-	set_headerFields(HF_SERVER, SERVER_NAME);
+	std::map<std::string, std::string>::iterator	found = m_listContentType.find(extension);
+	if (found == m_listContentType.end())
+		throw MessageErrorException(STATUS_UNSUPPORTED_MEDIA_TYPE, m_url);
+	set_headerFields(HF_CONTENT_TYPE, found->second);
 }
 
 const URL & ResponseHTTP::get_url() const
@@ -101,3 +87,26 @@ std::string ResponseHTTP::get_path() const
 {
 	return m_url.path;
 }
+
+/*
+	Set the minimals Header Fields needed for an answer.
+		Date and Server
+*/
+void	ResponseHTTP::m_set_minimalHeaderFields()
+{
+	set_headerFields(HF_DATE, getStringTime());
+	set_headerFields(HF_SERVER, SERVER_NAME);
+}
+
+/*
+	Set Content-Lenght headerFields and keep size in intern variable
+*/
+void	ResponseHTTP::setContentLength(size_t size)
+{
+	std::stringstream StringSize;
+
+	StringSize << size;
+	m_length = size;
+	set_headerFields(HF_CONTENT_LENGTH, StringSize.str()); 
+}
+

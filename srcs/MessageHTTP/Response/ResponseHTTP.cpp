@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 11:53:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 19:42:35 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,42 +309,23 @@ void	ResponseHTTP::m_openFile_Body(const std::string & location)
 
 	std::cout << "is open = " << m_body.is_open() << std::endl;
 	if (m_body.is_open() == false)
-		throw MessageErrorException(STATUS_NOT_FOUND); // TODO: URL
-	m_setOpenFileBodySize();
+		throw MessageErrorException(STATUS_NOT_FOUND, m_url);
 }
 
-
-void	ResponseHTTP::m_setOpenFileBodySize()
+void	ResponseHTTP::m_openFile_CGI()
 {
-		int	FileSize; // TODO: maybe long ?
+	m_body_CGI = tmpfile(); // TODO check error opening ?
+}
+
+void	ResponseHTTP::m_setOpenFileBodySize() // TODO CHECK
+{
+		size_t	FileSize; // TODO: maybe long ?
 
 		m_body.seekg (0, m_body.end);
 		FileSize = m_body.tellg();
 
 		std::cout << "FileSize = " << FileSize << std::endl;
-		setContentLength(FileSize == -1 ? 0 : FileSize);
+		setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
 		m_body.seekg (0, m_body.beg);
-
 }
 
-std::map< std::string, std::string> m_listContentType;
-
-
-void	m_init_listContentType() // TODO: 415 Unsupported Media Type
-{
-
-	m_listContentType[".aac"] = "audio/aac";
-	m_listContentType[".avi"] = "video/x-msvideo";
-	m_listContentType[".bmp"] = "image/bmp";
-	m_listContentType[".css"] = "text/css";
-	m_listContentType[".csv"] = "text/csv";
-	m_listContentType[".gif"] = "image/gif";
-	m_listContentType[".htm"] = "text/html";
-	m_listContentType[".html"] = "text/html";
-	m_listContentType[".ico"] = "image/x-icon";
-	m_listContentType[".jpeg"] = "image/jpeg";
-	m_listContentType[".jpg"] = "image/jpeg";
-	m_listContentType[".mpeg"] = "video/mpeg";
-	m_listContentType[".png"] = "image/png";
-	m_listContentType[".svg"] = "image/svg+xml";
-}

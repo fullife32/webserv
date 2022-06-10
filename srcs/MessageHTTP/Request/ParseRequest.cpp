@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:39:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 17:12:55 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,18 @@ ParseRequest::~ParseRequest()
 
 std::string &	ParseRequest::append(const std::string & str)
 {
+	if (m_is_post_method == true)
+		m_append_body(str);
 	m_sizeReceive += str.size();
+	// m_body_tmp
 	return m_data.append(str);
+}
+
+void			ParseRequest::m_append_body(const std::string & str)
+{
+	fputs(str.data(), m_body_tmp); // TODO protected ?
+	m_body_size += str.size();
+	// if (m_body.size() > m_max_body_size())  // TODO
 }
 
 
@@ -51,6 +61,7 @@ bool			ParseRequest::empty() const
 {
 	return m_data.empty();
 }
+
 
 /* -------------------------------------------------------------------------- */
 
@@ -233,3 +244,6 @@ void	ParseRequest::m_formated_Url(std::string target)
 	if (m_requestLine.url.path.empty())
 		m_requestLine.url.path = "/";
 }
+
+
+// void	m_create_body_
