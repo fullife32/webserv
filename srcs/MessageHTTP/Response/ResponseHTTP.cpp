@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 11:53:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 17:18:51 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 	
 	if (request.hasBody())
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	if (request.hasQueryString())
+	if (request.hasQueryString() || m_url.fileExtension == "php")
 		// fonction class CGI(ResponseHTTP )
 		m_formated_CGI_Response(request);
 	else		
@@ -179,7 +179,7 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Con
 	std::cout << "in methode POST" << std::endl;
 
 	size_t	ContentLenght;
-	
+
 	if (request.hasBody() == false)
 		throw MessageErrorException(STATUS_BAD_REQUEST); // TODO: a checker
 	ContentLenght = atoi(request.get_value_headerFields(HF_CONTENT_LENGTH).data());
@@ -192,14 +192,38 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Con
 
 void	ResponseHTTP::m_method_DELETE(const URL & url)
 {
+	(void)url;
 	std::cout << "in methode DELETE" << std::endl;
+	std::stringstream	body;
 
 	if (m_server->isMethodAllowed(m_url.serverName, m_url.path, m_method) == false)
 		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED);
-	std::string		deleteFile = m_foundLocation();
 
-	// if (deleteFile.empty())
-	// 	throw MessageErrorException();
+	std::string	deleteFile = m_foundLocation();
+
+	int ret = std::remove(deleteFile.c_str());
+	bool success = !std::ifstream(deleteFile.c_str());
+
+	if (ret == -1 || success == false) {
+		m_statusLine.statusCode = STATUS_ACCEPTED;
+		m_statusLine.reasonPhrase = m_errors[STATUS_ACCEPTED];
+	}
+	else {
+		body << "<!DOCTYPE html>" << CRLF;
+		body << "<html>" << CRLF;
+		body << "<body>" << CRLF;
+		body << "<h1>File deleted.</h1>" << CRLF;
+		body << "</body>" << CRLF;
+		body << "</html>" << CRLF;
+		body << CRLF << CRLF;
+
+		setContentLength(body.str().size());
+		set_headerFields(HF_CONTENT_TYPE, "text/html");
+	}
+	m_formated_StatusLine();
+	m_formated_HeaderFields();
+	m_header << body.str();
+
 }
 
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/09 18:41:48 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 17:26:50 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void		Client::receive_data() {
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		try {
 			m_request.buildRequest();
-			// m_request.debug_print();
+			m_request.debug_print();
 			m_response.buildResponse(m_request);
 		}
 		catch (MessageErrorException & e) {
@@ -110,7 +110,7 @@ void		Client::send_data() {
 		setToRemove(); // TODO: what to do ? 
 
 
-// }
+}
 
 // void	Client::receive_data_from_CGI()
 // {
@@ -136,4 +136,4 @@ void		Client::send_data() {
 // 		m_cgi is ready = false;
 // 	}
 
-}
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP_formatting.cpp                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 11:51:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 16:45:22 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,19 @@
 		m_header.clear();
 		std::string path = m_foundLocation();
 
-		if (m_isAutoindex == false)
+		if (m_isAutoindex == false) {
 			m_openFile_Body(path);
-		m_formated_StatusLine();
-		m_formated_HeaderFields();
-		if (m_isAutoindex == true)
+			m_formated_StatusLine();
+			m_formated_HeaderFields();
+		}
+		else if (m_isAutoindex == true)
 			m_formated_Autoindex(path);
 	}
 
 
 	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
 	{
-		m_header.clear();
-		// m_openFile_Body(m_foundLocation());
-		m_formated_StatusLine();
-		m_formated_HeaderFields();
-
-		// m_fd = open(request.get_request_body_CGI());
-		// if (m_fd == -1)
-		// 	throw(MessageErrorException(100)) // TODO a voir
-
-		// std::cout << "there is a query string in the request" << std::endl;
+		std::cout << "there is a query string in the request" << std::endl;
 
 		// try executeCGI(m_headerFields, *this, *m_server)
 	}
@@ -65,8 +57,8 @@
 
 	void	ResponseHTTP::m_formated_Autoindex(std::string &path ) // TODO added by Eithan
 	{
-		size_t		headerSize = m_header.str().size();
-		std::string	actualPath(m_url.path.begin() + 1, m_url.path.end());
+		std::string			actualPath(m_url.path.begin() + 1, m_url.path.end());
+		std::stringstream	body;
 
 		glob_t glob_result;
 		glob_result.gl_offs = 2;
@@ -79,25 +71,28 @@
 			glob_result.gl_pathv + glob_result.gl_pathc);
 		globfree(&glob_result);
 
-		m_header << "<!DOCTYPE html>" << CRLF;
-		m_header << "<html lang=\"en\"" << CRLF;
-		m_header << "<head>" << CRLF;
-		m_header << "<meta charset=\"UTF-8\">" << CRLF;
-		m_header << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << CRLF;
-		m_header << "</head>" << CRLF;
-		m_header << "<body style=\"font-size: x-large;font-family: monospace;text-align: -webkit-left; >\"; >" << CRLF;
-		m_header << "<h3>Index of " << actualPath << "</h3>" << CRLF;
-		m_header << "<a href=\"/\">/</a>" << CRLF;
+		body << "<!DOCTYPE html>" << CRLF;
+		body << "<html lang=\"en\">" << CRLF;
+		body << "<head>" << CRLF;
+		body << "<meta charset=\"UTF-8\">" << CRLF;
+		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << CRLF;
+		body << "</head>" << CRLF;
+		body << "<body style=\"font-size: x-large;font-family: monospace;text-align: -webkit-left; >\"; >" << CRLF;
+		body << "<h3>Index of " << actualPath << "</h3>" << CRLF;
+		body << "<a href=\"/\">/</a>" << CRLF;
 		if (return_value != GLOB_NOMATCH) {
 			for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
-				m_header << "<br><a href=\"" <<  actualPath + "/" + (*it).erase(0, path.size()) << "\">/" << (*it) << "</a>" << CRLF;
+				body << "<br><a href=\"" <<  actualPath + "/" + (*it).erase(0, path.size()) << "\">/" << (*it) << "</a>" << CRLF;
 		}
-		m_header << "</body>" << CRLF;
-		m_header << "</html>" << CRLF;
-		m_header << CRLF;
+		body << "</body>" << CRLF;
+		body << "</html>" << CRLF;
+		body << CRLF << CRLF;
 
-		setContentLength(m_header.str().size() - headerSize);
+		setContentLength(body.str().size());
 		set_headerFields(HF_CONTENT_TYPE, "text/html");
+		m_formated_StatusLine();
+		m_formated_HeaderFields();
+		m_header << body.str();
 	}
 
 
