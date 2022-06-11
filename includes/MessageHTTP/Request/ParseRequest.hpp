@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:11:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 18:40:56 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,15 @@ class ParseRequest : public HeaderFields
 	private:
 		std::string							m_data;
 		std::string							m_header;
-		std::string							m_body;
+		std::string							m_body;// TODO erase
 		RequestLine							m_requestLine;
 		size_t								m_sizeReceive;
+		FILE *								m_body_tmp;
+		size_t								m_body_size;
+		size_t								m_max_body_size; // TODO
+
+		bool								m_is_post_method;
+
 		// std::map<std::string, std::string>	m_headerFields;
 	public:
 
@@ -40,12 +46,14 @@ class ParseRequest : public HeaderFields
 		bool 			empty() const ;
 
 
+	// void	ParseRequest::set_maxBodySize(size_t max) // TODO
 
 		RequestLine		getRequestLine();
 		std::string		getBody();
+		FILE *			getCGIbody(); // TODO
 		std::map<std::string, std::string>	getHeaderFields();
 
-		void			m_prepareRequestBuilding();
+		void			m_prepareRequestBuilding(); // TODO getline()
 
 	private:
 	
@@ -55,6 +63,8 @@ class ParseRequest : public HeaderFields
 		void			m_check_host_HeaderFields(const std::string & url);
 		void			m_formated_Url(std::string url);
 		
+		void			m_append_body(const std::string & str);
+		void			m_create_body_tmp();
 	public:
 
 	//debug

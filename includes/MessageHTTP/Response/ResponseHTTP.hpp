@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 18:32:24 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/11 09:09:49 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "MessageHTTP.hpp"
 # include <glob.h> // TODO added by Eithan
 
-class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
+class ResponseHTTP : public MessageMethods, public HeaderFields,  public ContentTypes, public ErrorMap
 {
 	/*
 		protected variables herited from MessageMethods: list of all Methods
@@ -29,21 +29,20 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 		protected variables herited from HeaderFields: map of HeaderFields
 			std::map<std::string, std::string>	m_headerFields;
 
-		
+		protected variables herited from contentType: map of ContentType
+			std::map< std::string, std::string> m_listContentType = init_map_ContentType();
 	*/
 	private:
 
-		// classCGI				m_cgi;
 		StatusLine				m_statusLine;
 		const ServerConf *		m_server;
 		int						m_method;
 		std::stringstream		m_header;
-		std::fstream			m_body;
-		int						m_cgi_repsonse;
+		std::fstream			m_body; // ?? TOUT dans FILE *
 		size_t					m_length;
 		bool					m_isAutoindex;
 		URL						m_url;
-		//TODO test DELETE / 
+		FILE *					m_body_CGI;
 		
 
 	public:
@@ -63,6 +62,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 
 	/* get		    ------------------------------------------------ */
 		size_t		getNextChunk(char * buffer);
+		FILE *		getBodyForCGI() const ;
 		const URL & get_url() const ;
 		std::string get_queryString() const ;
 		std::string get_pathInfo() const ;
@@ -75,6 +75,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
 		void		setContentLength(size_t size);
+		void		setContentType(std::string const & extension);
 		void		setServer(ServerConf & server);
 	
 	
@@ -104,6 +105,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 
 		void	m_build_autoIndex(std::string location);
 
+		void	m_openFile_CGI();
 		void	m_openFile_Body(const std::string & location);
 		bool	m_openFile_Error(const std::string & location);
 
@@ -115,7 +117,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields, public ErrorMap
 		void	m_method_DELETE(const RequestHTTP & request);
 
 		std::string	m_foundLocation();
-		void	m_checkBodySize(size_t request_bodySize, size_t ContentLenght);
+		void		m_checkBodySize(size_t request_bodySize, size_t ContentLenght);
 
 	// DEBUG
 	public:

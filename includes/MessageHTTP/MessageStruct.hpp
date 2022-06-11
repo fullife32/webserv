@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 13:52:23 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 15:43:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,5 +132,16 @@ class MessageMethods
 
 std::map <std::string, int>		init_map_method();
 
+/* Content Type  ------------------------------------------------ */
+
+
+class ContentTypes
+{
+	protected:
+		static std::map< std::string, std::string> m_listContentType;
+
+};
+
+std::map< std::string, std::string>		init_map_ContentType(); // TODO: 415 Unsupported Media Type
 
 #endif
