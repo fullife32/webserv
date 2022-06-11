@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 09:08:59 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/11 12:18:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,14 +121,10 @@
 		std::stringstream		body;
 		std::string				ErrorUrl = m_server->getErrorPage(url.serverName, std::string(url.path), m_statusLine.statusCode);
 
-		std::cout << "Error Url " <<  ErrorUrl << std::endl;
-		std::cout << "Error Url path " <<  url.path << std::endl;
-
 		m_formated_StatusLine();
 		if (!ErrorUrl.empty())
 		{
 			ErrorUrl = url.path + ErrorUrl;
-			std::cout << "Error Url " <<  ErrorUrl << std::endl;
 			if (m_openFile_Error(ErrorUrl) == false)
 				m_formated_ErrorBody(body);
 		} 

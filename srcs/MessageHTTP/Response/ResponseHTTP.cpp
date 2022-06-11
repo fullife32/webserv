@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 09:09:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/11 12:22:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,10 @@ void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 	clear();
 	m_url = request.getUrl();
 	m_set_minimalHeaderFields();
+	std::cout << "XXXXXXXXXXXXXXXXXXXX OK XXXXXXXXXXXXXXXXXXX" << std::endl;
+
 	m_method = request.getMethod();
+	std::cout << "XXXXXXXXXXXXXXXXXXXX     END    XXXXXXXXXXXXXXXXXXX" << std::endl;
 	m_parseMethod(request);
 
 }
@@ -186,6 +189,8 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Con
 	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty()) 
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);// TODO: if no Content type ?
 	m_checkBodySize(request.getBodySize(), ContentLenght);
+
+	std::cout << "OK FOR POST " << std::endl;
 	
 }
 

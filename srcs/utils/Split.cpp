@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:49:59 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:01:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/11 13:55:14 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,12 @@ void	popFirst( std::string & str ) {
 	if (str.empty())
 		return;
 	str = str.substr(1);
+}
+
+std::string		extract_line(std::string & str, size_t	size)
+{
+	std::string		line(&str[0], &str[size]);
+
+	str.erase(0, size);
+	return line;
 }

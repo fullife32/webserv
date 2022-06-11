@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 21:14:01 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 17:50:31 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/11 12:11:19 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,12 +131,12 @@ void test_request_response(int ac, char **argv)
 	if (ac != 2)
 		return ;
 // 	// open file for test
-// 	fd = open(argv[1], O_RDONLY);
-// 	if (fd == -1)
-// 	{
-// 		std::cerr << std::strerror(errno) << std::endl;
-// 		return (-1);
-// 	}	
+	fd = open(argv[1], O_RDONLY);
+	if (fd == -1)
+	{
+		std::cerr << std::strerror(errno) << std::endl;
+		return ;
+	}	
 	
 
 	// get buffer like recv
@@ -152,12 +152,12 @@ void test_request_response(int ac, char **argv)
 	// end recv : client try to build request and response
 	try
 	{
-		request.buildRequest();
+		// request.buildRequest();
 		response.buildResponse(request);
 	}
 	catch (MessageErrorException & e)
 	{
-		response.buildError(e.getError(), e.getMappedError());
+		response.buildError(e.getError(), e.getMappedError(), e.getUrl());
 	}
 
 	// std::cout << response.getNextChunk(response.size()) << std::endl;
@@ -179,6 +179,7 @@ void test_request_response(int ac, char **argv)
 int main(int ac, char **argv)
 {
 
+	test_request_response(ac, argv);
 	// int fd = open("test_config/simple/simple.html", O_RDONLY);
 
 	// fd.read
@@ -200,5 +201,5 @@ int main(int ac, char **argv)
 	// r.m_formated_Url("/path/with/most/directory/file.txt?queryString=jeNeSaisPas#fragmentUtils???");
 	// r.debug_print();
 
-
+	return (0);
 }

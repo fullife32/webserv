@@ -6,15 +6,21 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 09:09:49 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/11 13:53:33 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEHTTP_HPP
 # define RESPONSEHTTP_HPP
 
+
+# include "utils.hpp"
+# include "MessageStruct.hpp"
+# include "ErrorMessage.hpp"
+# include "ParseRequest.hpp"
+# include "RequestHTTP.hpp"
+
 # include "Server.hpp"
-# include "MessageHTTP.hpp"
 # include <glob.h> // TODO added by Eithan
 
 class ResponseHTTP : public MessageMethods, public HeaderFields,  public ContentTypes, public ErrorMap
