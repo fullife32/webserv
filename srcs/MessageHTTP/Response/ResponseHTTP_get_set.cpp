@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 19:28:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:32:16 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,12 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 	{
 		len = strlen(buffer);
 		m_body.get(buffer + len, MESSAGE_BUFFER_SIZE -len + 1, 0);
+		return (strlen(buffer));
+	}
+	else if (m_body_CGI != NULL)
+	{
+		len = strlen(buffer);
+		fgets(buffer + len, MESSAGE_BUFFER_SIZE - len, m_body_CGI);
 		return (strlen(buffer));
 	}
 	len = strlen(buffer);
@@ -96,6 +102,7 @@ void	ResponseHTTP::m_set_minimalHeaderFields()
 {
 	set_headerFields(HF_DATE, getStringTime());
 	set_headerFields(HF_SERVER, SERVER_NAME);
+	set_headerFields(HF_CONTENT_TYPE, get_contentType(m_url.fileExtension));
 }
 
 /*

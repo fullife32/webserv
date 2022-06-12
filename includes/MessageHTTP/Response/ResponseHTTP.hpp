@@ -6,20 +6,14 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 13:53:33 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:12:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RESPONSEHTTP_HPP
 # define RESPONSEHTTP_HPP
 
-
-# include "utils.hpp"
-# include "MessageStruct.hpp"
-# include "ErrorMessage.hpp"
-# include "ParseRequest.hpp"
-# include "RequestHTTP.hpp"
-
+# include "MessageHTTP.hpp"
 # include "Server.hpp"
 # include <glob.h> // TODO added by Eithan
 
@@ -98,6 +92,8 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		// set
 		void	m_set_minimalHeaderFields();
 		void	m_setOpenFileBodySize();
+		void	m_setCGIBodySize();
+
 
 	/* formated Response   ------------------------------------------ */
 		void	m_formated_Response();

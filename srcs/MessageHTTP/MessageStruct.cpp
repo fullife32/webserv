@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 15:46:52 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:24:31 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ void	RequestLine::clear()
 void	StatusLine::clear()
 {
 	version.clear();
-	statusCode = 0;
-	reasonPhrase.clear();
+	statusCode = STATUS_OK;
+	reasonPhrase = S_STATUS_OK;
 }
 
 /* Header Fields  ------------------------------------------------ */
@@ -142,6 +142,8 @@ void		HeaderFields::set_headerFields(const HeaderFields::value_type & headerFiel
 
 void	HeaderFields::set_headerFields(const std::string & headerField, const std::string & value)
 {
+	if (value.empty())
+		return ;
 	m_headerFields[headerField] = value;
 }
 
@@ -211,5 +213,15 @@ std::map< std::string, std::string>		init_map_ContentType()
 
 	return (map_contentType);
 }
+
+std::string ContentTypes::get_contentType(const std::string & requestContentType) const
+{
+	std::map<std::string, std::string>::const_iterator	found = m_listContentType.find(requestContentType);
+
+	if (found != m_listContentType.end())
+		return found->second;
+	return (std::string());
+}
+
 
 std::map< std::string, std::string> ContentTypes::m_listContentType = init_map_ContentType();

@@ -6,23 +6,24 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 19:04:50 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 13:13:43 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:35:12 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "RequestHTTP.hpp"
+# include "MessageHTTP.hpp"
 
 /* -------------------------------------------------------------------------- */
 /*                     Constructor Destructor                                 */
 /* -------------------------------------------------------------------------- */
 
-RequestHTTP::RequestHTTP()
+RequestHTTP::RequestHTTP(const ServerConf * server)
+: ParseRequest(server)
 {}
 
 
 RequestHTTP::RequestHTTP(const RequestHTTP & copy)
-{
-}
+: ParseRequest(copy)
+{}
 
 RequestHTTP::~RequestHTTP()
 {}
@@ -35,11 +36,7 @@ int		RequestHTTP::getMethod() const
 {
 	std::map <std::string, int>::const_iterator	found = m_methods.find(m_requestLine.method);
 	if (found == m_methods.end())
-	{
-		
-		std::cout << "get method :  |"<<  m_requestLine.method << "|" << std::endl;
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	}
 	return (*found).second;
 }
 
@@ -54,11 +51,13 @@ size_t	RequestHTTP::getBodySize() const
 	return m_body_size;
 }
 
-int				get_body_for_CGI()
+FILE *		RequestHTTP::getBodyForCGI() const
 {
-	// m_bodyCGI = open(m_path_body_for_CGI.str(), O_RDONLY);
-	// if (m_bodyCGI == -1)
+	if (m_body != NULL)
+		rewind(m_body);
+	return m_body;
 }
+
 
 /* -------------------------------------------------------------------------- */
 

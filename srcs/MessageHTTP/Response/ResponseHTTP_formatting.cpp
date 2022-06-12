@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 12:18:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:34:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,33 +23,52 @@
 	*/
 	void	ResponseHTTP::m_formated_Response()
 	{
-		m_header.clear();
 		std::string path = m_foundLocation();
+
 
 		if (m_isAutoindex == false) {
 			m_openFile_Body(path);
 			m_formated_StatusLine();
 			m_formated_HeaderFields();
 		}
-		else if (m_isAutoindex == true)
-			m_formated_Autoindex(path);
+		else if (m_isAutoindex == true) {
+			m_formated_Autoindex(path); }
 	}
 
 
 	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
 	{
-		std::cout << "there is a query string in the request" << std::endl;
-		m_header.clear();
-		m_body_CGI = tmpfile();
+		std::cout << "this is a CGI request" << std::endl;
 
+		m_body_CGI = tmpfile(); // creation du fichier temporaire pour la reponse a envoyer au client
 
-		// std::cout << "there is a query string in the request" << std::endl;
+		FILE * request_body = request.getBodyForCGI(); // recupere le pointeur sur le body de la requete client
+
+		/*
+		 	dans le CGI faire :
+
+		int fd_IN = fileno(request.getBodyForCGI());
+		int fd_OUT = fileno(response.getBodyForCGI());
+		*/
+
+		// DEBUG : ///////////////////////////////////////////////////////////////////
+		if (request_body != NULL)
+		{
+			std::cout << "xxxxxxxxxxxxxxxx REQUEST BODY: xxxxxxxxxxxxxxxxx " << std::endl;
+			char buffer[1000] = {0};
+			while (!feof(request_body))
+			{
+				if (fgets (buffer,1000,request_body) == NULL) break;
+				std::cout << buffer << std::endl;
+			}
+		}
+		// DEBUG : ///////////////////////////////////////////////////////////////////
+
 
 		// try executeCGI(m_headerFields, *this, *m_server)
 
-	
 		
-		// TODO: contentTYPE et CONTENT LENGTHs
+		m_setCGIBodySize();
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
 	}
@@ -98,6 +117,8 @@
 		body << "</body>" << CRLF;
 		body << "</html>" << CRLF;
 		body << CRLF << CRLF;
+
+
 
 		setContentLength(body.str().size());
 		set_headerFields(HF_CONTENT_TYPE, "text/html");

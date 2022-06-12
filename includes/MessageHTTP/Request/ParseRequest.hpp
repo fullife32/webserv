@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 13:15:06 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:36:00 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,52 +16,44 @@
 # include "utils.hpp"
 # include "MessageStruct.hpp"
 # include "ErrorMessage.hpp"
+# include "ServerConf.hpp"
 # include "Print.hpp" // TODO DEBUG
-# include <iostream> // TODO DEBUG
-
-// std::string		extract_line(std::string & str, size_t	size);
-
 
 class ParseRequest : public HeaderFields
 {
 	protected:
-		RequestLine							m_requestLine;
-		FILE *								m_body;				// body for CGI post
-		size_t								m_body_size;		// size of body request
-		size_t								m_max_body_size; 	// TODO get from server
-
+		RequestLine			m_requestLine;
+		FILE *				m_body;				// body for CGI post
+		size_t				m_body_size;		// size of body request
 
 	private:
-		std::string							m_data;				// raw data from recv() client
-		size_t								m_header_size;		// size of header request
-		bool								m_is_post_method;
-		bool								m_has_complete_header;
-		bool								m_has_complete_startLine;
+		const ServerConf *	m_server;
+		std::string			m_data;				// raw data from recv() client
+		size_t				m_header_size;		// size of header request
+		size_t				m_max_body_size; 	// max body size of location
+		bool				m_is_post_method;
+		bool				m_has_complete_header;
+		bool				m_has_complete_startLine;
 
 	public:
 
 	/* constructor ------------------------------------------------ */
-		ParseRequest();
+		ParseRequest(const ServerConf * server);
 		ParseRequest(const ParseRequest & copy);
 
 	/* destructor  ------------------------------------------------ */
 		virtual ~ParseRequest();
 
-
 	/* public    ------------------------------------------------ */
-		void		append(const std::string & str); 		// pour recuperer la requete entiere ( buffer)
-		bool 		empty() const ;
-		FILE *		getCGIbody(); // TODO
-	
-	
+		void	append(const std::string & buffer);
+		bool	empty() const ;
+		void	clear() ;
 
 	private:
 		void	m_prepare_POST_body() ;
-		void	m_append_body(const std::string & str); 	// pour recuperer la requete entiere ( buffer)
-
+		void	m_append_body(const std::string & buffer);
 
 	/* parsing    ------------------------------------------------ */
-
 		bool	m_parse_header() ; // parse raw data and check if header is complete
 		void 	m_parse_RequestLine(const std::string & startline);
 		void 	m_parse_headerFields(const std::string & line);
@@ -72,17 +64,7 @@ class ParseRequest : public HeaderFields
 		void	m_check_max_body_size() const ;
 		void	m_check_host_HeaderFields(const std::string & url); // TODO
 		
-		// bool	m_is_POST_method() const ; // MAYBE NOT NEED
-		// bool	m_has_complete_header() const ; // MAYBE NOT NEED ?
-
-
-
-	// void	ParseRequest::set_maxBodySize(size_t max) // TODO
-
-
-
-	//debug
-
+	// TODO debug
 	public:
 		void			debug_print()
 		{
@@ -106,4 +88,3 @@ class ParseRequest : public HeaderFields
 }; // end class
 
 #endif
-

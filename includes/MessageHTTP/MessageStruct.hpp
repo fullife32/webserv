@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/10 15:43:18 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:23:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ struct StatusLine
 };
 
 
-
 /* Header Fields  ------------------------------------------------ */
 
 class HeaderFields
@@ -140,8 +139,9 @@ class ContentTypes
 	protected:
 		static std::map< std::string, std::string> m_listContentType;
 
+	std::string get_contentType(const std::string & requestContentType) const ;
 };
 
-std::map< std::string, std::string>		init_map_ContentType(); // TODO: 415 Unsupported Media Type
+std::map< std::string, std::string>		init_map_ContentType();
 
 #endif

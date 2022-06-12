@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/11 12:15:53 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:36:27 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "ErrorMessage.hpp"
 
 Client::Client( int fd, sockaddr_storage cli, socklen_t size, Server &server )
-: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_response(&(m_server.getConf())) {
+: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_request(&m_server.getConf()), m_response(&m_server.getConf()) {
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
  }
 
@@ -69,20 +69,25 @@ void		Client::receive_data() {
 		return ;
 	}
 	if (size == 0 && m_request.empty())
+	{
 		setToRemove();
+		return ;
+	}
 
 		//// TRY BUILD HEADER
 	try
 	{
 		m_request.append(m_buffer);
-		
 	}
 	catch (MessageErrorException & e) {
 		m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
+		setToChangeEvent();
+		return ;
 	}
 	catch (std::exception & e) {
 		std::cerr << e.what() << std::endl;
 		setToRemove();
+		return ;
 	}
 	
 	 /// IF END OR LAST BUFFER RECV
@@ -90,8 +95,8 @@ void		Client::receive_data() {
 	{
 		
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+		setToChangeEvent();
 		try {
-			// m_request.buildRequest();
 			m_request.debug_print();
 			m_response.buildResponse(m_request);
 		}
@@ -102,7 +107,6 @@ void		Client::receive_data() {
 			std::cerr << e.what() << std::endl;
 			setToRemove();
 		}
-		setToChangeEvent();
 	}	
 }
 
@@ -128,28 +132,3 @@ void		Client::send_data() {
 
 }
 
-// void	Client::receive_data_from_CGI()
-// {
-// 	getline()
-// 	if (m_buffer.isEmpty())
-// 		recv(fd_CGI);
-// 		m_cgi is ready = true;
-// }
-
-// void	Client::send_data_CGI() {
-
-
-// 	if (m_response.CGIhasheaderToSend)
-// 		send_data()
-		
-// 	if (m_CGIisready == true )
-// 	{
-// 		static size_t	bufferSize = 0;
-
-// 		bufferSize = m_response.getNextChunk_CGI(m_buffer); // HEADER
-// 		send(m_fd, m_buffer);
-// 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
-// 		m_cgi is ready = false;
-// 	}
-
-// }

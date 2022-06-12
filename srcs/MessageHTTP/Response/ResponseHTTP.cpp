@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/11 12:22:20 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:57:38 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ ResponseHTTP::ResponseHTTP()
 	m_header(),
 	m_body(),
 	m_length(0),
-	m_isAutoindex(false)
+	m_isAutoindex(false),
+	m_url(),
+	m_body_CGI(NULL)
 {}
 
 
@@ -44,7 +46,8 @@ ResponseHTTP::ResponseHTTP(const ServerConf * server)
 	m_body(),
 	m_length(0),
 	m_isAutoindex(false),
-	m_url()
+	m_url(),
+	m_body_CGI(NULL)
 {}
 
 
@@ -55,14 +58,18 @@ ResponseHTTP::ResponseHTTP(const ResponseHTTP & copy)
 	m_method(copy.m_method),
 	m_length(copy.m_length),
 	m_isAutoindex(copy.m_isAutoindex),
-	m_url(copy.m_url)
+	m_url(copy.m_url),
+	m_body_CGI(copy.m_body_CGI)
+
 {
 	m_header << copy.m_header;
 	m_body << copy.m_body;
 }
 
 ResponseHTTP::~ResponseHTTP()
-{}
+{
+	clear();
+}
 
 
 // ResponseHTTP & ResponseHTTP::operator=(const ResponseHTTP & other)
@@ -85,19 +92,22 @@ ResponseHTTP::~ResponseHTTP()
 
 void	ResponseHTTP::clear()
 {
-	m_method = 0;
-	m_length = 0;
 	m_headerFields.clear();
 	m_statusLine.clear();
-	m_statusLine.statusCode = STATUS_OK;
-	m_statusLine.reasonPhrase = m_errors[STATUS_OK];
+	m_method = 0;
+	m_length = 0;
+	m_header.str("");
+	m_header.clear();
 	if (m_body.is_open())
 		m_body.close();
 	m_body.clear();
-	m_header.str("");
-	m_header.clear();
 	m_isAutoindex = false;
 	m_url = URL();
+	if (m_body_CGI != NULL)
+	{
+		fclose(m_body_CGI);
+		m_body_CGI = NULL;
+	}
 }
 
 size_t		ResponseHTTP::size() 
@@ -118,13 +128,9 @@ void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 {
 	clear();
 	m_url = request.getUrl();
-	m_set_minimalHeaderFields();
-	std::cout << "XXXXXXXXXXXXXXXXXXXX OK XXXXXXXXXXXXXXXXXXX" << std::endl;
-
 	m_method = request.getMethod();
-	std::cout << "XXXXXXXXXXXXXXXXXXXX     END    XXXXXXXXXXXXXXXXXXX" << std::endl;
+	m_set_minimalHeaderFields();
 	m_parseMethod(request);
-
 }
 
 /*
@@ -165,33 +171,30 @@ void	ResponseHTTP::m_parseMethod(const RequestHTTP & request)
 
 void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 {
-	std::cout << "in methode GET" << std::endl;
+	std::cout << "in methode GET" << std::endl; // TODO DEBUG
 	
 	if (request.hasBody())
-		throw MessageErrorException(STATUS_BAD_REQUEST);
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url); // TODO deja fait sur parserequest ?
 	if (request.hasQueryString() || m_url.fileExtension == "php")
-		// fonction class CGI(ResponseHTTP )
 		m_formated_CGI_Response(request);
 	else		
 		m_formated_Response();
 
 }
 
-void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Content-Type
+void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Content-Type jamais envoyé par firefox....
 {
-	std::cout << "in methode POST" << std::endl;
-
-	size_t	ContentLenght;
+	std::cout << "in methode POST" << std::endl; // TODO DEBUG
 
 	if (request.hasBody() == false)
-		throw MessageErrorException(STATUS_BAD_REQUEST, m_url); // TODO: a checker
-	ContentLenght = atoi(request.get_value_headerFields(HF_CONTENT_LENGTH).data());
-	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty()) 
-		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);// TODO: if no Content type ?
-	m_checkBodySize(request.getBodySize(), ContentLenght);
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	size_t	contentLenght = convertStringToSize(request.get_value_headerFields(HF_CONTENT_LENGTH));
+	if (contentLenght != request.getBodySize())
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	m_checkBodySize(request.getBodySize(), contentLenght);
+	m_formated_CGI_Response(request);
 
-	std::cout << "OK FOR POST " << std::endl;
-	
+	std::cout << "OK FOR POST " << std::endl; // TODO DEBUG
 }
 
 /*
@@ -243,7 +246,6 @@ void	ResponseHTTP::m_method_DELETE(const RequestHTTP & request)
 	m_formated_StatusLine();
 	m_formated_HeaderFields();
 	m_header << body.str();
-
 }
 
 
@@ -269,7 +271,6 @@ if (redirection != 0)
 	m_statusLine.statusCode = redirection;
 	m_statusLine.reasonPhrase = m_errors[redirection];
 	set_headerFields(HF_LOCATION, realPath);
-	std::cout << "redirection ?????" << std::endl;
 }
 else
 {
@@ -303,7 +304,7 @@ if (ContentLenght == 0)
 size_t	maxBodySize = (m_server->getBodySize(m_url.serverName, m_url.formatedPath()));
 
 if (maxBodySize != 0 && request_bodySize > maxBodySize)
-	throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url); // TODO:close client
+	throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url);
 if (ContentLenght != request_bodySize)
 	throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 }
@@ -363,13 +364,21 @@ void	ResponseHTTP::m_openFile_CGI()
 
 void	ResponseHTTP::m_setOpenFileBodySize() // TODO CHECK
 {
-		size_t	FileSize; // TODO: maybe long ?
+	size_t	FileSize;
 
-		m_body.seekg (0, m_body.end);
-		FileSize = m_body.tellg();
+	m_body.seekg (0, m_body.end);
+	FileSize = m_body.tellg();
+	setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
+	m_body.seekg (0, m_body.beg);
+}
 
-		std::cout << "FileSize = " << FileSize << std::endl;
-		setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
-		m_body.seekg (0, m_body.beg);
+void	ResponseHTTP::m_setCGIBodySize()
+{
+	size_t	FileSize;
+
+	fseek(m_body_CGI, 0, SEEK_END);
+	FileSize = ftell(m_body_CGI);
+	fseek(m_body_CGI, 0, SEEK_SET);
+	setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
 }
 
