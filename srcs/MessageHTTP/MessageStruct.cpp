@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:30:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 17:42:52 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,7 @@ void	HTTPversion::formatedVersion(const std::string & version)
 
 bool	HTTPversion::isSupportedVersion()
 {
-	return true; // TODO:FOR DEBUG 
-	if (major_version != 1 || minor_version != 1)
+	if (major_version != 1 && (minor_version != 0 || minor_version != 1))
 		return false;
 	return true;
 }
