@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 17:42:52 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 18:56:38 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ std::map< std::string, std::string>		init_map_ContentType()
 	map_contentType["ico"] = "image/x-icon";
 	map_contentType["jpeg"] = "image/jpeg";
 	map_contentType["jpg"] = "image/jpeg";
+	map_contentType["js"] = "application/javascript";
 	map_contentType["mpeg"] = "video/mpeg";
 	map_contentType["png"] = "image/png";
 	map_contentType["svg"] = "image/svg+xml";
@@ -221,6 +222,5 @@ std::string ContentTypes::get_contentType(const std::string & requestContentType
 		return found->second;
 	return (std::string());
 }
-
 
 std::map< std::string, std::string> ContentTypes::m_listContentType = init_map_ContentType();
