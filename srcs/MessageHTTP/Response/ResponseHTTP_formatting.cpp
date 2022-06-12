@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:25:53 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 22:26:36 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,12 @@
 	void	ResponseHTTP::m_formated_Response()
 	{
 		std::string path = m_foundLocation();
-
+		if (m_is_redirection == true)
+		{
+			m_formated_StatusLine();
+			m_formated_HeaderFields();
+			return ;
+		}
 
 		if (m_isAutoindex == false) {
 			m_openFile_Body(path);
@@ -140,7 +145,6 @@
 		m_formated_StatusLine();
 		if (!ErrorUrl.empty())
 		{
-			ErrorUrl = url.path + ErrorUrl;
 			if (m_openFile_Error(ErrorUrl) == false)
 				m_formated_ErrorBody(body);
 		} 
