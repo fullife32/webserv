@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 11:24:47 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:29:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "ErrorMessage.hpp"
 
 Client::Client( int fd, sockaddr_storage cli, socklen_t size, Server &server )
-: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_response(&(m_server.getConf())) {
+: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_request(&m_server.getConf()), m_response(&m_server.getConf()) {
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
  }
 
@@ -46,9 +46,6 @@ bool	Client::getToChangeEvent() const {
 }
 
 void			Client::setToRemove() {
-	if (m_toRemove)
-		m_toRemove = false;
-	else
 		m_toRemove = true;
 }
 void			Client::setToChangeEvent() {
@@ -58,12 +55,10 @@ void			Client::setToChangeEvent() {
 		m_toChangeEvent = true;
 }
 
-
 void		Client::receive_data() {
 
 	int	size;
 
-	std::cout << "RECEIVE DATA" << std::endl;
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0); // TODO; recv first == 0 le client s est deconnecte
 
@@ -73,19 +68,44 @@ void		Client::receive_data() {
 		m_response.buildError(STATUS_INTERNAL_SERVER_ERROR, S_STATUS_INTERNAL_SERVER_ERROR, m_response.get_url());
 		return ;
 	}
-	m_request.append(m_buffer);
+	if (size == 0 && m_request.empty())
+	{
+		setToRemove();
+		return ;
+	}
+
+		//// TRY BUILD HEADER
+	try
+	{
+		m_request.append(m_buffer);
+	}
+	catch (MessageErrorException & e) {
+		m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
+		setToChangeEvent();
+		return ;
+	}
+	catch (std::exception & e) {
+		std::cerr << e.what() << std::endl;
+		setToRemove();
+		return ;
+	}
+	
+	 /// IF END OR LAST BUFFER RECV
 	if (size == 0 || size < MESSAGE_BUFFER_SIZE)
 	{
-		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);////
+		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+		setToChangeEvent();
 		try {
-			m_request.buildRequest();
 			m_request.debug_print();
 			m_response.buildResponse(m_request);
 		}
-		catch (WS::MessageErrorException & e) {
+		catch (MessageErrorException & e) {
 			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
 		}
-		setToChangeEvent();
+		catch (std::exception & e) {
+			std::cerr << e.what() << std::endl;
+			setToRemove();
+		}
 	}	
 }
 
@@ -95,22 +115,16 @@ void		Client::send_data() {
 	static size_t	bufferSize = 0;
 	static size_t	sendSize = 0;
 
-
-	std::cout << "SEND DATA" << std::endl;
-
-
 	if (sendSize == bufferSize)
 	{
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		bufferSize = m_response.getNextChunk(m_buffer);
 	}
-	if (bufferSize == 0)
+	if (bufferSize == 0) {
 		setToRemove();
-	sendSize = send(m_fd, m_buffer, bufferSize, 0);
-	if (sendSize == (size_t)-1)
+		return;
+	}
+	sendSize = send(m_fd, m_buffer, bufferSize, MSG_NOSIGNAL);
+	if (sendSize == (size_t)-1 || sendSize == 0 || bufferSize < MESSAGE_BUFFER_SIZE)
 		setToRemove(); // TODO: what to do ? 
-
-
 }
-
-

@@ -6,64 +6,69 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 11:19:22 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:56:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSEREQUEST_HPP
 # define PARSEREQUEST_HPP
 
-# include "MessageHTTP.hpp"
-
-namespace WS
-{
+# include "utils.hpp"
+# include "MessageStruct.hpp"
+# include "ErrorMessage.hpp"
+# include "ServerConf.hpp"
+# include "Print.hpp" // TODO DEBUG
 
 class ParseRequest : public HeaderFields
 {
+	protected:
+		RequestLine			m_requestLine;
+		FILE *				m_body;				// body for CGI post
+		size_t				m_body_size;		// size of body request
 
 	private:
-		std::string							m_data;
-		std::string							m_header;
-		std::string							m_body;
-		RequestLine							m_requestLine;
-		// std::map<std::string, std::string>	m_headerFields;
+		const ServerConf *	m_server;
+		std::string			m_data;				// raw data from recv() client
+		size_t				m_header_size;		// size of header request
+		size_t				m_max_body_size; 	// max body size of location
+		bool				m_is_post_method;
+		bool				m_has_complete_header;
+		bool				m_has_complete_startLine;
+
 	public:
 
 	/* constructor ------------------------------------------------ */
-		ParseRequest();
+		ParseRequest(const ServerConf * server);
 		ParseRequest(const ParseRequest & copy);
 
 	/* destructor  ------------------------------------------------ */
-		~ParseRequest();
+		virtual ~ParseRequest();
 
-
-	/* functions    ------------------------------------------------ */
-		std::string &	append(const std::string & str); // pour recuperer la requete entiere ( buffer)
-
-		RequestLine		getRequestLine();
-		std::string		getBody();
-		std::map<std::string, std::string>	getHeaderFields();
-
-		void			m_prepareRequestBuilding();
+	/* public    ------------------------------------------------ */
+		void	append(const std::string & buffer);
+		bool	empty() const ;
+		void	clear() ;
 
 	private:
-	
-		void			m_separateHeaderBody(); // separe les datas dans m_header et m_body
-		void			m_formated_HeaderFields(const std::vector<std::string> & headerSplit);// formate les headerfields
-		void			m_formated_RequestLine(const std::string & startline);	// formate la premiere ligne requestline 
-		void			m_check_host_HeaderFields(const std::string & url);
-		void			m_formated_Url(std::string url);
+		void	m_append_body(const std::string & buffer);
+		void	m_prepare_POST_body() ;
+
+	/* parsing    ------------------------------------------------ */
+		bool	m_parse_header();
+		void 	m_parse_RequestLine(const std::string & startline);
+		void 	m_parse_headerFields(const std::string & line);
+		void	m_parse_url(std::string url);
+
+
+		void	m_check_max_header_size() const ;
+		void	m_check_max_body_size() const ;
+		void	m_check_host_HeaderFields();
 		
-	public:
-
-	//debug
-
+	// TODO debug
 	public:
 		void			debug_print()
 		{
 			std::cout << "PARSE REQUEST DEBUG PRINT *******************************" << std::endl;
-			std::cout << "HEADER: " <<  std::endl << m_data << std::endl;
-			std::cout << "BODY: " <<  std::endl << m_body << std::endl;
 			std::cout << "REQUESTLINE: " <<  std::endl;
 			std::cout << "	method: " << m_requestLine.method << std::endl;
 			std::cout << "	version: " << m_requestLine.version.name <<  m_requestLine.version.major_version << "." <<  m_requestLine.version.minor_version << std::endl;
@@ -72,12 +77,15 @@ class ParseRequest : public HeaderFields
 			std::cout << "	filename: " << m_requestLine.url.filename << std::endl;
 			std::cout << "	extension: " << m_requestLine.url.fileExtension << std::endl;
 			std::cout << "	query: " << m_requestLine.url.query << std::endl;
+			std::cout << "	path: " << m_requestLine.url.pathInfo << std::endl;
 			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
+
+		std::map<std::string, std::string>::iterator	it;
+
+	for (it = m_headerFields.begin(); it != m_headerFields.end(); it++)
+		std::cout << "key=" << it->first << " value=" << it->second << std::endl;
 		}
 
 }; // end class
 
-} // end namespace
-
 #endif
-

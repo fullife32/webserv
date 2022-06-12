@@ -1,33 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   MessageHTTP.hpp                                    :+:      :+:    :+:   */
+/*   string_usefull.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/29 11:24:35 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:27:30 by lvirgini         ###   ########.fr       */
+/*   Created: 2022/06/11 12:50:37 by lvirgini          #+#    #+#             */
+/*   Updated: 2022/06/12 13:36:37 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MESSAGEHTTP_HPP
-# define MESSAGEHTTP_HPP
-
-# include "WebservDefine.hpp"
-#include <iostream>	// TODO debug
-
-# include <map>
-# include <string>
-# include <vector>
-# include <fstream>
-# include <sstream>
-# include <memory.h>
-
 # include "utils.hpp"
-# include "MessageStruct.hpp"
-# include "ErrorMessage.hpp"
-# include "ParseRequest.hpp"
-# include "RequestHTTP.hpp"
-# include "ResponseHTTP.hpp"
+# include <sstream>
+# include <iostream>
 
-#endif
+/*
+	Use for Request and Response
+*/
+
+std::string		extract_line(std::string & str, size_t	size)
+{
+	std::string		line(&str[0], &str[size]);
+
+	str.erase(0, size);
+	return line;
+}
+
+
+size_t	convertStringToSize(const std::string & str)
+{
+	std::stringstream	s;
+	size_t				size = 0;
+
+	s << str;
+	s >> size;
+	return (size);
+}

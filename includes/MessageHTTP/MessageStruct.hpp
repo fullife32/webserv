@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:15:53 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:23:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,119 +21,127 @@
 #define HF_CONTENT_TYPE		"Content-Type"
 #define HF_USER_AGENT		"User-Agent"
 #define HF_LOCATION			"Location"
+#define HF_SERVER			"Server"
+#define HF_DATE				"Date"
 
-namespace WS {
+/* HTTPversion  ------------------------------------------------ */
+/*
+	HTTP version = HTTP-name "/" DIGIT "." DIGIT
+	HTTP-name   = %x48.54.54.50 ; "HTTP", case-sensitive
 
+	isSupportedVersion() is only 1.1 for our Webserv
+*/
 
-	/* HTTPversion  ------------------------------------------------ */
-	/*
-		HTTP version = HTTP-name "/" DIGIT "." DIGIT
-		HTTP-name   = %x48.54.54.50 ; "HTTP", case-sensitive
+struct HTTPversion
+{
+	std::string		name;
+	int				major_version;
+	int				minor_version;
 
-		isSupportedVersion() is only 1.1 for our Webserv
-	*/
-
-	struct HTTPversion
-	{
-		std::string		name;
-		int				major_version;
-		int				minor_version;
-
-		HTTPversion();
-		~HTTPversion();
-		
-		void	formatedVersion(const std::string & version);
-		bool	isSupportedVersion();
-		void	clear();
-	};
-
-	/* URL						  ---------------------------------- */
+	HTTPversion();
+	~HTTPversion();
 	
-	struct URL
-	{
-		std::string	serverName;		// example.com
-		std::string	path;			//				/location/here
-		std::string filename;		//								/file.html
-		std::string	fileExtension;	//									 .html
-		std::string	pathInfo;		//					if .cgi				.cgi/path/info
-		std::string	query;			//													?queryString=value
-		std::string fragment;		//																		#fragment
+	void	formatedVersion(const std::string & version);
+	bool	isSupportedVersion();
+	void	clear();
+};
+
+/* URL						  ---------------------------------- */
+
+struct URL
+{
+	std::string	serverName;		// example.com
+	std::string	path;			//				/location/here
+	std::string filename;		//								/file.html
+	std::string	fileExtension;	//									 .html
+	std::string	pathInfo;		//					if .cgi				.cgi/path/info
+	std::string	query;			//													?queryString=value
+	std::string fragment;		//																		#fragment
 
 
-		URL() {};
-		URL(const URL & other);
-		URL & operator=(const URL & other);
+	URL() {};
+	URL(const URL & other);
+	URL & operator=(const URL & other);
 
-				
-		std::string		formatedPath() const ; //TODO: maybe not
-		void			clear();
+			
+	std::string		formatedPath() const ; //TODO: maybe not
+	void			clear();
 
-	};
+};
 
-	/* Request Line -------m----------------------------------------- */
-
-
-	struct RequestLine
-	{
-		HTTPversion		version;
-		URL				url;
-		std::string		method; // ACTIONS : GET, POST, DELETE
-
-		void	clear();
-	};
+/* Request Line -------m----------------------------------------- */
 
 
-	/* Status Line  ------------------------------------------------ */
-	/*
-		status-code = 3DIGIT
-		voir code erreur potentiellement une std::mqp <int, string> avec toute la liste d'erreur et 
-		le reasonPhrase correspondante ou ENUM ou define ??
-	*/
+struct RequestLine
+{
+	HTTPversion		version;
+	URL				url;
+	std::string		method; // ACTIONS : GET, POST, DELETE
 
-	struct StatusLine
-	{
-		HTTPversion		version;
-		int				statusCode;
-		std::string 	reasonPhrase;
-	
-		void	clear();
-	};
+	void	clear();
+};
 
 
+/* Status Line  ------------------------------------------------ */
+/*
+	status-code = 3DIGIT
+	voir code erreur potentiellement une std::mqp <int, string> avec toute la liste d'erreur et 
+	le reasonPhrase correspondante ou ENUM ou define ??
+*/
 
-	/* Header Fields  ------------------------------------------------ */
+struct StatusLine
+{
+	HTTPversion		version;
+	int				statusCode;
+	std::string 	reasonPhrase;
 
-	class HeaderFields
-	{
+	void	clear();
+};
+
+
+/* Header Fields  ------------------------------------------------ */
+
+class HeaderFields
+{
+
+
+	public:
 		typedef std::map<std::string, std::string> 	value_type;
 
-		protected:
-			value_type	m_headerFields;
+		void			clear();
+		void			set_headerFields(const std::string & headerField, const std::string & value);
+		void			set_headerFields(const value_type & headerFlieds);
 
-		public:
+		std::string		get_value_headerFields(const std::string & key) const ;
+		value_type		get_headerFields() const ;
 
-			void			clear();
-			void			set_headerFields(const std::string & headerField, const std::string & value);
-			void			set_headerFields(const value_type & headerFlieds);
+	protected:
+		value_type	m_headerFields;
+};
 
-			std::string		get_value_headerFields(const std::string & key) const ;
-			value_type		get_headerFields() const ;
 
-	};
-	
+/* Message Methods static map  --------------------------------- */
 
-	/* Message Methods static map  --------------------------------- */
+class MessageMethods
+{
+	protected:
+		static	std::map <std::string, int>		m_methods;
 
-	class MessageMethods
-	{
-		protected:
-			static	std::map <std::string, int>		m_methods;
-	
-	};
-	
+};
+
 std::map <std::string, int>		init_map_method();
 
+/* Content Type  ------------------------------------------------ */
 
-} //end namespace
+
+class ContentTypes
+{
+	protected:
+		static std::map< std::string, std::string> m_listContentType;
+
+	std::string get_contentType(const std::string & requestContentType) const ;
+};
+
+std::map< std::string, std::string>		init_map_ContentType();
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:31 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 14:17:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:28:06 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ public:
 
 private:
 
-	bool				m_toRemove; // ?
-	bool				m_toChangeEvent; // ?
+	bool				m_toRemove; 		// ?
+	bool				m_toChangeEvent; 	// ?
 	sockaddr_storage 	m_cli;
 	socklen_t			m_size;
-	WS::RequestHTTP		m_request;
-	WS::ResponseHTTP	m_response;
+	RequestHTTP			m_request;
+	ResponseHTTP		m_response;
 	char				m_buffer[MESSAGE_BUFFER_SIZE + 1];
 
 	Client();

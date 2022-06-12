@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 14:59:23 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:58:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,24 @@
 
 # include "MessageHTTP.hpp"
 
-namespace WS {
-
-
-class RequestHTTP : public MessageMethods, public HeaderFields
+class RequestHTTP : public MessageMethods, public ParseRequest
 {
 	/*
 		protected variables herited from MessageMethods: list of all Methods
-			static	std::map <std::string, int>		m_methods;
+			static	std::map <std::string, int>	m_methods;
 
-		protected variables herited from HeaderFields: list of all Methods
-			std::map<std::string, std::string>	m_headerFields;	
+		protected variables herited from ParseRequest: list of all Methods
+		std::map<std::string, std::string>		m_headerFields;
+		RequestLine								m_requestLine;
+		FILE *									m_body;				// body for CGI post
+		size_t									m_body_size;		// size of body request
+		size_t									m_max_body_size;
 	*/
-	private:
-		RequestLine							m_requestLine;
-		ParseRequest						m_parseRequest;
-		std::string							m_body;
 
 	public:
 
 	/* constructor ------------------------------------------------ */
-		RequestHTTP();
+		RequestHTTP(const ServerConf * server);
 		RequestHTTP(const RequestHTTP & copy);
 
 	/* destructor  ------------------------------------------------ */
@@ -45,43 +42,16 @@ class RequestHTTP : public MessageMethods, public HeaderFields
 		RequestHTTP &	operator=(const RequestHTTP & other);
 
 	/* get / set    ------------------------------------------------ */
-		int				getMethod() const;
 		URL				getUrl() const;
-		void			setRequestLine(const RequestLine & requestLine);
-		void			setBody(const std::string & body);
+		int				getMethod() const;
+		size_t			getBodySize() const ;
+		FILE *			getBodyForCGI() const ;
 
 	/* functions    ------------------------------------------------ */
-		void			buildRequest();
-		void			append(const char * buffer);
 
 		bool			hasQueryString() const ;
 		bool			hasBody() const ;
-		size_t			getBodySize() const ;
-
-
-		// debug
-		 void	debug_print()
-		{
-
-			std::cout << " REQUEST DEBUG PRINT ************************************" << std::endl;
-			std::cout << "HEADER: " <<  std::endl  << std::endl;
-			std::cout << "BODY: " <<  std::endl << m_body << std::endl;
-			std::cout << "REQUESTLINE: " <<  std::endl;
-			std::cout << "	method: " << m_requestLine.method << std::endl;
-			std::cout << "	version: " << m_requestLine.version.name <<  m_requestLine.version.major_version << "." <<  m_requestLine.version.minor_version << std::endl;
-			std::cout << "	servername: " << m_requestLine.url.serverName << std::endl;
-			std::cout << "	path: " << m_requestLine.url.path << std::endl;
-			std::cout << "	filename: " << m_requestLine.url.filename << std::endl;
-			std::cout << "	extension: " << m_requestLine.url.fileExtension << std::endl;
-			std::cout << "	query: " << m_requestLine.url.query << std::endl;
-			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
-			std::cout << std::endl;
-		}
-
 
 }; // end class RequestHTTP
-
-
-} // end namespace
 
 #endif

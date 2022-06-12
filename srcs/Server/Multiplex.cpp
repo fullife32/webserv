@@ -6,24 +6,24 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/05 14:12:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 10:36:18 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Multiplex.hpp"
 
 Multiplex::Multiplex()
-: m_fd(-1), m_nbReady(0), m_events(NULL) { }
+: m_signal_fd(-1), m_fd(-1), m_nbReady(0), m_events(NULL) { }
 
 Multiplex::~Multiplex() {
-	freeEvents();
 	closePlex();
 }
 
 void	Multiplex::createPlex() {
-	m_fd = epoll_create1(0); //FD_CLOEXEC if need to close after exec
+	m_fd = epoll_create1(EPOLL_CLOEXEC); // EPOLL_CLOEXEC if need to close after exec
 	if (m_fd == -1)
-		throw Multiplex::PlexFail();
+		throw Multiplex::PlexFail(PLEX_CREATE_FAIL);
+	handleSignal();
 	std::cout << m_fd << ": epoll list created" << std::endl; // TODO DEBUG
 }
 
@@ -35,18 +35,50 @@ int	Multiplex::waitPlex() {
 	}
 	m_nbReady = epoll_wait(m_fd, m_events, MAXEVENTS, EPOLL_TIMEOUT);
 	if (m_nbReady == -1) {
-		std::cerr << "epoll_wait failed" << std::endl;
+		std::cout << "Something went wrong on the server selector" << std::endl;
 		return -1;
 	}
 	return m_nbReady;
 }
 
-void	Multiplex::handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients ) {
+int	Multiplex::handleEvents( std::map<int, Server> &servers, std::map<int, Client> &clients ) {
 	for (int i = 0; i < m_nbReady; i++) {
-		handleServer(i, servers, clients); // cut search in two with epoll fd, < servers, > clients ?
+		if (m_events[i].data.fd == m_signal_fd) {
+			std::cout << "Stopping server peacefully..." << std::endl;
+			return -1;
+		}
+		handleServer(i, servers, clients); // TODO cut search in two with epoll fd, < servers, > clients ?
 		handleClients(i, clients);
 	}
 	freeEvents();
+	return 0;
+}
+
+
+
+void	Multiplex::addSignalToPoll() const {
+	epoll_event	event;
+
+	memset(&event, 0, sizeof(event));
+	event.events = EPOLLIN;
+	event.data.fd = m_signal_fd;
+	if (epoll_ctl(m_fd, EPOLL_CTL_ADD, m_signal_fd, &event) == -1)
+		throw Multiplex::PlexFail(PLEX_ADD_FAIL);
+}
+
+void	Multiplex::handleSignal() {
+	sigset_t	mask;
+
+	sigemptyset(&mask);
+	sigaddset(&mask, SIGTERM);
+	sigaddset(&mask, SIGINT);
+	int	ret = sigprocmask(SIG_BLOCK, &mask, 0);
+	if (ret == -1)
+		throw Multiplex::PlexFail(PLEX_CREATE_FAIL);
+	m_signal_fd = signalfd(-1, &mask, 0);
+	if (m_signal_fd == -1)
+		throw Multiplex::PlexFail(PLEX_CREATE_FAIL);
+	addSignalToPoll();
 }
 
 
@@ -56,12 +88,12 @@ void	Multiplex::addServersToPoll( std::map<int, Server> &servers ) const {
 		epoll_event	event;
 
 		if (it->second.getFd() == -1)
-			throw Multiplex::PlexFail(); // change message
+			throw Multiplex::PlexFail(PLEX_FD_FAIL); // change message
 		memset(&event, 0, sizeof(event));
 		event.events = EPOLLIN;
 		event.data.fd = it->second.getFd();
 		if (epoll_ctl(m_fd, EPOLL_CTL_ADD, it->second.getFd(), &event) == -1)
-			throw Multiplex::PlexFail(); // change message
+			throw Multiplex::PlexFail(PLEX_ADD_FAIL); // change message
 	}
 }
 
@@ -71,16 +103,19 @@ void	Multiplex::handleServer( int i, std::map<int, Server> &servers, std::map<in
 		if (!(m_events[i].events & EPOLLIN)) // secure client too
 			std::cerr << "Ghost event in server: " << it->second.getFd() << std::endl; // return error ?
 		else {
+			int	fd = -1;
 			try {
+				fd = it->second.getFd();
 				Client	tmpClient(Client::acceptClient(it->second.getFd(), it->second));
-			std::cout << tmpClient.getFd() << std::endl;
+				addClientToPoll(tmpClient);
 				clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
-				addClientToPoll(clients.rbegin()->second);
 				// Debug
 				std::cout << clients.rbegin()->second.getFd() << ": coucou je suis nouveau ici !" << std::endl;
 				//
-			} catch(std::exception &except) {
-				std::cerr << except.what() << std::endl; // check to change to cerr not cout
+			} catch(Multiplex::PlexFail &except) {
+				if (fd != -1)
+					close(fd);
+				std::cerr << except.what() << std::endl; // TODO check to change to cerr not cout
 			}
 		}
 	}
@@ -92,12 +127,12 @@ void	Multiplex::addClientToPoll( Client &client ) const {
 	epoll_event	event;
 
 	if (client.getFd() == -1)
-		throw Multiplex::PlexFail(); // change message
+		throw Multiplex::PlexFail(PLEX_FD_FAIL);
 	memset(&event, 0, sizeof(event));
 	event.events = EPOLLIN;
 	event.data.fd = client.getFd();
 	if (epoll_ctl(m_fd, EPOLL_CTL_ADD, client.getFd(), &event) == -1)
-		throw Multiplex::PlexFail(); // change message
+		throw Multiplex::PlexFail(PLEX_ADD_FAIL);
 }
 
 /*
@@ -108,14 +143,11 @@ void	Multiplex::addClientToPoll( Client &client ) const {
 void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
 	std::map<int, Client>::iterator currentClient = clients.find(m_events[i].data.fd);
 	if (currentClient != clients.end()) {
-		if (m_events[i].events & EPOLLIN) {
+		if (m_events[i].events & EPOLLIN)
 			currentClient->second.receive_data();
-			m_checkClientChangeEvent(currentClient, clients);
-		}
-		else if (m_events[i].events & EPOLLOUT) {
+		else if (m_events[i].events & EPOLLOUT)
 			currentClient->second.send_data();
-			m_checkClientChangeEvent(currentClient, clients);
-		}
+		m_checkClientChangeEvent(currentClient, clients);
 	}
 }
 
@@ -128,14 +160,14 @@ void	Multiplex::m_checkClientChangeEvent( std::map<int, Client>::iterator curren
 	if (currentClient->second.getToChangeEvent()) {
 		try {
 			changeClientEvent(currentClient->second, EPOLLOUT);
-		} catch (Multiplex::PlexFail const &except) {
+		} catch (std::exception const &except) {
 			std::cerr << except.what() << std::endl;
 		}
 	}
 	else if (currentClient->second.getToRemove()) {
 		try {
 			deleteClient(clients, currentClient);
-		} catch (Multiplex::PlexFail const &except) {
+		} catch (std::exception const &except) {
 			std::cerr << except.what() << std::endl;
 		}
 	}
@@ -145,22 +177,19 @@ void	Multiplex::changeClientEvent( Client &client, int newEvent ) const { // whe
 	epoll_event	event;
 
 	if (client.getFd() == -1)
-		throw Multiplex::PlexFail(); // change message
+		throw Multiplex::PlexFail(PLEX_FD_FAIL); // change message
 	memset(&event, 0, sizeof(event));
 	event.events = newEvent;
 	event.data.fd = client.getFd();
 	if (epoll_ctl(m_fd, EPOLL_CTL_MOD, client.getFd(), &event) == -1)
-		throw Multiplex::PlexFail(); // change message
+		throw Multiplex::PlexFail(PLEX_MOD_FAIL); // change message
 	client.setToChangeEvent();
 }
 
-void	Multiplex::deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator it ) {
-	// Debug
-	std::cout << it->second.getFd() << ": ciao, je me casse !" << std::endl;
-	//
-	if (epoll_ctl(m_fd, EPOLL_CTL_DEL, it->first, NULL) == -1) {
-		throw Multiplex::PlexFail(); // change message
-	}
+void	Multiplex::deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator &it ) {
+	if (epoll_ctl(m_fd, EPOLL_CTL_DEL, it->first, NULL) == -1)
+		throw Multiplex::PlexFail(PLEX_DEL_FAIL); // change message
+	std::cout << it->second.getFd() << ": ciao, je me casse !" << std::endl; // TODO Debug
 	it->second.closeSocket();
 	clients.erase(it);
 }
@@ -176,4 +205,6 @@ void	Multiplex::closePlex() { // delete everything before closing
 	freeEvents();
 	if (m_fd != -1)
 		close(m_fd);
+	if (m_signal_fd != -1)
+		close(m_signal_fd);
 }

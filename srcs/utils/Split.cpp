@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:49:59 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:01:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 11:45:37 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,3 +64,4 @@ void	popFirst( std::string & str ) {
 		return;
 	str = str.substr(1);
 }
+

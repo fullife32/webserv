@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:16:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:26:30 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,96 +14,110 @@
 #include "ServerConf.hpp"
 #include <unistd.h>
 
-namespace WS
-{
 /* -------------------------------------------------------------------------- */
 /*                     Get Set                                               */
 /* -------------------------------------------------------------------------- */
 
-	/*
-		Prepare le buffer pour envoi a send()
-			envoi d'abord le header puis le body de la page
-			clear et envoi NULL une fois tout envoyé.
-	*/
-	size_t	ResponseHTTP::getNextChunk(char * buffer)
+/*
+	Prepare le buffer pour envoi a send()
+		envoi d'abord le header puis le body de la page
+		clear et envoi NULL une fois tout envoyé.
+*/
+size_t	ResponseHTTP::getNextChunk(char * buffer)
+{
+	size_t	len;
+
+	m_header.get(buffer, MESSAGE_BUFFER_SIZE + 1, 0);
+	if (m_header.gcount() == MESSAGE_BUFFER_SIZE)
+		return MESSAGE_BUFFER_SIZE;
+	if (m_body.is_open())
 	{
-		size_t	len;
-
-		if (m_header.read(buffer, MESSAGE_BUFFER_SIZE))
-			return strlen(buffer);
-
 		len = strlen(buffer);
-
-		if (m_body.is_open() && m_body.read(buffer + len, MESSAGE_BUFFER_SIZE - len))
-			return strlen(buffer);
-			
+		m_body.get(buffer + len, MESSAGE_BUFFER_SIZE -len + 1, 0);
+		return (strlen(buffer));
+	}
+	else if (m_body_CGI != NULL)
+	{
 		len = strlen(buffer);
-		if (len == 0)
-			clear();
-		return (len);
+		if (fgets(buffer + len, MESSAGE_BUFFER_SIZE - len, m_body_CGI) == NULL)
+			clear(); 
+		// 	TODO// len + 1 ? checker car fstream prends +1" 
+		// check car  Reading stops after an EOF or a newline.""
+		return (strlen(buffer));
 	}
-
-	/*
-		Set Content-Lenght headerFields and keep size in intern variable
-	*/
-	void	ResponseHTTP::setContentLength(size_t size)
-	{
-		std::stringstream StringSize;
-
-		StringSize << size;
-		m_length = size;
-		set_headerFields("Content-Length", StringSize.str()); 
-	}
+	len = strlen(buffer);
+	if (len == 0)
+		clear();
+	return (len);
+}
 
 
+void	ResponseHTTP::setContentType(std::string const & extension)
+{
+	if (extension.empty())
+		return ;
+	std::map<std::string, std::string>::iterator	found = m_listContentType.find(extension);
+	if (found == m_listContentType.end())
+		throw MessageErrorException(STATUS_UNSUPPORTED_MEDIA_TYPE, m_url);
+	set_headerFields(HF_CONTENT_TYPE, found->second);
+}
+
+const URL & ResponseHTTP::get_url() const
+{
+	return m_url;
+}
+
+std::string ResponseHTTP::get_queryString() const
+{
+	return m_url.query;
+}
+
+std::string ResponseHTTP::get_pathInfo() const
+{
+	return m_url.pathInfo;
+}
+
+int			ResponseHTTP::get_method() const
+{
+	return m_method;
+}
+
+std::string ResponseHTTP::get_serverName() const
+{
+	return m_url.serverName;
+}
 
 
-	/*
-		Set the minimals Header Fields needed for an answer.
-			Date and Server
-	*/
-	void	ResponseHTTP::m_set_minimalHeaderFields()
-	{
-		set_headerFields("Date", getStringTime());
-		set_headerFields("Server", SERVER_NAME);
-	}
+std::string ResponseHTTP::get_fileName() const
+{
+	return m_url.filename;
+}
 
+std::string ResponseHTTP::get_path() const
+{
+	return m_url.path;
+}
 
-// std::string getQueryString()
-// {
-// 	// format brut truc=biduleetcccc
-// }
+/*
+	Set the minimals Header Fields needed for an answer.
+		Date and Server
+*/
+void	ResponseHTTP::m_set_minimalHeaderFields()
+{
+	set_headerFields(HF_DATE, getStringTime());
+	set_headerFields(HF_SERVER, SERVER_NAME);
+	setContentType(m_url.fileExtension);
+}
 
-// std::string getServerName()
-// {
-// 	return 
-// }
+/*
+	Set Content-Lenght headerFields and keep size in intern variable
+*/
+void	ResponseHTTP::setContentLength(size_t size)
+{
+	std::stringstream StringSize;
 
+	StringSize << size;
+	m_length = size;
+	set_headerFields(HF_CONTENT_LENGTH, StringSize.str());
+}
 
-	const URL & ResponseHTTP::get_url() const
-	{
-		return m_url;
-	}
-
-	std::string ResponseHTTP::get_queryString() const
-	{
-		return m_url.query;
-	}
-
-	std::string ResponseHTTP::get_pathInfo() const
-	{
-		return m_url.pathInfo;
-	}
-
-	int			ResponseHTTP::get_method() const
-	{
-		return m_method;
-	}
-
-	std::string ResponseHTTP::get_serverName() const
-	{
-		return m_url.serverName;
-	}
-
-
-} // end namespace

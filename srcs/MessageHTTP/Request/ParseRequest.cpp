@@ -6,109 +6,128 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:13:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:56:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "MessageHTTP.hpp"
 
-namespace WS {
-
 /* -------------------------------------------------------------------------- */
 /*                     Constructor Destructor                                 */
 /* -------------------------------------------------------------------------- */
 
-ParseRequest::ParseRequest()
+ParseRequest::ParseRequest(const ServerConf * server) :
+	m_body(NULL),
+	m_body_size(0),
+	m_server(server),
+	m_header_size(0),
+	m_max_body_size(0),
+	m_is_post_method(false),
+	m_has_complete_header(false),
+	m_has_complete_startLine(false)
 {}
 
 
 ParseRequest::ParseRequest(const ParseRequest & copy) :
-	m_data(copy.m_data),
-	m_header(copy.m_header),
+	m_requestLine(copy.m_requestLine),
 	m_body(copy.m_body),
-	m_requestLine(copy.m_requestLine)
+	m_body_size(copy.m_body_size),
+	m_server(copy.m_server),
+	m_data(copy.m_data),
+	m_header_size(copy.m_header_size),
+	m_max_body_size(copy.m_max_body_size),
+	m_is_post_method(copy.m_is_post_method),
+	m_has_complete_header(copy.m_has_complete_header),
+	m_has_complete_startLine(copy.m_has_complete_startLine)
 {
 	m_headerFields = copy.m_headerFields;
 }
 
 ParseRequest::~ParseRequest()
-{}
+{
+	clear();
+}
 
 /* -------------------------------------------------------------------------- */
 
+void	ParseRequest::clear()
+{
+	m_requestLine.clear();
+	if (m_body != NULL)
+	{
+		fclose(m_body);
+		m_body = NULL;
+	}
+	m_body_size = 0;
+	m_data.clear();
+	m_header_size = 0;
+	m_max_body_size = 0;
+	m_is_post_method = false;
+	m_has_complete_header = false;
+	m_has_complete_startLine = false;
+}
+
+bool	ParseRequest::empty() const 
+{
+	return (m_header_size == 0 && m_body_size == 0);
+}
+
+/* -------------------------------------------------------------------------- */
 
 /*
 **	append buffer from recv to complete the request data.
-*/
 
-std::string &	ParseRequest::append(const std::string & str)
+	as long as the header of the request is not complete try to parse header
+	then
+		if it is a POST method retrieve the rest of the request in the body
+		otherwise if there is a body : request error
+*/
+void	ParseRequest::append(const std::string & buffer)
 {
-	return m_data.append(str);
+	if (m_has_complete_header == false)
+	{
+		m_header_size += buffer.size();
+		m_data.append(buffer);
+		if (m_parse_header() == false)
+		{
+			m_check_max_header_size();
+			return ;
+		}
+		m_header_size -= m_data.size();
+	}
+	if (m_is_post_method)
+	{
+		if (m_data.empty() == false)
+		{
+			m_append_body(m_data);
+			m_data.clear();
+		}
+		else 
+			m_append_body(buffer);
+	}
+	else 
+	{
+		if (m_data.empty() == false)
+			throw MessageErrorException(STATUS_BAD_REQUEST);
+	}
 }
 
+void	ParseRequest::m_append_body(const std::string & buffer)
+{
+	if (fputs(buffer.data(), m_body) == EOF)
+		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
+	m_body_size += buffer.size();
+	m_check_max_body_size();
+}
 
+void	ParseRequest::m_prepare_POST_body()
+{
+	m_body = tmpfile();
+
+	if (m_body == NULL)
+		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
+}
 /* -------------------------------------------------------------------------- */
-
-/*
-** After completely receive request : formated the requestHTTP
-**	separate body and header
-** formated the requestHeader in a requestLine
-*/
-
-void	ParseRequest::m_prepareRequestBuilding()
-{
-	std::vector<std::string>	split;
-	std::string					FirstLine;
-
-
-	m_separateHeaderBody();
-	split = splitString(m_header, NEWLINE);
-	if (split.size() == 0)
-		throw MessageErrorException(STATUS_BAD_REQUEST, URL());
-
-	FirstLine = split[0];
-	split.erase(split.begin());
-
-	m_formated_RequestLine(FirstLine);
-	m_formated_HeaderFields(split);
-	m_check_host_HeaderFields(FirstLine);
-}
-
-
-RequestLine	ParseRequest::getRequestLine()
-{
-	return(m_requestLine);
-	
-}
-std::string	ParseRequest::getBody()
-{
-	return (m_body);
-}
-		
-std::map<std::string, std::string>	ParseRequest::getHeaderFields()
-{
-	return (m_headerFields);
-}
-
-/* -------------------------------------------------------------------------- */
-
-
-/*
-** Separate Header from Body
-		find separation empty line between header and body request
-		it can be the end of file and body will be empty
-
-		throw exception if empty line is not found (400: Bad Request)
-*/
-void		ParseRequest::m_separateHeaderBody()
-{
-	size_t		separation = m_data.find(EMPTY_LINE);
-	
-	if (separation == std::string::npos)
-		throw MessageErrorException(STATUS_BAD_REQUEST);
-	m_body =   std::string(&m_data[separation + 4], &m_data[m_data.size()]);
-	m_header = std::string(&m_data[0], &m_data[separation]);
-}
 
 /*
 	 get first line of Header
@@ -118,10 +137,10 @@ void		ParseRequest::m_separateHeaderBody()
 		for now HTTPversion is facultatif
 		throw exception (400 Bad Request)
 */
-void 		ParseRequest::m_formated_RequestLine(const std::string & startline)
+void 		ParseRequest::m_parse_RequestLine(const std::string & startline)
 {
 	std::vector<std::string>	split;
-	
+
 	split = splitString(startline, " ");
 	if (split.size() < 2 || split.size() > 3)
 		throw MessageErrorException(STATUS_BAD_REQUEST);
@@ -130,72 +149,24 @@ void 		ParseRequest::m_formated_RequestLine(const std::string & startline)
 		throw MessageErrorException(STATUS_URI_TOO_LONG);
 
 	m_requestLine.method = split[0];
-	m_formated_Url(split[1]);
+	m_parse_url(split[1]);
 	if (split.size() == 3)
 		m_requestLine.version.formatedVersion(split[2]);
-}
-
-/*
-**	get all header fields by separate each line of headerSplit by ':'
-		iterate each line of Header and create a map of < string, string >
-		corresponding to < HeaderFileds, HeaderFileds value >
-*/
-void	ParseRequest::m_formated_HeaderFields(const std::vector<std::string> & headerSplit)
-{
-	size_t				found;
-	std::string			key;
-	std::string			value;
-	std::string			line;
-	std::vector<std::string>::const_iterator	it = headerSplit.begin();
-
-	for (; it != headerSplit.end(); it++)
+	if (m_requestLine.method == "POST")
 	{
-		line = *it;
-		found = line.find(":");
-		if (found == std::string::npos)
-			throw MessageErrorException(STATUS_BAD_REQUEST, m_requestLine.url);
-		key = std::string(&line[0], &line[found]);
-		value = std::string(&line[found + 1], &line[line.size()]);
-		set_headerFields(key, value);
+		m_is_post_method = true ;
+		m_prepare_POST_body();
+		m_body_size = m_server->getBodySize(m_requestLine.url.serverName, m_requestLine.url.path);
 	}
 }
 
-/*
-	Check host for symplify search for opening file
-		if not in headerfield : 
-		else
-			if already in target : do nothing
-			else cat host + target in requestLine
-*/
-void	ParseRequest::m_check_host_HeaderFields(const std::string & url)
-{
-	// find Header Field "host"
-	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find(HF_HOST);
-	
-	if (found_host == m_headerFields.end()) ///// FAUT IL OBLIGATOIREMENT LE HOST ? normalement oui avec http1.1
-		throw MessageErrorException(STATUS_BAD_REQUEST); // TODO URL ?
-
-	// get header field value of "host"
-	m_requestLine.url.serverName = (*found_host).second;
-	std::string		host = (*found_host).second;
-	if (host.empty())
-		throw MessageErrorException(STATUS_BAD_REQUEST); // TODO: URL ?
-
-	// check if host is already in target
-	if ( url.find(host) != std::string::npos)
-	{
-		m_requestLine.url.serverName = host;
-		m_requestLine.url.path.erase(0, host.size());
-	}
-}
-
-
-void	ParseRequest::m_formated_Url(std::string target)
+void	ParseRequest::m_parse_url(std::string target)
 {
 	size_t		found_fragment = target.find('#');
 	size_t		found_query = target.find('?');
 	size_t		found_file;
 	size_t		found_extension;
+	size_t		found_pathInfo;
 
 	if (found_fragment != std::string::npos)
 	{
@@ -206,13 +177,22 @@ void	ParseRequest::m_formated_Url(std::string target)
 	{
 		m_requestLine.url.query = std::string(&target[found_query + 1], &target[target.size()]);
 		target.erase(found_query);
+		found_extension =  target.find_last_of('.'); // TODO check pathInfo
+		if (found_extension != std::string::npos)
+		{
+			found_pathInfo = target.find('/', target.find_last_of('.'));
+			if (found_pathInfo != std::string::npos)
+			{
+				m_requestLine.url.pathInfo = std::string(&target[found_pathInfo + 1], &target[target.size()]);
+				target.erase(found_pathInfo);
+			}
+		}
 	}
-
 	found_file = target.find_last_of('/');
 	if (found_file != std::string::npos)
 	{
 		if (found_file == target.size())
-			target.erase(found_file);
+			target.erase(found_file); 
 		else 
 		{
 			found_extension = target.find_last_of('.');
@@ -225,7 +205,105 @@ void	ParseRequest::m_formated_Url(std::string target)
 		}
 	}
 	m_requestLine.url.path = target;
+	if (m_requestLine.url.path.empty())
+		m_requestLine.url.path = "/";
 }
 
 
-} // end namespace
+/*
+**	get all header fields by separate each line of headerSplit by ':'
+iterate each line of Header and create a map of < string, string >
+corresponding to < HeaderFileds, HeaderFileds value >
+*/
+void 			ParseRequest::m_parse_headerFields(const std::string & line)
+{
+	size_t				separator;
+	std::string			key;
+	std::string			value;
+
+	separator = line.find(":");
+	if (separator == std::string::npos)
+		throw MessageErrorException(100, m_requestLine.url);
+	key = std::string(&line[0], &line[separator]);
+	value = std::string(&line[separator + 1], &line[line.size()]);
+	set_headerFields(key, value);
+}
+
+
+/*
+	iterate through each row to find the start row and header fields until an empty row is found.
+	which means the end of the headers.
+*/
+bool			ParseRequest::m_parse_header()
+{
+	size_t	new_line;
+
+	while ((new_line = m_data.find(NEWLINE)) != std::string::npos)
+	{
+		if (new_line == 0)
+		{
+			m_has_complete_header = true;
+			m_data.erase(0, 2);
+			m_check_host_HeaderFields();
+			return true ;
+		}
+		if (m_has_complete_startLine == false)
+		{
+			m_parse_RequestLine(extract_line(m_data, new_line));
+			m_data.erase(0, 2);
+			m_has_complete_startLine = true;
+		}
+		else if (m_has_complete_header == false)
+		{
+			m_parse_headerFields(extract_line(m_data, new_line));
+			m_data.erase(0, 2);
+		}
+		else
+			return false ;
+	}
+	return false ;
+}
+
+/* -------------------------------------------------------------------------- */
+
+void	ParseRequest::m_check_max_header_size() const
+{
+	if (m_header_size > REQUEST_HEADER_MAX_SIZE)
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE); // TODO wich error ?
+}
+
+void	ParseRequest::m_check_max_body_size() const
+{
+	if (m_max_body_size != 0 && m_body_size > m_max_body_size)
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE); // TODO wich error ?
+}
+
+
+/*
+	Check host for symplify search for opening file
+		if not in headerfield : 
+		else
+			if already in target : do nothing
+			else cat host + target in requestLine
+*/
+void	ParseRequest::m_check_host_HeaderFields() // TODO clear
+{
+	// find Header Field "host"
+	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find(HF_HOST);
+	
+	if (found_host == m_headerFields.end()) ///// FAUT IL OBLIGATOIREMENT LE HOST ? normalement oui avec http1.1
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_requestLine.url);
+
+	// get header field value of "host"
+	m_requestLine.url.serverName = (*found_host).second;
+	std::string		host = (*found_host).second;
+	if (host.empty())
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_requestLine.url);
+
+	// check if host is already in target
+	if (m_requestLine.url.path.find(host) != std::string::npos)
+	{
+		m_requestLine.url.serverName = host;
+		m_requestLine.url.path.erase(0, host.size());
+	}
+}

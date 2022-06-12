@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 15:04:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/07 16:39:22 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,8 +103,6 @@ enum e_statusCode
 	STATUS_HTTPVERSION_NOT_SUPPORTED= 505
 };
 	
-namespace WS 
-{
 
 class ErrorMap
 {
@@ -137,7 +135,6 @@ class MessageErrorException : public std::exception, public ErrorMap
 
 std::map <int, std::string>		init_mapError()  throw() ;
 
-}
 
 #endif
 
