@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 11:57:38 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:11:26 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,45 +23,31 @@
 /*                     Constructor Destructor                                 */
 /* -------------------------------------------------------------------------- */
 
-ResponseHTTP::ResponseHTTP()
-	: MessageMethods(), HeaderFields(),
-	m_statusLine(),
-	m_server(NULL),
-	m_method(0),
-	m_header(),
-	m_body(),
-	m_length(0),
-	m_isAutoindex(false),
-	m_url(),
-	m_body_CGI(NULL)
-{}
-
-
 ResponseHTTP::ResponseHTTP(const ServerConf * server)
-	: MessageMethods(), HeaderFields(),
+	: MessageMethods(), HeaderFields(), ContentTypes(), ErrorMap(),
 	m_statusLine(),
 	m_server(server),
 	m_method(0),
 	m_header(),
 	m_body(),
+	m_body_CGI(NULL),
 	m_length(0),
-	m_isAutoindex(false),
 	m_url(),
-	m_body_CGI(NULL)
+	m_isAutoindex(false)
 {}
 
 
 ResponseHTTP::ResponseHTTP(const ResponseHTTP & copy)
-	: MessageMethods(), HeaderFields(),
+	: MessageMethods(), HeaderFields(), ContentTypes(), ErrorMap(),
 	m_statusLine(copy.m_statusLine),
 	m_server(copy.m_server),
 	m_method(copy.m_method),
+	m_body_CGI(copy.m_body_CGI),
 	m_length(copy.m_length),
-	m_isAutoindex(copy.m_isAutoindex),
 	m_url(copy.m_url),
-	m_body_CGI(copy.m_body_CGI)
-
+	m_isAutoindex(copy.m_isAutoindex)
 {
+	m_headerFields = copy.m_headerFields;
 	m_header << copy.m_header;
 	m_body << copy.m_body;
 }
@@ -71,29 +57,12 @@ ResponseHTTP::~ResponseHTTP()
 	clear();
 }
 
-
-// ResponseHTTP & ResponseHTTP::operator=(const ResponseHTTP & other)
-// {
-// 	if (this != &other)
-// 	{
-// 		clear();
-// 		m_headerFields = other.m_headerFields;
-// 		m_statusLine = other.m_statusLine;
-// 		m_server = other.m_server;
-// 		m_method = other.m_method;
-// 		m_length = other.m_length;
-
-// 		m_header << other.m_header;
-// 	}
-// 	return *this;
-// }
-
 /* -------------------------------------------------------------------------- */
 
 void	ResponseHTTP::clear()
 {
-	m_headerFields.clear();
 	m_statusLine.clear();
+	m_headerFields.clear();
 	m_method = 0;
 	m_length = 0;
 	m_header.str("");
@@ -115,14 +84,13 @@ size_t		ResponseHTTP::size()
 	return (m_length);
 }
 
-
 /* -------------------------------------------------------------------------- */
 /*                     Build Response                                         */
 /* -------------------------------------------------------------------------- */
 
 /*
-	Construit la reponse en fonction de la requete.
-	Si une erreur se produit throw MessageError et reconstruit la reponse en fonction de l'erreur rencontree.
+	Builds the response according to the request.
+	If an error occurs throw MessageError and rebuilds the response according to the error encountered.
 */
 void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 {
@@ -134,18 +102,16 @@ void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 }
 
 /*
-	Construit la reponse en fonction de l'erreur rencontree.
+	Builds the response according to the error encountered.
 */
 void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase, const URL & url)
 {
 	clear();
-
 	m_set_minimalHeaderFields();
 	m_statusLine.statusCode = StatusCode;
 	m_statusLine.reasonPhrase = ReasonPhrase;
 	m_url = url;
 	m_formated_Error(m_url);
-	debug_print();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -154,7 +120,7 @@ void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase, 
 
 /*
 	Setup the Method and Parse to the corresponding functions
-	throw an exception if Method is not Allowed
+	throw an exception if Method is not implemented
 */
 void	ResponseHTTP::m_parseMethod(const RequestHTTP & request)
 {
@@ -171,10 +137,8 @@ void	ResponseHTTP::m_parseMethod(const RequestHTTP & request)
 
 void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 {
-	std::cout << "in methode GET" << std::endl; // TODO DEBUG
-	
 	if (request.hasBody())
-		throw MessageErrorException(STATUS_BAD_REQUEST, m_url); // TODO deja fait sur parserequest ?
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 	if (request.hasQueryString() || m_url.fileExtension == "php")
 		m_formated_CGI_Response(request);
 	else		
@@ -214,7 +178,6 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Con
 
 void	ResponseHTTP::m_method_DELETE(const RequestHTTP & request)
 {
-	std::cout << "in methode DELETE" << std::endl;
 	std::stringstream	body;
 
 	if (request.hasBody())
@@ -276,7 +239,7 @@ else
 {
 	realPath = m_server->getLocationPath(m_url.serverName, m_url.path);
 	if (realPath.empty())
-		throw MessageErrorException (100);
+		throw MessageErrorException (STATUS_NOT_FOUND, m_url);
 	if (m_url.filename.empty())
 	{
 		m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
@@ -335,31 +298,24 @@ bool	ResponseHTTP::m_openFile_Error(const std::string & location)
 
 void	ResponseHTTP::m_openFile_Body(const std::string & location)
 {
-
-	std::cout << "OPENFILE location = " << location << std::endl;
-	if (m_isAutoindex)
-		;// m_build_autoIndex(location);
-	else
+	try
 	{
-		try
-		{
-			m_body.open(location.data());
-		}
-		catch(const std::exception& e)  //// TODO: What to do ? 
-		{
-			std::cerr << e.what() << '\n';
-			throw	MessageErrorException(100);
-		}
+		m_body.open(location.data());
 	}
-
-	std::cout << "is open = " << m_body.is_open() << std::endl;
+	catch(const std::exception& e)  //// TODO: What to do ? 
+	{
+		std::cerr << e.what() << '\n';
+		throw	MessageErrorException(100);
+	}
 	if (m_body.is_open() == false)
 		throw MessageErrorException(STATUS_NOT_FOUND, m_url);
 }
 
 void	ResponseHTTP::m_openFile_CGI()
 {
-	m_body_CGI = tmpfile(); // TODO check error opening ?
+	m_body_CGI = tmpfile();
+	if (m_body_CGI == NULL)
+		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_url);
 }
 
 void	ResponseHTTP::m_setOpenFileBodySize() // TODO CHECK

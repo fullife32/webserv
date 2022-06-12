@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 13:36:00 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:56:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ class ParseRequest : public HeaderFields
 		void	clear() ;
 
 	private:
-		void	m_prepare_POST_body() ;
 		void	m_append_body(const std::string & buffer);
+		void	m_prepare_POST_body() ;
 
 	/* parsing    ------------------------------------------------ */
-		bool	m_parse_header() ; // parse raw data and check if header is complete
+		bool	m_parse_header();
 		void 	m_parse_RequestLine(const std::string & startline);
 		void 	m_parse_headerFields(const std::string & line);
 		void	m_parse_url(std::string url);
@@ -62,7 +62,7 @@ class ParseRequest : public HeaderFields
 
 		void	m_check_max_header_size() const ;
 		void	m_check_max_body_size() const ;
-		void	m_check_host_HeaderFields(const std::string & url); // TODO
+		void	m_check_host_HeaderFields();
 		
 	// TODO debug
 	public:
@@ -77,6 +77,7 @@ class ParseRequest : public HeaderFields
 			std::cout << "	filename: " << m_requestLine.url.filename << std::endl;
 			std::cout << "	extension: " << m_requestLine.url.fileExtension << std::endl;
 			std::cout << "	query: " << m_requestLine.url.query << std::endl;
+			std::cout << "	path: " << m_requestLine.url.pathInfo << std::endl;
 			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
 
 		std::map<std::string, std::string>::iterator	it;

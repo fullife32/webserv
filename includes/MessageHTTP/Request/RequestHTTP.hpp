@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:43:22 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 13:35:00 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 13:58:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ class RequestHTTP : public MessageMethods, public ParseRequest
 		protected variables herited from MessageMethods: list of all Methods
 			static	std::map <std::string, int>	m_methods;
 
-		protected variables herited from HeaderFields: list of all Methods
-			std::map<std::string, std::string>	m_headerFields;
-
 		protected variables herited from ParseRequest: list of all Methods
+		std::map<std::string, std::string>		m_headerFields;
 		RequestLine								m_requestLine;
 		FILE *									m_body;				// body for CGI post
 		size_t									m_body_size;		// size of body request

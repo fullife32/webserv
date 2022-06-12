@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/12 13:36:27 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:29:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ void		Client::receive_data() {
 	 /// IF END OR LAST BUFFER RECV
 	if (size == 0 || size < MESSAGE_BUFFER_SIZE)
 	{
-		
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		setToChangeEvent();
 		try {
@@ -128,7 +127,4 @@ void		Client::send_data() {
 	sendSize = send(m_fd, m_buffer, bufferSize, MSG_NOSIGNAL);
 	if (sendSize == (size_t)-1 || sendSize == 0 || bufferSize < MESSAGE_BUFFER_SIZE)
 		setToRemove(); // TODO: what to do ? 
-
-
 }
-

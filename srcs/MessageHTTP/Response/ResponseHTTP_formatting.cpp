@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 11:34:21 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:25:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,20 +40,21 @@
 	{
 		std::cout << "this is a CGI request" << std::endl;
 
-		m_body_CGI = tmpfile(); // creation du fichier temporaire pour la reponse a envoyer au client
-
-		FILE * request_body = request.getBodyForCGI(); // recupere le pointeur sur le body de la requete client
+		m_openFile_CGI();	// creation du fichier temporaire pour la reponse a envoyer au client
 
 		/*
 		 	dans le CGI faire :
 
-		int fd_IN = fileno(request.getBodyForCGI());
-		int fd_OUT = fileno(response.getBodyForCGI());
+			int fd_IN = fileno(request.getBodyForCGI());
+			int fd_OUT = fileno(response.getBodyForCGI());
 		*/
 
+
 		// DEBUG : ///////////////////////////////////////////////////////////////////
+		FILE * request_body = request.getBodyForCGI();
 		if (request_body != NULL)
 		{
+
 			std::cout << "xxxxxxxxxxxxxxxx REQUEST BODY: xxxxxxxxxxxxxxxxx " << std::endl;
 			char buffer[1000] = {0};
 			while (!feof(request_body))
@@ -64,10 +65,6 @@
 		}
 		// DEBUG : ///////////////////////////////////////////////////////////////////
 
-
-		// try executeCGI(m_headerFields, *this, *m_server)
-
-		
 		m_setCGIBodySize();
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
@@ -117,8 +114,6 @@
 		body << "</body>" << CRLF;
 		body << "</html>" << CRLF;
 		body << CRLF << CRLF;
-
-
 
 		setContentLength(body.str().size());
 		set_headerFields(HF_CONTENT_TYPE, "text/html");

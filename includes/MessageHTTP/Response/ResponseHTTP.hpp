@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 11:12:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:05:13 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "MessageHTTP.hpp"
 # include "Server.hpp"
-# include <glob.h> // TODO added by Eithan
+# include <glob.h>
 
 class ResponseHTTP : public MessageMethods, public HeaderFields,  public ContentTypes, public ErrorMap
 {
@@ -30,7 +30,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 			std::map<std::string, std::string>	m_headerFields;
 
 		protected variables herited from contentType: map of ContentType
-			std::map< std::string, std::string> m_listContentType = init_map_ContentType();
+			std::map< std::string, std::string> m_listContentType;
 	*/
 	private:
 
@@ -38,27 +38,25 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		const ServerConf *		m_server;
 		int						m_method;
 		std::stringstream		m_header;
-		std::fstream			m_body; // ?? TOUT dans FILE *
-		size_t					m_length;
-		bool					m_isAutoindex;
-		URL						m_url;
+		std::fstream			m_body;
 		FILE *					m_body_CGI;
-		
+		size_t					m_length;
+		URL						m_url;
+		bool					m_isAutoindex;
+
 
 	public:
 
 	/* constructor ------------------------------------------------ */
-		ResponseHTTP();
 		ResponseHTTP(const ServerConf * server);
 		ResponseHTTP(const ResponseHTTP & copy);
 
 	/* destructor  ------------------------------------------------ */
 		virtual ~ResponseHTTP();
 
-
-	/* operator    ------------------------------------------------ */
-		ResponseHTTP &	operator=(const ResponseHTTP & other);
-
+	/* functions    ------------------------------------------------ */
+		void		clear();
+		size_t		size() ;
 
 	/* get		    ------------------------------------------------ */
 		size_t		getNextChunk(char * buffer);
@@ -71,25 +69,18 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		std::string get_fileName() const ;
 		std::string get_path() const ;
 
-
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
 		void		setContentLength(size_t size);
 		void		setContentType(std::string const & extension);
 		void		setServer(ServerConf & server);
 	
-	
-	/* functions    ------------------------------------------------ */
-
-		void		clear();
-		size_t		size() ;
-
+	/* build	    ------------------------------------------------ */
 		void		buildError(int StatusCode, const std::string & ReasonPhrase, const URL & url);
 		void		buildResponse(const RequestHTTP & request);
 
 	private:
 
-		// set
 		void	m_set_minimalHeaderFields();
 		void	m_setOpenFileBodySize();
 		void	m_setCGIBodySize();
@@ -126,11 +117,6 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		virtual void	debug_print()
 		{
 			std::cout << " RESPONSE DEBUG PRINT ************************************" << std::endl;
-			// std::string	S;
-			// m_header >> S;
-			// std::cout << "HEADER: " << S.data() << std::endl;
-			// m_body >> S;
-			// std::cout << "BODY: " << S.data() << std::endl;
 			std::cout << "REQUESTLINE: " <<  std::endl;
 			std::cout << "	status code: " << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << std::endl;
 			std::cout << "	version: " << m_statusLine.version.name <<  m_statusLine.version.major_version << "." <<  m_statusLine.version.minor_version << std::endl;

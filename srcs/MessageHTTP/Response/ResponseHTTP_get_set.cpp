@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 11:32:16 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:26:30 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,10 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 	else if (m_body_CGI != NULL)
 	{
 		len = strlen(buffer);
-		fgets(buffer + len, MESSAGE_BUFFER_SIZE - len, m_body_CGI);
+		if (fgets(buffer + len, MESSAGE_BUFFER_SIZE - len, m_body_CGI) == NULL)
+			clear(); 
+		// 	TODO// len + 1 ? checker car fstream prends +1" 
+		// check car  Reading stops after an EOF or a newline.""
 		return (strlen(buffer));
 	}
 	len = strlen(buffer);
@@ -49,9 +52,10 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 }
 
 
-
 void	ResponseHTTP::setContentType(std::string const & extension)
 {
+	if (extension.empty())
+		return ;
 	std::map<std::string, std::string>::iterator	found = m_listContentType.find(extension);
 	if (found == m_listContentType.end())
 		throw MessageErrorException(STATUS_UNSUPPORTED_MEDIA_TYPE, m_url);
@@ -102,7 +106,7 @@ void	ResponseHTTP::m_set_minimalHeaderFields()
 {
 	set_headerFields(HF_DATE, getStringTime());
 	set_headerFields(HF_SERVER, SERVER_NAME);
-	set_headerFields(HF_CONTENT_TYPE, get_contentType(m_url.fileExtension));
+	setContentType(m_url.fileExtension);
 }
 
 /*
@@ -114,6 +118,6 @@ void	ResponseHTTP::setContentLength(size_t size)
 
 	StringSize << size;
 	m_length = size;
-	set_headerFields(HF_CONTENT_LENGTH, StringSize.str()); 
+	set_headerFields(HF_CONTENT_LENGTH, StringSize.str());
 }
 
