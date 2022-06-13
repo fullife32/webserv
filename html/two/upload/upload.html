@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="http://localhost:8000/upload/upload.css">
+	<meta charset="utf-8">
+	<title>Upload</title>
+</head>
+<body>
+
+	<header>
+    <nav>
+      <ul id="Navbar">
+        <div id="Logonavbar"><a href="http://localhost:8000/">Webserv</a></div>
+        <li><a href="http://localhost:8000/get_not_allowed">No GET</a></li>
+        <li><a href="http://localhost:8000/delete">DELETE</a></li>
+        <li><a href="http://localhost:8000/delete_not_allowed">No DELETE</a></li>
+        <li><a href="http://localhost:8000/upload">POST</a></li>
+        <li><a href="http://localhost:8000/post_not_allowed">No POST</a></li>
+        <li><a href="http://localhost:8000/body_size_too_low">POST too low</a></li>
+        <li><a href="http://localhost:8000/no_cgi">POST no cgi</a></li>
+      </ul>
+    </nav>
+    </header>
+
+  <form action="upload.php" method="post" enctype="multipart/form-data">
+    <section id="Upload">
+      <h1>Select a file to upload:</h1>
+      <label for="file" class="labelFile">Choose a file</label>
+      <input id="file" type="file" name="fileToUpload" class="inputFile">
+    </section>
+    <section id="Submit">
+      <input type="submit" value="Upload File" name="submit" class="button">
+   </section>
+  </form>
+
+</body>
+</html>

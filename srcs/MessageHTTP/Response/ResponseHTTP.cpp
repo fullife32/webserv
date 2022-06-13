@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:11:26 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 22:14:33 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ ResponseHTTP::ResponseHTTP(const ServerConf * server)
 	m_body_CGI(NULL),
 	m_length(0),
 	m_url(),
-	m_isAutoindex(false)
+	m_isAutoindex(false),
+	m_is_redirection(false)
 {}
 
 
@@ -45,7 +46,9 @@ ResponseHTTP::ResponseHTTP(const ResponseHTTP & copy)
 	m_body_CGI(copy.m_body_CGI),
 	m_length(copy.m_length),
 	m_url(copy.m_url),
-	m_isAutoindex(copy.m_isAutoindex)
+	m_isAutoindex(copy.m_isAutoindex),
+	m_is_redirection(copy.m_is_redirection)
+
 {
 	m_headerFields = copy.m_headerFields;
 	m_header << copy.m_header;
@@ -71,6 +74,7 @@ void	ResponseHTTP::clear()
 		m_body.close();
 	m_body.clear();
 	m_isAutoindex = false;
+	m_is_redirection = false;
 	m_url = URL();
 	if (m_body_CGI != NULL)
 	{
@@ -231,6 +235,7 @@ if (m_server->isMethodAllowed(m_url.serverName, formatedPath, m_method) == false
 redirection = m_server->isRedirecting(m_url.serverName, m_url.path, realPath);
 if (redirection != 0)
 {
+	m_is_redirection = true;
 	m_statusLine.statusCode = redirection;
 	m_statusLine.reasonPhrase = m_errors[redirection];
 	set_headerFields(HF_LOCATION, realPath);

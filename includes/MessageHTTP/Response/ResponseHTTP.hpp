@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:05:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 22:02:21 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		size_t					m_length;
 		URL						m_url;
 		bool					m_isAutoindex;
+		bool					m_is_redirection;
 
 
 	public:
