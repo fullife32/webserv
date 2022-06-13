@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:15:38 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 20:03:03 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class ParseRequest : public HeaderFields
 		void	m_parse_url_query_string(std::string & url);
 		void	m_parse_url_filename(std::string & url);
 		void	m_parse_url_port(std::string & url);
+		void	m_prepare_body();
 
 
 

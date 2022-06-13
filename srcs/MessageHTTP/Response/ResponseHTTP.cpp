@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 17:15:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 20:13:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 
 }
 
-void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Content-Type jamais envoyé par firefox....
+void	ResponseHTTP::m_method_POST(const RequestHTTP & request) 
 {
 	std::cout << "in methode POST" << std::endl; // TODO DEBUG
 
@@ -159,6 +159,8 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Con
 	size_t	contentLenght = convertStringToSize(request.get_value_headerFields(HF_CONTENT_LENGTH));
 	if (contentLenght != request.getBodySize())
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty())
+		throw MessageErrorException(100); // TODO: check Content-Type jamais envoyé par firefox....
 	m_checkBodySize(request.getBodySize(), contentLenght);
 	m_formated_CGI_Response(request);
 
@@ -250,7 +252,7 @@ std::string			ResponseHTTP::m_foundLocation()
 			m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
 			if (m_isAutoindex == true)
 				return (realPath);
-			index = m_server->getIndex(m_url.serverName, m_url.path); // TODO:
+			index = m_server->getIndex(m_url.serverName, m_url.path);
 			if (index.empty())
 					throw MessageErrorException(STATUS_FORBIDDEN, m_url);
 			realPath = index;

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/13 18:44:09 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 19:07:02 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void		Client::receive_data() {
 	int	size;
 
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
-	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0); // TODO; recv first == 0 le client s est deconnecte
+	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0);
 
 	if (size == -1)
 	{
@@ -74,7 +74,7 @@ void		Client::receive_data() {
 		return ;
 	}
 
-		//// TRY BUILD HEADER
+	// TRY BUILD HEADER
 	try
 	{
 		m_request.append(m_buffer);
@@ -90,15 +90,15 @@ void		Client::receive_data() {
 		return ;
 	}
 	
-	 /// IF END OR LAST BUFFER RECV
+	// IF END OR LAST BUFFER RECV
 	if (size == 0 || size < MESSAGE_BUFFER_SIZE)
 	{
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		setToChangeEvent();
 		try {
-			// m_request.debug_print();
+			// m_request.debug_print(); // TODO DEBUG
 			m_response.buildResponse(m_request);
-			m_response.debug_print();
+			m_response.debug_print(); // TODO DEBUG
 		}
 		catch (MessageErrorException & e) {
 			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());

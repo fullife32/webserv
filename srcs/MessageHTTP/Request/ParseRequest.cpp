@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:50:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 20:13:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,10 +114,44 @@ void	ParseRequest::append(const std::string & buffer)
 
 void	ParseRequest::m_append_body(const std::string & buffer)
 {
-	if (fputs(buffer.data(), m_body) == EOF)
+	if (buffer.empty() == false && fputs(buffer.data(), m_body) == EOF)
 		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
 	m_body_size += buffer.size();
 	m_check_max_body_size();
+}
+
+void	ParseRequest::m_prepare_body()
+{
+
+	// TODO //
+	// char line[1000];
+
+	// std::string type = get_value_headerFields(HF_CONTENT_TYPE);
+	// if (type.find("multipart/form-data;") != std::string::npos)
+	// {
+	// 	std::string	boundary(&type[type.find('=') + 1], type[type.size()]);
+	// 	rewind(m_body);
+
+	// 	fgets(line,1000, m_body);
+	// 	while line = 
+
+
+	// 	size_t newLine =	 0;
+	// 		size_t sep_pos = 0;
+	// 		while (1) {
+	// 			size_t tmp = buffer.find("\r", newLine); //"\n\rj
+	// 			if (tmp == std::string::npos)
+	// 				break ;
+	// 			sep_pos = buffer.find(":", newLine);
+	// 			std::string const key = buffer.substr(newLine, sep_pos - newLine);
+	// 			std::string const value = buffer.substr(sep_pos + 2, tmp - (newLine + key.size() + 1));
+	// 			std::cout << "key: " << key << "\n";
+	// 			std::cout << "value: " << value << "\n";
+	// 			set_headerFields(key, value);
+	// 			newLine = tmp + 2;
+	// 		}
+	// }
+	
 }
 
 void	ParseRequest::m_prepare_POST_body()
@@ -195,7 +229,7 @@ void	ParseRequest::m_parse_url_query_string(std::string & str)
 	{
 		m_requestLine.url.query = std::string(&str[found_query + 1], &str[str.size()]);
 		str.erase(found_query);
-		found_extension =  str.find_last_of('.'); // TODO check pathInfo
+		found_extension =  str.find_last_of('.');
 		if (found_extension != std::string::npos)
 		{
 			found_pathInfo = str.find('/', str.find_last_of('.'));
