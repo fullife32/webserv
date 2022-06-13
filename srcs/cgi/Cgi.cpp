@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/13 20:50:16 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/14 00:02:58 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,32 +17,33 @@ Cgi::Cgi
  ServerConf const &server_conf) {
 	// build environment
 	std::map<std::string, std::string> env_map;
-	env_map["AUTH_TYPE"] = ""; // ?
+	// env_map["AUTH_TYPE"] = ""; // ?
 	env_map["CONTENT_LENGTH"] = header_fields.get_value_headerFields(HF_CONTENT_LENGTH);
 	env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
 	env_map["GATEWAY_INTERFACE"] = "CGI/1.1";
-	env_map["PATH_INFO"] = response_http.get_pathInfo();
-	env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path());
+	// env_map["PATH_INFO"] = response_http.get_pathInfo();
+	// env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path());
 	env_map["QUERY_STRING"] = response_http.get_queryString();
-	env_map["REMOTE_ADDR"] = server_conf.getIp();
-	env_map["REMOTE_HOST"] = ""; // ?
-	env_map["REMOTE_IDENT"] = "";// ?
-	env_map["REMOTE_USER"] = ""; // ?
+	// env_map["REMOTE_ADDR"] = server_conf.getIp();
+	// env_map["REMOTE_HOST"] = ""; // ?
+	// env_map["REMOTE_IDENT"] = "";// ?
+	// env_map["REMOTE_USER"] = ""; // ?
+	env_map["REDIRECT_STATUS"] = "200";
 	env_map["REQUEST_METHOD"] = response_http.get_method();
-	env_map["SCRIPT_NAME"] = response_http.get_formatedPath();
-	env_map["SERVER_NAME"] = response_http.get_serverName();
-	env_map["SERVER_PORT"] = server_conf.getPort();
-	env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
-	env_map["SERVER_SOFTWARE"] = "Webserv/1";
-	this->_alloc_env(env_map);
-	// build args
-	this->_argv = new char*[3];
-	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
 	char pathwd[PATH_MAX] ;
 	getcwd(pathwd, PATH_MAX);
 	std::string arg1 = std::string(pathwd)
 		+ "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
 		+ response_http.get_fileName();
+	env_map["SCRIPT_FILENAME"] = arg1;
+	// env_map["SERVER_NAME"] = response_http.get_serverName();
+	// env_map["SERVER_PORT"] = server_conf.getPort();
+	// env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
+	// env_map["SERVER_SOFTWARE"] = "Webserv/1";
+	this->_alloc_env(env_map);
+	// build args
+	this->_argv = new char*[3];
+	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
 	// free(tmp);
 	this->_argv[0] = new char[arg0.length() + 1];
 	std::strcpy(this->_argv[0], arg0.c_str());
