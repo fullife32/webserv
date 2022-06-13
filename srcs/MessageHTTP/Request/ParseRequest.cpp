@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:21:50 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:50:42 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,13 +305,13 @@ bool			ParseRequest::m_parse_header()
 void	ParseRequest::m_check_max_header_size() const
 {
 	if (m_header_size > REQUEST_HEADER_MAX_SIZE)
-		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE); // TODO wich error ?
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE);
 }
 
 void	ParseRequest::m_check_max_body_size() const
 {
 	if (m_max_body_size != 0 && m_body_size > m_max_body_size)
-		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE); // TODO wich error ?
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE);
 }
 
 

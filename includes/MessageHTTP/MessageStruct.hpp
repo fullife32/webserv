@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 13:47:03 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:50:15 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ struct URL
 	URL & operator=(const URL & other);
 
 			
-	std::string		formatedPath() const ; //TODO: maybe not
+	std::string		formatedPath() const ;
 	void			clear();
 
 };

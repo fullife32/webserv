@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 22:14:33 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 15:17:15 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -325,12 +325,14 @@ void	ResponseHTTP::m_openFile_CGI()
 
 void	ResponseHTTP::m_setOpenFileBodySize() // TODO CHECK
 {
-	size_t	FileSize;
+	size_t	FileEnd;
+	size_t	FileBegin;
 
-	m_body.seekg (0, m_body.end);
-	FileSize = m_body.tellg();
-	setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
-	m_body.seekg (0, m_body.beg);
+	FileBegin = m_body.tellg();
+	m_body.seekg (0, std::ios::beg);
+	FileEnd = (m_body.tellg());
+	setContentLength(FileBegin - FileEnd == (size_t)-1 ? 0 : FileBegin - FileEnd);
+	m_body.seekg (0, std::ios::beg);
 }
 
 void	ResponseHTTP::m_setCGIBodySize()
