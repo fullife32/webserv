@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/09 17:34:26 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:10:58 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,12 @@
 
 const s_server	&ServerConf::getServerByName( const std::string &server_name ) const {
 	std::vector<std::string>::const_iterator itMain = std::find(m_main.first.begin(), m_main.first.end(), server_name);
-
 	if (itMain != m_main.first.end())
 		return m_main.second;
 	for (std::map<std::vector<std::string>, s_server>::const_iterator it = m_subs.begin(); it != m_subs.end(); ++it) {
 		std::vector<std::string>::const_iterator itSub = std::find((*it).first.begin(), (*it).first.end(), server_name);
 
-		if (itSub != (*it).first.end())
+		if (itSub != (*it).first.end()) // TODO be sure that it doesn't go here if not correct
 			return (*it).second;
 	}
 	return m_main.second;
@@ -180,7 +179,7 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 	std::string	rest;
 	bool		yes = true;
 
-	std::cout << location << "?" << (location == "/") << std::endl;
+	std::cout << location << "?" << (location == "/") << std::endl; // TODO debug
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
@@ -200,18 +199,19 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 	return std::string();
 }
 
-std::string	ServerConf::isUploadPath( const std::string &server_name, const std::string &location ) const {
+std::string	ServerConf::getUploadPath( const std::string &server_name, const std::string &location ) const {
 	s_base		baseStruct;
 	std::string	rest;
 	bool		yes = true;
 
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
-	else
+	else {
 		baseStruct = getLocationByName(server_name, location, yes, rest);
-	if (yes == false) // TODO accept rest of location ??
-		return std::string();
-	else if ((rest.empty() || rest == "/") && baseStruct.upload_pass.empty() == false)
-		return getLocationPath(server_name, location) + baseStruct.upload_pass + "/";
-	return std::string(); // TODO Is upload pass a specification to add at the end and if doesn't exists return only root + location ??
+		if (baseStruct.upload_pass.empty())
+			baseStruct = getServerByName(server_name);
+	}
+	if (baseStruct.upload_pass.empty())
+		return baseStruct.root + "/";
+	return baseStruct.upload_pass + "/";
 }

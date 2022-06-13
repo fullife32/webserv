@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageStruct.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:58:07 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:10:14 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,9 @@ void	HTTPversion::formatedVersion(const std::string & version)
 
 bool	HTTPversion::isSupportedVersion()
 {
-	return true; // TODO:FOR DEBUG 
-	if (major_version != 1 || minor_version != 1)
-		return false;
-	return true;
+	if (major_version == 1 && (minor_version == 0 || minor_version == 1))
+		return true;
+	return false;
 }
 
 void	HTTPversion::clear()
@@ -66,6 +65,7 @@ void	HTTPversion::clear()
 URL::URL(const URL & copy)
 {
 	serverName = copy.serverName;
+	port = copy.port;
 	path = copy.path;
 	filename = copy.filename;
 	fileExtension = copy.fileExtension;
@@ -79,6 +79,7 @@ URL & URL::operator=(const URL & other)
 	if (this != &other)
 	{
 		serverName = other.serverName;
+		port = other.port;
 		path = other.path;
 		filename = other.filename;
 		fileExtension = other.fileExtension;
@@ -123,8 +124,8 @@ void	RequestLine::clear()
 void	StatusLine::clear()
 {
 	version.clear();
-	statusCode = 0;
-	reasonPhrase.clear();
+	statusCode = STATUS_OK;
+	reasonPhrase = S_STATUS_OK;
 }
 
 /* Header Fields  ------------------------------------------------ */
@@ -142,6 +143,8 @@ void		HeaderFields::set_headerFields(const HeaderFields::value_type & headerFiel
 
 void	HeaderFields::set_headerFields(const std::string & headerField, const std::string & value)
 {
+	if (value.empty())
+		return ;
 	m_headerFields[headerField] = value;
 }
 
@@ -183,3 +186,43 @@ std::map <std::string, int>		init_map_method()
 
 
 std::map <std::string, int>		MessageMethods::m_methods = init_map_method();
+
+
+
+/* Content Type  ------------------------------------------------ */
+
+
+std::map< std::string, std::string>		init_map_ContentType()
+{
+	std::map< std::string, std::string>	map_contentType;
+
+	map_contentType["aac"] = "audio/aac";
+	map_contentType["avi"] = "video/x-msvideo";
+	map_contentType["bmp"] = "image/bmp";
+	map_contentType["css"] = "text/css";
+	map_contentType["csv"] = "text/csv";
+	map_contentType["gif"] = "image/gif";
+	map_contentType["htm"] = "text/html";
+	map_contentType["html"] = "text/html";
+	map_contentType["ico"] = "image/x-icon";
+	map_contentType["jpeg"] = "image/jpeg";
+	map_contentType["jpg"] = "image/jpeg";
+	map_contentType["js"] = "application/javascript";
+	map_contentType["mpeg"] = "video/mpeg";
+	map_contentType["png"] = "image/png";
+	map_contentType["svg"] = "image/svg+xml";
+	map_contentType["php"] = "text/php";
+
+	return (map_contentType);
+}
+
+std::string ContentTypes::get_contentType(const std::string & requestContentType) const
+{
+	std::map<std::string, std::string>::const_iterator	found = m_listContentType.find(requestContentType);
+
+	if (found != m_listContentType.end())
+		return found->second;
+	return (std::string());
+}
+
+std::map< std::string, std::string> ContentTypes::m_listContentType = init_map_ContentType();

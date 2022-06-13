@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 11:55:21 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/10 19:32:44 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,11 +161,11 @@ void	ServerConf::getConfTest(std::vector<ServerConf> &confs) {
 	std::cout << "Index other / ? " << confs.at(0).getIndex("other_simple.com", "/") << std::endl;
 	std::cout << std::endl;
 
-	std::cout << "Is Upload path / ? " << confs.at(0).isUploadPath("", "/") << std::endl;
-	std::cout << "Is Upload path /test ? " << confs.at(0).isUploadPath("", "/test") << std::endl;
-	std::cout << "Is Upload path /upload ? " << confs.at(0).isUploadPath("", "/upload") << std::endl;
-	std::cout << "Is Upload path other / ? " << confs.at(0).isUploadPath("other_simple.com", "/") << std::endl;
-	std::cout << "Is Upload path other /upload ? " << confs.at(0).isUploadPath("other_simple.com", "/upload") << std::endl;
+	std::cout << "Get Upload path / ? " << confs.at(0).getUploadPath("", "/") << std::endl;
+	std::cout << "Get Upload path /test ? " << confs.at(0).getUploadPath("", "/test") << std::endl;
+	std::cout << "Get Upload path /upload ? " << confs.at(0).getUploadPath("", "/upload") << std::endl;
+	std::cout << "Get Upload path other / ? " << confs.at(0).getUploadPath("other_simple.com", "/") << std::endl;
+	std::cout << "Get Upload path other /upload ? " << confs.at(0).getUploadPath("other_simple.com", "/upload") << std::endl;
 	std::cout << std::endl;
 }
 //

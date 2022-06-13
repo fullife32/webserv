@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 18:07:54 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/12 21:38:30 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define IP_MASK "255.255.255.255"
 # define DEFAULT_PORT "8000"
 # define DEFAULT_BODY 1000000
-# define DEFAULT_CONFIG_PATH "test_config/simple.conf" // TODO actualise path for main
+# define DEFAULT_CONFIG_PATH "html/one.conf" // TODO actualise path for main
 
 enum e_config_error {
 	EMPTY_FILE,
@@ -128,7 +128,7 @@ public:
 	size_t  		isRedirecting( const std::string &server_name, const std::string &location, std::string &url ) const;
 	bool			isAutoindexOn( const std::string &server_name, const std::string &location ) const;
 	std::string		getIndex( const std::string &server_name, const std::string &location ) const;
-	std::string		isUploadPath( const std::string &server_name, const std::string &location ) const;
+	std::string		getUploadPath( const std::string &server_name, const std::string &location ) const;
 
 
 	class ConfFail : public std::exception {

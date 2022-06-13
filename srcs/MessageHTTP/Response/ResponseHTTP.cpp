@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:53:51 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 15:24:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,81 +23,64 @@
 /*                     Constructor Destructor                                 */
 /* -------------------------------------------------------------------------- */
 
-ResponseHTTP::ResponseHTTP()
-	: MessageMethods(), HeaderFields(),
-	m_statusLine(),
-	m_server(NULL),
-	m_method(0),
-	m_header(),
-	m_body(),
-	m_length(0),
-	m_isAutoindex(false)
-{}
-
-
 ResponseHTTP::ResponseHTTP(const ServerConf * server)
-	: MessageMethods(), HeaderFields(),
+	: MessageMethods(), HeaderFields(), ContentTypes(), ErrorMap(),
 	m_statusLine(),
 	m_server(server),
 	m_method(0),
 	m_header(),
 	m_body(),
+	m_body_CGI(NULL),
 	m_length(0),
+	m_url(),
 	m_isAutoindex(false),
-	m_url()
+	m_is_redirection(false)
 {}
 
 
 ResponseHTTP::ResponseHTTP(const ResponseHTTP & copy)
-	: MessageMethods(), HeaderFields(),
+	: MessageMethods(), HeaderFields(), ContentTypes(), ErrorMap(),
 	m_statusLine(copy.m_statusLine),
 	m_server(copy.m_server),
 	m_method(copy.m_method),
+	m_body_CGI(copy.m_body_CGI),
 	m_length(copy.m_length),
+	m_url(copy.m_url),
 	m_isAutoindex(copy.m_isAutoindex),
-	m_url(copy.m_url)
+	m_is_redirection(copy.m_is_redirection)
+
 {
+	m_headerFields = copy.m_headerFields;
 	m_header << copy.m_header;
 	m_body << copy.m_body;
 }
 
 ResponseHTTP::~ResponseHTTP()
-{}
-
-
-// ResponseHTTP & ResponseHTTP::operator=(const ResponseHTTP & other)
-// {
-// 	if (this != &other)
-// 	{
-// 		clear();
-// 		m_headerFields = other.m_headerFields;
-// 		m_statusLine = other.m_statusLine;
-// 		m_server = other.m_server;
-// 		m_method = other.m_method;
-// 		m_length = other.m_length;
-
-// 		m_header << other.m_header;
-// 	}
-// 	return *this;
-// }
+{
+	clear();
+}
 
 /* -------------------------------------------------------------------------- */
 
 void	ResponseHTTP::clear()
 {
+	m_statusLine.clear();
+	m_headerFields.clear();
 	m_method = 0;
 	m_length = 0;
-	m_headerFields.clear();
-	m_statusLine.clear();
-	m_statusLine.statusCode = STATUS_OK;
-	m_statusLine.reasonPhrase = m_errors[STATUS_OK];
+	m_header.str("");
+	m_header.clear();
 	if (m_body.is_open())
 		m_body.close();
 	m_body.clear();
-	m_header.str("");
-	m_header.clear();
 	m_isAutoindex = false;
+	m_is_redirection = false;
 	m_url = URL();
+	if (m_body_CGI != NULL)
+	{
+		fclose(m_body_CGI);
+		m_body_CGI = NULL;
+	}
 }
 
 size_t		ResponseHTTP::size() 
@@ -105,38 +88,34 @@ size_t		ResponseHTTP::size()
 	return (m_length);
 }
 
-
 /* -------------------------------------------------------------------------- */
 /*                     Build Response                                         */
 /* -------------------------------------------------------------------------- */
 
 /*
-	Construit la reponse en fonction de la requete.
-	Si une erreur se produit throw MessageError et reconstruit la reponse en fonction de l'erreur rencontree.
+	Builds the response according to the request.
+	If an error occurs throw MessageError and rebuilds the response according to the error encountered.
 */
 void	ResponseHTTP::buildResponse(const RequestHTTP & request)
 {
 	clear();
 	m_url = request.getUrl();
-	m_set_minimalHeaderFields();
 	m_method = request.getMethod();
+	m_set_minimalHeaderFields();
 	m_parseMethod(request);
-
 }
 
 /*
-	Construit la reponse en fonction de l'erreur rencontree.
+	Builds the response according to the error encountered.
 */
 void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase, const URL & url)
 {
 	clear();
-
 	m_set_minimalHeaderFields();
 	m_statusLine.statusCode = StatusCode;
 	m_statusLine.reasonPhrase = ReasonPhrase;
 	m_url = url;
 	m_formated_Error(m_url);
-	debug_print();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -145,7 +124,7 @@ void	ResponseHTTP::buildError(int StatusCode, const std::string & ReasonPhrase, 
 
 /*
 	Setup the Method and Parse to the corresponding functions
-	throw an exception if Method is not Allowed
+	throw an exception if Method is not implemented
 */
 void	ResponseHTTP::m_parseMethod(const RequestHTTP & request)
 {
@@ -153,7 +132,7 @@ void	ResponseHTTP::m_parseMethod(const RequestHTTP & request)
 	{
 		case (GET) : m_method_GET(request); break;
 		case (POST) : m_method_POST(request); break;
-		case (DELETE) : m_method_DELETE(request.getUrl()); break;
+		case (DELETE) : m_method_DELETE(request); break;
 		default :
 			throw MessageErrorException(STATUS_NOT_IMPLEMENTED, request.getUrl());
 	}
@@ -162,44 +141,78 @@ void	ResponseHTTP::m_parseMethod(const RequestHTTP & request)
 
 void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 {
-	std::cout << "in methode GET" << std::endl;
-	
 	if (request.hasBody())
-		throw MessageErrorException(STATUS_BAD_REQUEST);
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 	if (request.hasQueryString() || m_url.fileExtension == "php")
-		// fonction class CGI(ResponseHTTP )
 		m_formated_CGI_Response(request);
 	else		
 		m_formated_Response();
 
 }
 
-void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Content-Type
+void	ResponseHTTP::m_method_POST(const RequestHTTP & request) // TODO: check Content-Type jamais envoyé par firefox....
 {
-	std::cout << "in methode POST" << std::endl;
+	std::cout << "in methode POST" << std::endl; // TODO DEBUG
 
-	size_t	ContentLenght;
-	
 	if (request.hasBody() == false)
-		throw MessageErrorException(STATUS_BAD_REQUEST); // TODO: a checker
-	ContentLenght = atoi(request.get_value_headerFields(HF_CONTENT_LENGTH).data());
-	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty()) 
-		throw MessageErrorException(STATUS_BAD_REQUEST);// TODO: if no Content type ?
-	m_checkBodySize(request.getBodySize(), ContentLenght);
-	
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	size_t	contentLenght = convertStringToSize(request.get_value_headerFields(HF_CONTENT_LENGTH));
+	if (contentLenght != request.getBodySize())
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	m_checkBodySize(request.getBodySize(), contentLenght);
+	m_formated_CGI_Response(request);
+
+	std::cout << "OK FOR POST " << std::endl; // TODO DEBUG
 }
 
+/*
+	DELETE METHOD:
 
-void	ResponseHTTP::m_method_DELETE(const URL & url)
+		200 OK - If the ressource was found and delete from the server.
+		204 Accepted - If the ressource wasn't found or already deleted from the
+	server.
+		If the ressource wasn't found, the client should not get a 404 status,
+	for two reasons:
+		- It would send an unimportant information about the status of the
+	ressource, that the client wanted to delete, to the client.
+		- If the ressource was already deleted or doesn't exists, the DELETE
+	method works as excepted because the ressource is not present on the server
+	anymore.
+*/
+
+void	ResponseHTTP::m_method_DELETE(const RequestHTTP & request)
 {
-	std::cout << "in methode DELETE" << std::endl;
+	std::stringstream	body;
 
+	if (request.hasBody())
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 	if (m_server->isMethodAllowed(m_url.serverName, m_url.path, m_method) == false)
-		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED);
-	std::string		deleteFile = m_foundLocation();
+		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, m_url);
 
-	// if (deleteFile.empty())
-	// 	throw MessageErrorException();
+	std::string	deleteFile = m_foundLocation();
+
+	int		ret = std::remove(deleteFile.c_str());
+	bool	success = !std::ifstream(deleteFile.c_str());
+
+	if (ret == -1 || success == false) {
+		m_statusLine.statusCode = STATUS_ACCEPTED;
+		m_statusLine.reasonPhrase = m_errors[STATUS_ACCEPTED];
+	}
+	else {
+		body << "<!DOCTYPE html>" << CRLF;
+		body << "<html>" << CRLF;
+		body << "<body>" << CRLF;
+		body << "<h1>Ressource deleted.</h1>" << CRLF;
+		body << "</body>" << CRLF;
+		body << "</html>" << CRLF;
+		body << CRLF << CRLF;
+
+		setContentLength(body.str().size());
+		set_headerFields(HF_CONTENT_TYPE, "text/html");
+	}
+	m_formated_StatusLine();
+	m_formated_HeaderFields();
+	m_header << body.str();
 }
 
 
@@ -214,6 +227,7 @@ std::string			ResponseHTTP::m_foundLocation()
 {
 std::string		formatedPath = m_url.formatedPath();
 std::string		realPath;
+std::string		index;
 int				redirection;
 
 if (m_server->isMethodAllowed(m_url.serverName, formatedPath, m_method) == false)
@@ -221,6 +235,7 @@ if (m_server->isMethodAllowed(m_url.serverName, formatedPath, m_method) == false
 redirection = m_server->isRedirecting(m_url.serverName, m_url.path, realPath);
 if (redirection != 0)
 {
+	m_is_redirection = true;
 	m_statusLine.statusCode = redirection;
 	m_statusLine.reasonPhrase = m_errors[redirection];
 	set_headerFields(HF_LOCATION, realPath);
@@ -229,19 +244,21 @@ else
 {
 	realPath = m_server->getLocationPath(m_url.serverName, m_url.path);
 	if (realPath.empty())
-		throw MessageErrorException (STATUS_NOT_FOUND);
+		throw MessageErrorException (STATUS_NOT_FOUND, m_url);
 	if (m_url.filename.empty())
 	{
-		realPath = m_server->getIndex(m_url.serverName, m_url.path);
-		if (realPath.empty())
-		{
-			m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
-			if (m_isAutoindex == false)
+		m_isAutoindex = m_server->isAutoindexOn(m_url.serverName, m_url.path);
+		if (m_isAutoindex == true)
+			return (realPath);
+		index = m_server->getIndex(m_url.serverName, m_url.path); // TODO:
+		if (index.empty())
 				throw MessageErrorException(STATUS_FORBIDDEN, m_url);
-		}
+		realPath = index;
 	}
 	else 
+	{
 		realPath += m_url.filename;
+	}
 }
 return (realPath);
 }
@@ -255,7 +272,7 @@ if (ContentLenght == 0)
 size_t	maxBodySize = (m_server->getBodySize(m_url.serverName, m_url.formatedPath()));
 
 if (maxBodySize != 0 && request_bodySize > maxBodySize)
-	throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url); // TODO:close client
+	throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url);
 if (ContentLenght != request_bodySize)
 	throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 }
@@ -286,61 +303,46 @@ bool	ResponseHTTP::m_openFile_Error(const std::string & location)
 
 void	ResponseHTTP::m_openFile_Body(const std::string & location)
 {
-
-	std::cout << "OPENFILE location = " << location << std::endl;
-	if (m_isAutoindex)
-		;// m_build_autoIndex(location);
-	else
+	try
 	{
-		try
-		{
-			m_body.open(location.data());
-		}
-		catch(const std::exception& e)  //// TODO: What to do ? 
-		{
-			std::cerr << e.what() << '\n';
-			throw	MessageErrorException(100);
-		}
+		m_body.open(location.data());
 	}
-
-	std::cout << "is open = " << m_body.is_open() << std::endl;
+	catch(const std::exception& e)  //// TODO: What to do ? 
+	{
+		std::cerr << e.what() << '\n';
+		throw	MessageErrorException(100);
+	}
 	if (m_body.is_open() == false)
-		throw MessageErrorException(STATUS_NOT_FOUND); // TODO: URL
-	m_setOpenFileBodySize();
+		throw MessageErrorException(STATUS_NOT_FOUND, m_url);
+	std::cout <<" BODY IS OPEN" << location.data() << " " <<  m_body.is_open() << std::endl;
 }
 
-
-void	ResponseHTTP::m_setOpenFileBodySize()
+void	ResponseHTTP::m_openFile_CGI()
 {
-		int	FileSize; // TODO: maybe long ?
-
-		m_body.seekg (0, m_body.end);
-		FileSize = m_body.tellg();
-
-		std::cout << "FileSize = " << FileSize << std::endl;
-		setContentLength(FileSize == -1 ? 0 : FileSize);
-		m_body.seekg (0, m_body.beg);
-
+	m_body_CGI = tmpfile();
+	if (m_body_CGI == NULL)
+		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_url);
 }
 
-std::map< std::string, std::string> m_listContentType;
-
-
-void	m_init_listContentType() // TODO: 415 Unsupported Media Type
+void	ResponseHTTP::m_setOpenFileBodySize() // TODO CHECK
 {
+	size_t	FileEnd;
+	size_t	FileBegin;
 
-	m_listContentType[".aac"] = "audio/aac";
-	m_listContentType[".avi"] = "video/x-msvideo";
-	m_listContentType[".bmp"] = "image/bmp";
-	m_listContentType[".css"] = "text/css";
-	m_listContentType[".csv"] = "text/csv";
-	m_listContentType[".gif"] = "image/gif";
-	m_listContentType[".htm"] = "text/html";
-	m_listContentType[".html"] = "text/html";
-	m_listContentType[".ico"] = "image/x-icon";
-	m_listContentType[".jpeg"] = "image/jpeg";
-	m_listContentType[".jpg"] = "image/jpeg";
-	m_listContentType[".mpeg"] = "video/mpeg";
-	m_listContentType[".png"] = "image/png";
-	m_listContentType[".svg"] = "image/svg+xml";
+	FileBegin = m_body.tellg();
+	m_body.seekg (0, std::ios::beg);
+	FileEnd = (m_body.tellg());
+	setContentLength(FileBegin - FileEnd == (size_t)-1 ? 0 : FileBegin - FileEnd);
+	m_body.seekg (0, std::ios::beg);
 }
+
+void	ResponseHTTP::m_setCGIBodySize()
+{
+	size_t	FileSize;
+
+	fseek(m_body_CGI, 0, SEEK_END);
+	FileSize = ftell(m_body_CGI);
+	fseek(m_body_CGI, 0, SEEK_SET);
+	setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
+}
+

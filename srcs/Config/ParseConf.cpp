@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 18:18:34 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 15:51:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 11:35:26 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,5 @@ void	ServerConf::parseIndex( std::vector<std::string> &tokens, struct s_base &bl
 void	ServerConf::parseUploadPass( std::vector<std::string> &tokens, struct s_base &block ) {
 	if (tokens.size() > 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
-	else if (tokens[1][0] != '/')
-		throw ServerConf::ConfFail(WRONG_PATH_FORMAT, tokens[1]);
 	block.upload_pass = tokens[1];
 }

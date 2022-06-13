@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/09 17:39:37 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:17:29 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void Cgi::_alloc_env(std::map<std::string, std::string> &env_map) {
 	}
 }
 
-void Cgi::execute(void) {
+void Cgi::execute(int const fd_in, int const fd_out) {
 
 	for (int i = 0; this->_argv[i] != NULL; i++) {
 		std::cout << "argv[" << i << "] = " << this->_argv[i] << std::endl;

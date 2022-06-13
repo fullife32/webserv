@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/08 19:30:46 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:13:17 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ struct HTTPversion
 struct URL
 {
 	std::string	serverName;		// example.com
+	std::string	port;			//			::8080
 	std::string	path;			//				/location/here
 	std::string filename;		//								/file.html
 	std::string	fileExtension;	//									 .html
@@ -64,7 +65,7 @@ struct URL
 	URL & operator=(const URL & other);
 
 			
-	std::string		formatedPath() const ; //TODO: maybe not
+	std::string		formatedPath() const ;
 	void			clear();
 
 };
@@ -99,7 +100,6 @@ struct StatusLine
 };
 
 
-
 /* Header Fields  ------------------------------------------------ */
 
 class HeaderFields
@@ -132,5 +132,17 @@ class MessageMethods
 
 std::map <std::string, int>		init_map_method();
 
+/* Content Type  ------------------------------------------------ */
+
+
+class ContentTypes
+{
+	protected:
+		static std::map< std::string, std::string> m_listContentType;
+
+	std::string get_contentType(const std::string & requestContentType) const ;
+};
+
+std::map< std::string, std::string>		init_map_ContentType();
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/08 19:56:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/12 14:29:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "ErrorMessage.hpp"
 
 Client::Client( int fd, sockaddr_storage cli, socklen_t size, Server &server )
-: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_response(&(m_server.getConf())) {
+: Socket(fd),  m_server(server), m_toRemove(false), m_toChangeEvent(false), m_cli(cli), m_size(size), m_request(&m_server.getConf()), m_response(&m_server.getConf()) {
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
  }
 
@@ -68,15 +68,35 @@ void		Client::receive_data() {
 		m_response.buildError(STATUS_INTERNAL_SERVER_ERROR, S_STATUS_INTERNAL_SERVER_ERROR, m_response.get_url());
 		return ;
 	}
-	m_request.append(m_buffer);
 	if (size == 0 && m_request.empty())
+	{
 		setToRemove();
-	else if (size == 0 || size < MESSAGE_BUFFER_SIZE)
+		return ;
+	}
+
+		//// TRY BUILD HEADER
+	try
+	{
+		m_request.append(m_buffer);
+	}
+	catch (MessageErrorException & e) {
+		m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
+		setToChangeEvent();
+		return ;
+	}
+	catch (std::exception & e) {
+		std::cerr << e.what() << std::endl;
+		setToRemove();
+		return ;
+	}
+	
+	 /// IF END OR LAST BUFFER RECV
+	if (size == 0 || size < MESSAGE_BUFFER_SIZE)
 	{
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+		setToChangeEvent();
 		try {
-			m_request.buildRequest();
-			// m_request.debug_print();
+			m_request.debug_print();
 			m_response.buildResponse(m_request);
 		}
 		catch (MessageErrorException & e) {
@@ -86,7 +106,6 @@ void		Client::receive_data() {
 			std::cerr << e.what() << std::endl;
 			setToRemove();
 		}
-		setToChangeEvent();
 	}	
 }
 
@@ -108,8 +127,4 @@ void		Client::send_data() {
 	sendSize = send(m_fd, m_buffer, bufferSize, MSG_NOSIGNAL);
 	if (sendSize == (size_t)-1 || sendSize == 0 || bufferSize < MESSAGE_BUFFER_SIZE)
 		setToRemove(); // TODO: what to do ? 
-
-
 }
-
-

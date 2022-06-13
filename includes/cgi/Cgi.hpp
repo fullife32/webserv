@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:01:20 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/09 16:07:59 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:17:21 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ public:
 	~Cgi(void);
 
 	// main function
-	void execute(void);
+	void execute(int const fd_int, int const fd_out);
 
 	// error handling
 	class CgiError: public std::exception {
