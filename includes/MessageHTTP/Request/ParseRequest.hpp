@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 13:59:41 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:15:38 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,13 +78,13 @@ class ParseRequest : public HeaderFields
 			std::cout << "REQUESTLINE: " <<  std::endl;
 			std::cout << "	method: " << m_requestLine.method << std::endl;
 			std::cout << "	version: " << m_requestLine.version.name <<  m_requestLine.version.major_version << "." <<  m_requestLine.version.minor_version << std::endl;
-			std::cout << "	servername: " << m_requestLine.url.serverName << std::endl;
-			std::cout << "	port: " << m_requestLine.url.port << std::endl;
+			std::cout << "	servername: |" << m_requestLine.url.serverName << "|" << std::endl;
+			std::cout << "	port: |" << m_requestLine.url.port << "|" << std::endl;
 			std::cout << "	path: " << m_requestLine.url.path << std::endl;
 			std::cout << "	filename: " << m_requestLine.url.filename << std::endl;
 			std::cout << "	extension: " << m_requestLine.url.fileExtension << std::endl;
 			std::cout << "	query: " << m_requestLine.url.query << std::endl;
-			std::cout << "	pathInfo: " << m_requestLine.url.pathInfo << std::endl;
+			std::cout << "	pathInfo: |"<< m_requestLine.url.pathInfo << std::endl;
 			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
 
 		std::map<std::string, std::string>::iterator	it;

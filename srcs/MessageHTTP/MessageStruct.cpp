@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 13:41:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:21:06 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	HTTPversion::clear()
 URL::URL(const URL & copy)
 {
 	serverName = copy.serverName;
+	port = copy.port;
 	path = copy.path;
 	filename = copy.filename;
 	fileExtension = copy.fileExtension;
@@ -78,6 +79,7 @@ URL & URL::operator=(const URL & other)
 	if (this != &other)
 	{
 		serverName = other.serverName;
+		port = other.port;
 		path = other.path;
 		filename = other.filename;
 		fileExtension = other.fileExtension;
