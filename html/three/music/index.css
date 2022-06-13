@@ -103,7 +103,7 @@ nav a:hover {
 
 #Bienvenueh2 {
 	animation: AnimBienvenue 1s;
-	animation-delay: 1.2s;
+	animation-delay: 0.6s;
 	animation-fill-mode: backwards;
 	font-size: 3.5em;
 	color: #FF9300;
@@ -122,19 +122,13 @@ nav a:hover {
     }
 }
 
-#Bienvenue #W{
+#Bienvenue #M{
 	-webkit-animation: AnimBienvenue 1s;
 	animation : AnimBienvenue 1s;
-	animation-delay: 0.8s;
-	animation-fill-mode: backwards;}
-
-#Bienvenue #E{
-	-webkit-animation: AnimBienvenue 1s;
-	animation: AnimBienvenue 1s;
 	animation-delay: 0.6s;
 	animation-fill-mode: backwards;}
 
-#Bienvenue #B{
+#Bienvenue #U{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
 	animation-delay: 0.4s;
@@ -146,20 +140,14 @@ nav a:hover {
 	animation-delay: 0.2s;
 	animation-fill-mode: backwards;}
 
-#Bienvenue #E2{
+#Bienvenue #I{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
 	animation-delay: 0.4s;
 	animation-fill-mode: backwards;}
 
-#Bienvenue #R{
+#Bienvenue #C{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
 	animation-delay: 0.6s;
-	animation-fill-mode: backwards;}
-
-#Bienvenue #V{
-	-webkit-animation: AnimBienvenue 1s;
-	animation: AnimBienvenue 1s;
-	animation-delay: 0.8s;
 	animation-fill-mode: backwards;}
