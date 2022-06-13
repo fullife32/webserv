@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 15:17:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 15:24:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,6 +314,7 @@ void	ResponseHTTP::m_openFile_Body(const std::string & location)
 	}
 	if (m_body.is_open() == false)
 		throw MessageErrorException(STATUS_NOT_FOUND, m_url);
+	std::cout <<" BODY IS OPEN" << location.data() << " " <<  m_body.is_open() << std::endl;
 }
 
 void	ResponseHTTP::m_openFile_CGI()
