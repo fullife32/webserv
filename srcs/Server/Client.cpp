@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/13 14:58:56 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:44:09 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,19 +113,18 @@ void		Client::receive_data() {
 
 void		Client::send_data() {
 
-	static size_t	bufferSize = 0;
-	static size_t	sendSize = 0;
+	size_t	bufferSize = 0;
+	size_t	sendSize = 0;
 
-	if (sendSize == bufferSize)
+	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+	bufferSize = m_response.getNextChunk(m_buffer);
+	if (bufferSize == 0 && m_response.need_to_read() == false) 
 	{
-		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
-		bufferSize = m_response.getNextChunk(m_buffer);
-	}
-	if (bufferSize == 0) {
 		setToRemove();
 		return;
 	}
 	sendSize = send(m_fd, m_buffer, bufferSize, MSG_NOSIGNAL);
-	if (sendSize == (size_t)-1 || sendSize == 0 || bufferSize < MESSAGE_BUFFER_SIZE)
-		setToRemove(); // TODO: what to do ? 
+	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
+	if (sendSize == (size_t)-1 || sendSize == 0 || ((bufferSize < MESSAGE_BUFFER_SIZE) && m_response.need_to_read() == false))
+		setToRemove();
 }

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:21:06 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 17:59:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,7 @@ std::map< std::string, std::string>		init_map_ContentType()
 	map_contentType["jpeg"] = "image/jpeg";
 	map_contentType["jpg"] = "image/jpeg";
 	map_contentType["js"] = "application/javascript";
+	map_contentType["mp3"] = "audio/mp3";
 	map_contentType["mpeg"] = "video/mpeg";
 	map_contentType["png"] = "image/png";
 	map_contentType["svg"] = "image/svg+xml";

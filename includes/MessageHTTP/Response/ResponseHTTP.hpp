@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 15:05:06 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 17:34:16 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,14 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		const ServerConf *		m_server;
 		int						m_method;
 		std::stringstream		m_header;
-		std::fstream			m_body;
+		std::ifstream			m_body;
 		FILE *					m_body_CGI;
 		size_t					m_length;
 		URL						m_url;
 		bool					m_isAutoindex;
 		bool					m_is_redirection;
+
+
 
 
 	public:
@@ -60,6 +62,13 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		size_t		size() ;
 
 	/* get		    ------------------------------------------------ */
+		bool		need_to_read() {
+			if (m_body.good())
+				return true;
+			std::cout << false << std::endl;
+			return false;
+		}
+
 		size_t		getNextChunk(char * buffer);
 		FILE *		getBodyForCGI() const ;
 		const URL & get_url() const ;

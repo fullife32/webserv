@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:27:56 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:49:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 17:54:41 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 		TRACE
 	};
 	
-# define MESSAGE_BUFFER_SIZE	256
+# define MESSAGE_BUFFER_SIZE	1024
 # define SERVER_NAME				"Webserv"
 
 /*
