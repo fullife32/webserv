@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 12:01:30 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:13:26 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,12 @@
 		body << "<meta charset=\"UTF-8\">" << CRLF;
 		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << CRLF;
 		body << "</head>" << CRLF;
-		body << "<body style=\"font-size: x-large;font-family: monospace;text-align: -webkit-left; >\"; >" << CRLF;
+		body << "<body style=\"font-size: xx-large;font-family: monospace;text-align: -webkit-left; >\"; >" << CRLF;
 		body << "<h3>Index of /" << actualPath << "</h3>" << CRLF;
-		body << "<a href=\"http://127.0.0.1:8000/\">/</a>" << CRLF;
+		body << "<a href=\"http://" << m_url.serverName << ":" << m_url.port << "/\">/</a>" << CRLF;
 		if (return_value != GLOB_NOMATCH) {
 			for (std::vector<std::string>::iterator it = filenames.begin(); it != filenames.end(); ++it)
-				body << "<br><a href=\"http://127.0.0.1:8000/" <<  actualPath + "/" + (*it).erase(0, path.size()) << "\">/" << (*it) << "</a>" << CRLF;
+				body << "<br><a href=\"http://" << m_url.serverName << ":" << m_url.port << "/" <<  actualPath + "/" + (*it).erase(0, path.size()) << "\">/" << (*it) << "</a>" << CRLF;
 		}
 		body << "</body>" << CRLF;
 		body << "</html>" << CRLF;
