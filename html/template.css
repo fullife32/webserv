@@ -161,7 +161,7 @@ nav a:hover {
 
 #Bienvenueh2 {
 	animation: AnimBienvenue 1s;
-	animation-delay: 1s;
+	animation-delay: 1.4s;
 	animation-fill-mode: backwards;
 	font-size: 3.8em;
 	color: #FF9300;
@@ -183,41 +183,41 @@ nav a:hover {
 #Bienvenue #W{
 	-webkit-animation: AnimBienvenue 1s;
 	animation : AnimBienvenue 1s;
-	animation-delay: 0.8s;
+	animation-delay: 0.2s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #E{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.6s;
+	animation-delay: 0.4s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #B{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.4s;
+	animation-delay: 0.6s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #S{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.2s;
+	animation-delay: 0.8s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #E2{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.4s;
+	animation-delay: 1s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #R{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.6s;
+	animation-delay: 1.2s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #V{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.8s;
+	animation-delay: 1.4s;
 	animation-fill-mode: backwards;}
