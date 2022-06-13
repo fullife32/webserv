@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 18:54:57 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 20:11:44 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,7 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 	m_header.get(buffer, MESSAGE_BUFFER_SIZE + 1, 0);
 	if (m_header.gcount() == MESSAGE_BUFFER_SIZE)
 		return MESSAGE_BUFFER_SIZE;
-	if (m_body.good())
-	{
-		len = strlen(buffer);
-		len += m_body.readsome(buffer + len, MESSAGE_BUFFER_SIZE - len);
-		return (len);
-	}
-	else if (m_body_CGI != NULL)
+	if (m_body_CGI != NULL)
 	{
 		len = strlen(buffer);
 		if (fgets(buffer + len, MESSAGE_BUFFER_SIZE - len, m_body_CGI) == NULL)
@@ -44,6 +38,12 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 		// 	TODO// len + 1 ? checker car fstream prends +1" 
 		// check car  Reading stops after an EOF or a newline.""
 		return (strlen(buffer));
+	}
+	else if (m_body.good())
+	{
+		len = strlen(buffer);
+		len += m_body.readsome(buffer + len, MESSAGE_BUFFER_SIZE - len);
+		return (len);
 	}
 	len = strlen(buffer);
 	if (len == 0)

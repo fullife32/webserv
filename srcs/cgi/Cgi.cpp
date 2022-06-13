@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/13 18:52:43 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 20:50:16 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 	if (pid == -1)
 		throw Cgi::CgiError(strerror(errno));
 	else if (pid == 0) { // child process
-		std::cout << "child" << std::endl;
+		std::cerr << "child" << std::endl;
 		if (fd_in != -1) {
 			if (dup2(fd_in, STDIN_FILENO) == -1)
 				throw Cgi::CgiError(strerror(errno));
@@ -107,10 +107,22 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 		if (dup2(fd_out, STDOUT_FILENO) == -1)
 			throw Cgi::CgiError(strerror(errno));
 		execve(this->_argv[0], this->_argv, this->_env);
-		throw Cgi::CgiError(strerror(errno));
+		exit(errno);
 	} else { // parent process
 // // response_http.m_body -> open -> write -> 
+		int	wstatus;
+
+		waitpid(pid, &wstatus, 0);
+		usleep(100000);
+
 		std::cout << "parent" << std::endl;
+		std::cout << "EXIT STATUS: " << WEXITSTATUS(wstatus) << std::endl;
+		if (WIFEXITED(wstatus) == 0)
+			throw MessageErrorException(STATUS_GATEWAY_TIMEOUT);
+		else if (WEXITSTATUS(wstatus) == 2)
+			throw MessageErrorException(STATUS_NOT_FOUND);
+		else if (WEXITSTATUS(wstatus) == 127) // TODO what number ??
+			throw MessageErrorException(STATUS_CONFLICT); // TODO change it with conflict ?
 	}
 }
 

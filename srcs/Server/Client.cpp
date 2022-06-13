@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/13 18:44:09 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 19:18:19 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void		Client::receive_data() {
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		setToChangeEvent();
 		try {
-			// m_request.debug_print();
+			m_request.debug_print();
 			m_response.buildResponse(m_request);
 			m_response.debug_print();
 		}

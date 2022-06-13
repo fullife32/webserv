@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:01:20 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/13 16:51:17 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 19:05:49 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define CGI_HPP
 #include "MessageHTTP.hpp"
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <limits.h>
 
