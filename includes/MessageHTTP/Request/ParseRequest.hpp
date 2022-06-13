@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 13:56:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 13:59:41 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,12 @@ class ParseRequest : public HeaderFields
 		void 	m_parse_RequestLine(const std::string & startline);
 		void 	m_parse_headerFields(const std::string & line);
 		void	m_parse_url(std::string url);
+		void	m_parse_url_fragment(std::string & url);
+		void	m_parse_url_query_string(std::string & url);
+		void	m_parse_url_filename(std::string & url);
+		void	m_parse_url_port(std::string & url);
+
+
 
 
 		void	m_check_max_header_size() const ;
@@ -73,11 +79,12 @@ class ParseRequest : public HeaderFields
 			std::cout << "	method: " << m_requestLine.method << std::endl;
 			std::cout << "	version: " << m_requestLine.version.name <<  m_requestLine.version.major_version << "." <<  m_requestLine.version.minor_version << std::endl;
 			std::cout << "	servername: " << m_requestLine.url.serverName << std::endl;
+			std::cout << "	port: " << m_requestLine.url.port << std::endl;
 			std::cout << "	path: " << m_requestLine.url.path << std::endl;
 			std::cout << "	filename: " << m_requestLine.url.filename << std::endl;
 			std::cout << "	extension: " << m_requestLine.url.fileExtension << std::endl;
 			std::cout << "	query: " << m_requestLine.url.query << std::endl;
-			std::cout << "	path: " << m_requestLine.url.pathInfo << std::endl;
+			std::cout << "	pathInfo: " << m_requestLine.url.pathInfo << std::endl;
 			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
 
 		std::map<std::string, std::string>::iterator	it;

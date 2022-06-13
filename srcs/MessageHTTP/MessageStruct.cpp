@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:30:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 13:41:54 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,9 @@ void	HTTPversion::formatedVersion(const std::string & version)
 
 bool	HTTPversion::isSupportedVersion()
 {
-	return true; // TODO:FOR DEBUG 
-	if (major_version != 1 || minor_version != 1)
-		return false;
-	return true;
+	if (major_version == 1 && (minor_version == 0 || minor_version == 1))
+		return true;
+	return false;
 }
 
 void	HTTPversion::clear()
@@ -206,6 +205,7 @@ std::map< std::string, std::string>		init_map_ContentType()
 	map_contentType["ico"] = "image/x-icon";
 	map_contentType["jpeg"] = "image/jpeg";
 	map_contentType["jpg"] = "image/jpeg";
+	map_contentType["js"] = "application/javascript";
 	map_contentType["mpeg"] = "video/mpeg";
 	map_contentType["png"] = "image/png";
 	map_contentType["svg"] = "image/svg+xml";
@@ -222,6 +222,5 @@ std::string ContentTypes::get_contentType(const std::string & requestContentType
 		return found->second;
 	return (std::string());
 }
-
 
 std::map< std::string, std::string> ContentTypes::m_listContentType = init_map_ContentType();
