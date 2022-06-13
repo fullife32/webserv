@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:27:56 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 11:08:26 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:49:11 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@
 # define EMPTY_LINE			"\r\n\r\n" 
 # define SP					" "
 
-# define REQUEST_URL_MAX_SIZE		256 		// TODO chooze a max size
-# define REQUEST_HEADER_MAX_SIZE	(size_t)-1	// TODO choose a max size
+# define REQUEST_URL_MAX_SIZE		4000 		// nginx ref
+# define REQUEST_HEADER_MAX_SIZE	4000		// nginx ref 4000 - 8000
 # define START_LINE_HTTP_VERSION	"HTTP/1.1"
 
 #endif
