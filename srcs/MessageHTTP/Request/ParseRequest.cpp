@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:04:00 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:21:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,11 +255,13 @@ void 			ParseRequest::m_parse_headerFields(const std::string & line)
 	std::string			key;
 	std::string			value;
 
-	separator = line.find(":");
+	separator = line.find(':');
 	if (separator == std::string::npos)
 		throw MessageErrorException(100, m_requestLine.url);
 	key = std::string(&line[0], &line[separator]);
 	value = std::string(&line[separator + 1], &line[line.size()]);
+	if (value[0] == ' ')
+		popFirst(value);
 	set_headerFields(key, value);
 }
 
