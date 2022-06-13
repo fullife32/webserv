@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 16:21:11 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:47:34 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,11 @@
 
 		try {
 			Cgi cgi(request.get_headerFields(), *this, *m_server);
-			cgi.execute(fileno(request.getBodyForCGI()), fileno(this->m_body_CGI));
+			FILE *file_in = request.getBodyForCGI();
+			int fd_in = file_in == NULL ? -1 : fileno(file_in);
+			int fd_out = fileno(this->m_body_CGI);
+			std::cout << fd_in << " " << fd_out << std::endl;
+			cgi.execute(fd_in, fd_out);
 		} catch (Cgi::CgiError &except) {
 			std::cerr << except.what() << std::endl;
 			throw MessageErrorException(500, m_url);

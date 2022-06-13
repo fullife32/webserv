@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:01:20 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/13 16:17:21 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:51:17 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "MessageHTTP.hpp"
 #include <sys/types.h>
 #include <unistd.h>
+#include <limits.h>
 
 class Cgi {
 

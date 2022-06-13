@@ -6,7 +6,7 @@
 /*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/13 16:17:29 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 17:48:58 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,12 @@ Cgi::Cgi
 	// build args
 	this->_argv = new char*[3];
 	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
-	std::string arg1 = "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
+	char pathwd[PATH_MAX] ;
+	getcwd(pathwd, PATH_MAX);
+	std::string arg1 = std::string(pathwd)
+		+ "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
 		+ response_http.get_fileName();
+	// free(tmp);
 	this->_argv[0] = new char[arg0.length() + 1];
 	std::strcpy(this->_argv[0], arg0.c_str());
 	this->_argv[1] = new char[arg1.length() + 1];
@@ -91,29 +95,21 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 	for (int i = 0; this->_argv[i] != NULL; i++) {
 		std::cout << "argv[" << i << "] = " << this->_argv[i] << std::endl;
 	}
-	/*
-	int fd_in[2];
-	int fd_out[2];
-	
-	if (pipe(fd_in) == -1 || pipe(fd_out) == -1)
-		throw Cgi::CgiError(strerror(errno));
 	pid_t pid = fork();
 	if (pid == -1)
 		throw Cgi::CgiError(strerror(errno));
 	else if (pid == 0) { // child process
-		dup2(fd_in[0], STDIN_FILENO);
-		close(fd_in[1]);
-		dup2(fd_out[1], STDOUT_FILENO);
-		close(fd_out[0]);
+		std::cout << "child" << std::endl;
+		dup2(fd_in, STDIN_FILENO);
+		dup2(fd_out, STDOUT_FILENO);
 		if (execve(this->_argv[0], this->_argv, this->_env) == -1) {
-			close(fd_in[0]);
-			close(fd_out[1]);
 			throw Cgi::CgiError(strerror(errno));
+			exit(1);
 		}
 	} else { // parent process
-// response_http.m_body -> open -> write -> 
+// // response_http.m_body -> open -> write -> 
+		std::cout << "parent" << std::endl;
 	}
-	*/
 }
 
 // Error management
