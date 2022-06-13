@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP_get_set.cpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:05:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:46:53 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,10 @@ std::string ResponseHTTP::get_serverName() const
 	return m_url.serverName;
 }
 
+std::string ResponseHTTP::get_formatedPath() const
+{
+	return m_url.formatedPath();
+}
 
 std::string ResponseHTTP::get_fileName() const
 {

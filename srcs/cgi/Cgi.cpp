@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/13 17:48:58 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:52:43 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ Cgi::Cgi
 	env_map["REMOTE_IDENT"] = "";// ?
 	env_map["REMOTE_USER"] = ""; // ?
 	env_map["REQUEST_METHOD"] = response_http.get_method();
-	env_map["SCRIPT_NAME"] = response_http.get_fileName();
+	env_map["SCRIPT_NAME"] = response_http.get_formatedPath();
 	env_map["SERVER_NAME"] = response_http.get_serverName();
 	env_map["SERVER_PORT"] = server_conf.getPort();
 	env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
-	env_map["SERVER_SOFTWARE"] = "Webserv";
+	env_map["SERVER_SOFTWARE"] = "Webserv/1";
 	this->_alloc_env(env_map);
 	// build args
 	this->_argv = new char*[3];
@@ -100,12 +100,14 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 		throw Cgi::CgiError(strerror(errno));
 	else if (pid == 0) { // child process
 		std::cout << "child" << std::endl;
-		dup2(fd_in, STDIN_FILENO);
-		dup2(fd_out, STDOUT_FILENO);
-		if (execve(this->_argv[0], this->_argv, this->_env) == -1) {
-			throw Cgi::CgiError(strerror(errno));
-			exit(1);
+		if (fd_in != -1) {
+			if (dup2(fd_in, STDIN_FILENO) == -1)
+				throw Cgi::CgiError(strerror(errno));
 		}
+		if (dup2(fd_out, STDOUT_FILENO) == -1)
+			throw Cgi::CgiError(strerror(errno));
+		execve(this->_argv[0], this->_argv, this->_env);
+		throw Cgi::CgiError(strerror(errno));
 	} else { // parent process
 // // response_http.m_body -> open -> write -> 
 		std::cout << "parent" << std::endl;

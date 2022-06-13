@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 16:12:45 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:47:26 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		std::string get_fileName() const ;
 		std::string get_path() const ;
 		std::string get_port() const ;
+		std::string	get_formatedPath() const;
 
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
