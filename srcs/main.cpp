@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/12 11:59:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 17:38:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,34 @@
 #include "utils.hpp"
 
 int	main(int ac, char **av) {
+
+
+// 	char buf[256];
+
+// 	std::ifstream	f("html/three/music/images/background.jpg", std::fstream::binary );
+
+// 	// std::stringstream s;
+
+// 	// s << f;
+// 	// std::cout << s.str() << std::endl;
+// 		// if (f.good())
+// 			// std::cout << "coucou" << std::endl;
+// 			send(1, "coucou", 6, 0);
+// 		while (f.good())
+// 		{
+// 			memset(buf, 0, 256);
+// 			f.read(buf, 256);
+// 			write(1, buf, 256);
+
+// 			// str.append(buf);
+// 			std::cout << buf;
+// 		}
+// 		// send(1, str.data(), str.size(),0);
+// 		write(1, "\0", 1);
+		
+// // 
+// return (0);
+
 
 // char buffer [256] = {0} ;
 //   FILE * pFile = tmpfile ();

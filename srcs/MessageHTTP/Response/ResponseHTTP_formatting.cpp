@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 16:47:34 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:55:07 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,14 @@
 		// }
 		// DEBUG : ///////////////////////////////////////////////////////////////////
 
-		m_setCGIBodySize();
+		if (m_method == POST)
+			{
+			// save_POST(); // TODO
+				fclose(m_body_CGI);
+				m_body_CGI = NULL;
+			}
+		else
+			m_setCGIBodySize();
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
 	}

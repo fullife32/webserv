@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 18:47:26 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:55:22 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,12 +38,14 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		const ServerConf *		m_server;
 		int						m_method;
 		std::stringstream		m_header;
-		std::fstream			m_body;
+		std::ifstream			m_body;
 		FILE *					m_body_CGI;
 		size_t					m_length;
 		URL						m_url;
 		bool					m_isAutoindex;
 		bool					m_is_redirection;
+
+
 
 
 	public:
@@ -60,6 +62,13 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		size_t		size() ;
 
 	/* get		    ------------------------------------------------ */
+		bool		need_to_read() {
+			if (m_body.good())
+				return true;
+			std::cout << false << std::endl;
+			return false;
+		}
+
 		size_t		getNextChunk(char * buffer);
 		FILE *		getBodyForCGI() const ;
 		const URL & get_url() const ;
@@ -123,7 +132,21 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 			std::cout << "REQUESTLINE: " <<  std::endl;
 			std::cout << "	status code: " << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << std::endl;
 			std::cout << "	version: " << m_statusLine.version.name <<  m_statusLine.version.major_version << "." <<  m_statusLine.version.minor_version << std::endl;
-			std::cout << std::endl;		
+			
+			// std::cout << m_header.str() << std::endl;	
+			
+			// if (m_body.is_open())
+			// {
+			// 	m_body.seekg (0, m_body.beg);
+
+			// 		char buf[1000] = {0};
+			// 	while (!m_body.eof()) {
+			// 		 m_body.getline(buf, 999);
+			// 		std::cout << buf << std::endl;
+			// 	}
+			// 	m_body.seekg (0, m_body.beg);
+			// }
+
 		}
 
 
