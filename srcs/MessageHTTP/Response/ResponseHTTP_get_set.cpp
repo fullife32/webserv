@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:26:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:05:28 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,11 @@ std::string ResponseHTTP::get_fileName() const
 std::string ResponseHTTP::get_path() const
 {
 	return m_url.path;
+}
+
+std::string ResponseHTTP::get_port() const
+{
+	return m_url.port ;
 }
 
 /*

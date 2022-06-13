@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 13:56:20 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 14:04:00 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,51 +162,85 @@ void 		ParseRequest::m_parse_RequestLine(const std::string & startline)
 
 void	ParseRequest::m_parse_url(std::string target)
 {
-	size_t		found_fragment = target.find('#');
-	size_t		found_query = target.find('?');
-	size_t		found_file;
-	size_t		found_extension;
-	size_t		found_pathInfo;
+	std::cout << target << std::endl;
 
-	if (found_fragment != std::string::npos)
-	{
-		m_requestLine.url.fragment = std::string(&target[found_fragment + 1], &target[target.size()]);
-		target.erase(found_fragment);
-	}	
-	if (found_query != std::string::npos)
-	{
-		m_requestLine.url.query = std::string(&target[found_query + 1], &target[target.size()]);
-		target.erase(found_query);
-		found_extension =  target.find_last_of('.'); // TODO check pathInfo
-		if (found_extension != std::string::npos)
-		{
-			found_pathInfo = target.find('/', target.find_last_of('.'));
-			if (found_pathInfo != std::string::npos)
-			{
-				m_requestLine.url.pathInfo = std::string(&target[found_pathInfo + 1], &target[target.size()]);
-				target.erase(found_pathInfo);
-			}
-		}
-	}
-	found_file = target.find_last_of('/');
-	if (found_file != std::string::npos)
-	{
-		if (found_file == target.size())
-			target.erase(found_file); 
-		else 
-		{
-			found_extension = target.find_last_of('.');
-			if (found_extension != std::string::npos && found_extension != target.size() && found_extension > found_file)
-			{
-				m_requestLine.url.fileExtension = std::string(&target[found_extension + 1], &target[target.size()]);
-				m_requestLine.url.filename = std::string(&target[found_file + 1], &target[target.size()]);
-				target.erase(found_file);
-			}
-		}
-	}
+	m_parse_url_fragment(target);
+	m_parse_url_query_string(target);
+	m_parse_url_filename(target);
+	m_parse_url_port(target);
 	m_requestLine.url.path = target;
 	if (m_requestLine.url.path.empty())
 		m_requestLine.url.path = "/";
+}
+
+
+void		ParseRequest::m_parse_url_fragment(std::string & url)
+{
+	size_t	found_fragment = url.find('#');
+
+	if (found_fragment != std::string::npos)
+	{
+		m_requestLine.url.fragment = std::string(&url[found_fragment + 1], &url[url.size()]);
+		url.erase(found_fragment);
+	}	
+}
+
+void	ParseRequest::m_parse_url_query_string(std::string & str)
+{
+	size_t		found_query = str.find('?');
+	size_t		found_pathInfo;
+	size_t		found_extension;
+
+	if (found_query != std::string::npos)
+	{
+		m_requestLine.url.query = std::string(&str[found_query + 1], &str[str.size()]);
+		str.erase(found_query);
+		found_extension =  str.find_last_of('.'); // TODO check pathInfo
+		if (found_extension != std::string::npos)
+		{
+			found_pathInfo = str.find('/', str.find_last_of('.'));
+			if (found_pathInfo != std::string::npos)
+			{
+				m_requestLine.url.pathInfo = std::string(&str[found_pathInfo + 1], &str[str.size()]);
+				str.erase(found_pathInfo);
+			}
+		}
+	}
+}
+
+
+void	ParseRequest::m_parse_url_filename(std::string & str)
+{
+	size_t		found_file = str.find_last_of('/');
+	size_t		found_extension;
+
+	if (found_file != std::string::npos)
+	{
+		if (found_file == str.size())
+			str.erase(found_file); 
+		else 
+		{
+			found_extension = str.find_last_of('.');
+			if (found_extension != std::string::npos && found_extension != str.size() && found_extension > found_file)
+			{
+				m_requestLine.url.fileExtension = std::string(&str[found_extension + 1], &str[str.size()]);
+				m_requestLine.url.filename = std::string(&str[found_file + 1], &str[str.size()]);
+				str.erase(found_file);
+			}
+		}
+	}
+}
+
+
+void	ParseRequest::m_parse_url_port(std::string & str)
+{
+	size_t	found_port = str.find(':');
+
+	if (found_port != std::string::npos)
+	{
+		m_requestLine.url.port = std::string(&str[found_port + 1], &str[str.size()]);
+		str.erase(found_port);
+	}
 }
 
 
@@ -305,5 +339,13 @@ void	ParseRequest::m_check_host_HeaderFields() // TODO clear
 	{
 		m_requestLine.url.serverName = host;
 		m_requestLine.url.path.erase(0, host.size());
+	}
+	
+	size_t found_port = m_requestLine.url.serverName.find(':');
+
+	if (found_port != std::string::npos)
+	{
+		m_requestLine.url.port = m_requestLine.url.serverName.substr(found_port + 1);
+		m_requestLine.url.serverName.erase(found_port);
 	}
 }
