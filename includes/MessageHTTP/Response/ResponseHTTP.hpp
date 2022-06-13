@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:05:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 15:05:06 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,21 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 			std::cout << "REQUESTLINE: " <<  std::endl;
 			std::cout << "	status code: " << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << std::endl;
 			std::cout << "	version: " << m_statusLine.version.name <<  m_statusLine.version.major_version << "." <<  m_statusLine.version.minor_version << std::endl;
-			std::cout << std::endl;		
+			
+			// std::cout << m_header.str() << std::endl;	
+			
+			// if (m_body.is_open())
+			// {
+			// 	m_body.seekg (0, m_body.beg);
+
+			// 		char buf[1000] = {0};
+			// 	while (!m_body.eof()) {
+			// 		 m_body.getline(buf, 999);
+			// 		std::cout << buf << std::endl;
+			// 	}
+			// 	m_body.seekg (0, m_body.beg);
+			// }
+
 		}
 
 
