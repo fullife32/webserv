@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 19:35:52 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 20:12:10 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ bool	ParseRequest::empty() const
 		if it is a POST method retrieve the rest of the request in the body
 		otherwise if there is a body : request error
 */
-void	ParseRequest::append(const std::string & buffer)
+void	ParseRequest::append(const std::string & buffer, char *buff, size_t size)
 {
 		// m_data.append(buffer);
 	if (m_has_complete_header == false)
@@ -116,11 +116,18 @@ void	ParseRequest::append(const std::string & buffer)
 		// }
 		if (m_data.empty() == false)
 		{
+			// std::cout << "BUFFER +================= " << buff + m_header_size << std::endl;
+			// fwrite(buff, sizeof(char), size - m_header_size, m_body);
 			m_append_body(m_data);
 			m_data.clear();
 		}
 		else 
+		{
+			// // fwrite(buff, sizeof(char), size, m_body);
+			// if (fputs(buff + m_header_size, m_body) == EOF)
+			// 	throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
 			m_append_body(buffer);
+		}
 	}
 	else 
 	{

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 12:50:37 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 14:01:33 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:58:36 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,3 +36,13 @@ size_t	convertStringToSize(const std::string & str)
 	s >> size;
 	return (size);
 }
+
+// std::string	convertStringToSize(size_t size)
+// {
+// 	std::stringstream	s;
+// 	size_t				size = 0;
+
+// 	s << str;
+// 	s >> size;
+// 	return (size);
+// }

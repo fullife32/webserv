@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/14 19:39:28 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 20:11:17 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ Cgi::Cgi
 	env_map["CONTENT_LENGTH"] = header_fields.get_value_headerFields(HF_CONTENT_LENGTH);
 	env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
 	// env_map["CONTENT_TYPE"] = "image/jpeg";
-	env_map["DOCUMENT_ROOT"] = "html/two"; // TODO change
+	env_map["DOCUMENT_ROOT"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()); // TODO change
 	env_map["GATEWAY_INTERFACE"] = "CGI/1.1";
 	env_map["PATH_INFO"] = response_http.get_formatedPath();
-	env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + "/" + response_http.get_fileName();
+	env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + response_http.get_fileName();
 	// env_map["QUERY_STRING"] = response_http.get_queryString();
 	env_map["QUERY_STRING"] = response_http.get_queryString();
 	env_map["REMOTE_ADDR"] = server_conf.getIp();
@@ -34,7 +34,7 @@ Cgi::Cgi
 	env_map["REMOTE_USER"] = ""; // ?
 	env_map["REDIRECT_STATUS"] = "200";
 	// env_map["REQUEST_METHOD"] = response_http.get_method();
-	env_map["REQUEST_METHOD"] = response_http.get_method();
+	env_map["REQUEST_METHOD"] = "POST"; // response_http.get_method(); // TODO 
 	env_map["REQUEST_URI"] = response_http.get_formatedPath();
 	char pathwd[PATH_MAX] ;
 	getcwd(pathwd, PATH_MAX);
@@ -44,9 +44,9 @@ Cgi::Cgi
 	std::string arg1 = std::string(pathwd)
 		+ "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
 		+ response_http.get_fileName();
-	env_map["SCRIPT_FILENAME"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + "/" + response_http.get_fileName();
+	env_map["SCRIPT_FILENAME"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + response_http.get_fileName();
 	env_map["SERVER_NAME"] = response_http.get_serverName();
-	env_map["SERVER_PORT"] = server_conf.getPort();
+	env_map["SERVER_PORT"] = "8000"; // std::string(server_conf.getPort()); // TODO
 	env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
 	env_map["SERVER_SOFTWARE"] = "Webserv/1.0";
 	// env_map["UPLOAD_STORE"] = server_conf.getUploadPath(response_http.get_serverName(), response_http.get_path());
@@ -112,11 +112,31 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 	if (pid == -1)
 		throw Cgi::CgiError(strerror(errno));
 	else if (pid == 0) { // child process
+
+		std::cerr << "ENV:" << std::endl;
+        for (int i = 0; _env[i]; ++i)
+            std::cerr << _env[i] << std::endl;
+        std::cerr << "ARGS:" << std::endl;
+        for (int i = 0; _argv[i]; ++i)
+            std::cerr << _argv[i] << std::endl;
+		std::cerr << std::endl;
+        std::cerr << "BEGIN" << std::endl;
+        // char buf[1000] = {0};
+        // while (read(fd_in, buf, 1000) > 0)
+		// {
+        //     std::cerr << buf << std::endl;
+		// 	memset(buf, 0, 1000);
+		// }
+        std::cerr << "END" << std::endl;
+        std::cerr << std::endl;
+
+
+
 		std::cerr << "child" << std::endl;
-		int fdTest;
-		fdTest = open("html/two/delete/image.jpeg", O_RDONLY);
-		if (fdTest != -1) {
-			if (dup2(fdTest, STDIN_FILENO) == -1)
+		// int fdTest;
+		// fdTest = open("html/two/delete/image.jpeg", O_RDONLY);
+		if (fd_in != -1) {
+			if (dup2(fd_in, STDIN_FILENO) == -1)
 				throw Cgi::CgiError(strerror(errno));
 		}
 		if (dup2(fd_out, STDOUT_FILENO) == -1)

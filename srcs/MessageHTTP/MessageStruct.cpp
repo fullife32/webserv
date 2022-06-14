@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageStruct.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 18:55:15 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/14 20:15:03 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,6 +212,9 @@ std::map< std::string, std::string>		init_map_ContentType()
 	map_contentType["mpeg"] = "video/mpeg";
 	map_contentType["png"] = "image/png";
 	map_contentType["svg"] = "image/svg+xml";
+	map_contentType["txt"] = "text/txt";
+	map_contentType["cpp"] = "text/cpp";
+	map_contentType["hpp"] = "text/hpp";
 	map_contentType["php"] = "text/php";
 
 	return (map_contentType);

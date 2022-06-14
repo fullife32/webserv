@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/14 17:47:32 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 20:01:24 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void		Client::receive_data() {
 	// TRY BUILD HEADER
 	try
 	{
-		m_request.append(m_buffer); // TODO add size et char *
+		m_request.append(m_buffer, m_buffer, size); // TODO add size et char *
 	}
 	catch (MessageErrorException & e) {
 		m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
