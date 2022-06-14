@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 20:12:10 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:47:14 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@ ParseRequest::ParseRequest(const ServerConf * server) :
 	m_max_body_size(0),
 	m_is_post_method(false),
 	m_has_complete_header(false),
-	m_has_complete_startLine(false),
-	m_boundary_firstpart(false),
-	m_boundary_lastpart(false)
+	m_has_complete_startLine(false)
 	{}
 
 
@@ -67,9 +65,6 @@ void	ParseRequest::clear()
 	m_is_post_method = false;
 	m_has_complete_header = false;
 	m_has_complete_startLine = false;
-	m_boundary_firstpart = false;
-	m_boundary_lastpart =false;
-	m_boundary.clear();
 }
 
 bool	ParseRequest::empty() const 
@@ -89,7 +84,6 @@ bool	ParseRequest::empty() const
 */
 void	ParseRequest::append(const std::string & buffer, char *buff, size_t size)
 {
-		// m_data.append(buffer);
 	if (m_has_complete_header == false)
 	{
 		m_header_size += buffer.size();
@@ -103,17 +97,6 @@ void	ParseRequest::append(const std::string & buffer, char *buff, size_t size)
 	}
 	if (m_has_complete_header && m_is_post_method)
 	{
-		// if (m_boundary.empty() == false)
-		// {
-		// 	if (m_data.empty() == false)
-		// 	{
-		// 		m_append_body(m_data);
-		// 		m_data.clear();
-		// 	}
-		// 	else 
-		// 	m_append_body(buffer);
-		// 	// m_append_body_in_boundary();
-		// }
 		if (m_data.empty() == false)
 		{
 			// std::cout << "BUFFER +================= " << buff + m_header_size << std::endl;
@@ -143,69 +126,6 @@ void	ParseRequest::m_append_body(const std::string & buffer)
 		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
 	m_body_size += buffer.size();
 	m_check_max_body_size();
-}
-
-void	ParseRequest::m_parse_boundary_firstline(std::string line)
-{
-	size_t		found = line.find(":");
-
-	std::cout << "line extract = " << line << std::endl;
-	if (found != std::string::npos)
-	{
-		std::string key(&line[0], &line[found]);
-		if (line[found + 1] == ' ')
-			found++;
-		std::string value(&line[found], &line[line.size()]);
-		set_headerFields(key, value);
-	}
-}
-
-void	ParseRequest::m_append_body_in_boundary()
-{
-	std::cout << "IN BOUDARY" << std::endl;
-
-	size_t	found_contentType = 0;
-	size_t	found = m_data.find(m_boundary);
-	
-	if (found == std::string::npos)
-	{
-		std::cout << "NOT FOUND" << std::endl;
-		if (m_data.find('-') == std::string::npos)
-		{
-			if (fputs(m_data.data(), m_body) == EOF)
-				throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
-			m_data.clear();
-		}
-		std::cout << "Append OK" << std::endl;
-	}
-	else // boundary is find completely
-	{
-		std::cout << "FOUND" << std::endl;
-		found -= 3; // "---" set before bundary
-		if (m_boundary_firstpart == false && m_data.find(EMPTY_LINE) != std::string::npos) // check if empty line is in
-		{
-			extract_line(m_data, m_boundary.size() + sizeof(CRLF) + 2, found);
-			while (m_data.find(CRLF) != 0 && m_data.find(CRLF) != std::string::npos)
-			{
-				m_parse_boundary_firstline(extract_line(m_data, m_data.find(CRLF), found));
-				m_data.erase(0, 2);
-			}
-			m_data.erase(0, 2);
-			m_boundary_firstpart = true;
-			if (fputs(m_data.data(), m_body) == EOF)
-				throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
-			m_data.clear();
-		}
-		else
-		{
-			m_data.erase(found);
-			if (fputs(m_data.data(), m_body) == EOF)
-				throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
-			m_boundary_lastpart = true;
-		}
-	}
-	if (m_boundary_lastpart == true)
-		return ;
 }
 
 void	ParseRequest::m_prepare_POST_body()
@@ -261,7 +181,6 @@ void	ParseRequest::m_parse_url(std::string target)
 	if (m_requestLine.url.path.empty())
 		m_requestLine.url.path = "/";
 }
-
 
 void		ParseRequest::m_parse_url_fragment(std::string & url)
 {
@@ -370,8 +289,6 @@ bool			ParseRequest::m_parse_header()
 			m_has_complete_header = true;
 			m_data.erase(0, 2);
 			m_check_host_HeaderFields();
-			if (m_is_post_method == true) // TODO DELETE ?
-				m_check_multipart_body();
 			return true ;
 		}
 		if (m_has_complete_startLine == false)
@@ -396,15 +313,14 @@ bool			ParseRequest::m_parse_header()
 void	ParseRequest::m_check_max_header_size() const
 {
 	if (m_header_size > REQUEST_HEADER_MAX_SIZE)
-		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE);
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_requestLine.url);
 }
 
 void	ParseRequest::m_check_max_body_size() const
 {
 	if (m_max_body_size != 0 && m_body_size > m_max_body_size)
-		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE);
+		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_requestLine.url);
 }
-
 
 /*
 	Check host for symplify search for opening file
@@ -413,21 +329,18 @@ void	ParseRequest::m_check_max_body_size() const
 			if already in target : do nothing
 			else cat host + target in requestLine
 */
-void	ParseRequest::m_check_host_HeaderFields() // TODO clear
+void	ParseRequest::m_check_host_HeaderFields()
 {
-	// find Header Field "host"
 	std::map<std::string, std::string>::iterator		found_host = m_headerFields.find(HF_HOST);
 	
-	if (found_host == m_headerFields.end()) ///// FAUT IL OBLIGATOIREMENT LE HOST ? normalement oui avec http1.1
+	if (found_host == m_headerFields.end())
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_requestLine.url);
 
-	// get header field value of "host"
-	m_requestLine.url.serverName = (*found_host).second;
 	std::string		host = (*found_host).second;
+	m_requestLine.url.serverName = host;
 	if (host.empty())
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_requestLine.url);
 
-	// check if host is already in target
 	if (m_requestLine.url.path.find(host) != std::string::npos)
 	{
 		m_requestLine.url.serverName = host;
@@ -435,31 +348,9 @@ void	ParseRequest::m_check_host_HeaderFields() // TODO clear
 	}
 	
 	size_t found_port = m_requestLine.url.serverName.find(':');
-
 	if (found_port != std::string::npos)
 	{
 		m_requestLine.url.port = m_requestLine.url.serverName.substr(found_port + 1);
 		m_requestLine.url.serverName.erase(found_port);
-	}
-}
-
-
-void	ParseRequest::m_check_multipart_body()
-{
-	return ; // TODO erase
-	size_t		sep;
-	std::string	multi_part;
-	std::string	content_type;
-
-	content_type = get_value_headerFields(HF_CONTENT_TYPE);
-	// std::cout << content_type << std::endl << std::endl;
-	if (content_type.find("multipart/form-data") != std::string::npos)
-	{
-		sep = content_type.find("boundary=");
-		std::cout << content_type[sep] << std::endl;
-		if (sep != std::string::npos){
-			m_boundary = std::string(&content_type[sep + 10], &content_type[content_type.size()]);
-			set_headerFields(HF_CONTENT_TYPE, m_boundary);
-		}
 	}
 }

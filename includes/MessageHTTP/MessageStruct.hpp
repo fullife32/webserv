@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 16:13:17 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:18:01 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 
 	isSupportedVersion() is only 1.1 for our Webserv
 */
-
 struct HTTPversion
 {
 	std::string		name;
@@ -47,7 +46,6 @@ struct HTTPversion
 };
 
 /* URL						  ---------------------------------- */
-
 struct URL
 {
 	std::string	serverName;		// example.com
@@ -71,8 +69,6 @@ struct URL
 };
 
 /* Request Line -------m----------------------------------------- */
-
-
 struct RequestLine
 {
 	HTTPversion		version;
@@ -89,7 +85,6 @@ struct RequestLine
 	voir code erreur potentiellement une std::mqp <int, string> avec toute la liste d'erreur et 
 	le reasonPhrase correspondante ou ENUM ou define ??
 */
-
 struct StatusLine
 {
 	HTTPversion		version;
@@ -101,11 +96,8 @@ struct StatusLine
 
 
 /* Header Fields  ------------------------------------------------ */
-
 class HeaderFields
 {
-
-
 	public:
 		typedef std::map<std::string, std::string> 	value_type;
 
@@ -122,7 +114,6 @@ class HeaderFields
 
 
 /* Message Methods static map  --------------------------------- */
-
 class MessageMethods
 {
 	protected:
@@ -132,9 +123,8 @@ class MessageMethods
 
 std::map <std::string, int>		init_map_method();
 
+
 /* Content Type  ------------------------------------------------ */
-
-
 class ContentTypes
 {
 	protected:

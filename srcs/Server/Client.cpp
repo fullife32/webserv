@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/14 20:01:24 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:34:19 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void		Client::receive_data() {
 	// TRY BUILD HEADER
 	try
 	{
-		m_request.append(m_buffer, m_buffer, size); // TODO add size et char *
+		m_request.append(m_buffer, m_buffer, size);
 	}
 	catch (MessageErrorException & e) {
 		m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
@@ -95,9 +95,8 @@ void		Client::receive_data() {
 		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		setToChangeEvent();
 		try {
-			m_request.debug_print();
+			m_request.debug_print(); // TODO debug
 			m_response.buildResponse(m_request);
-			m_response.debug_print(); // TODO DEBUG
 		}
 		catch (MessageErrorException & e) {
 			m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
@@ -108,7 +107,6 @@ void		Client::receive_data() {
 		}
 	}	
 }
-
 
 void		Client::send_data() {
 

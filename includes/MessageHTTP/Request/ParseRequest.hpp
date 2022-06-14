@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 20:04:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 22:56:30 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,6 @@ class ParseRequest : public HeaderFields
 		bool				m_has_complete_header;
 		bool				m_has_complete_startLine;
 		
-		// TODO delete ?
-		bool				m_boundary_firstpart;
-		bool				m_boundary_lastpart;
-		std::string			m_boundary;  // TODO constructor et clear
-
 	public:
 
 	/* constructor ------------------------------------------------ */
@@ -57,12 +52,6 @@ class ParseRequest : public HeaderFields
 	private:
 		void	m_append_body(const std::string & buffer);
 
-		// TODO DELETE ?
-		void	m_append_body_in_boundary();
-		void	m_parse_boundary_firstline(std::string line);
-		void	m_check_multipart_body();
-
-
 	/* parsing    ------------------------------------------------ */
 		bool	m_parse_header();
 		void 	m_parse_RequestLine(const std::string & startline);
@@ -73,10 +62,6 @@ class ParseRequest : public HeaderFields
 		void	m_parse_url_filename(std::string & url);
 		void	m_parse_url_port(std::string & url);
 		void	m_prepare_POST_body() ;
-
-
-
-
 		void	m_check_max_header_size() const ;
 		void	m_check_max_body_size() const ;
 		void	m_check_host_HeaderFields();
@@ -97,14 +82,12 @@ class ParseRequest : public HeaderFields
 			std::cout << "	query: " << m_requestLine.url.query << std::endl;
 			std::cout << "	pathInfo: "<< m_requestLine.url.pathInfo << std::endl;
 			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
-			std::cout << "Boundary =" << m_boundary << std::endl;
 
-		std::map<std::string, std::string>::iterator	it;
+			std::map<std::string, std::string>::iterator	it;
 
-	for (it = m_headerFields.begin(); it != m_headerFields.end(); it++)
-		std::cout << "key=" << it->first << " value=" << it->second << std::endl;
+			for (it = m_headerFields.begin(); it != m_headerFields.end(); it++)
+				std::cout << "key=" << it->first << " value=" << it->second << std::endl;
 		}
-
 }; // end class
 
 #endif

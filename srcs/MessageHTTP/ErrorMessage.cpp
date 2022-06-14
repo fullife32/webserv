@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:42:57 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:44:02 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:16:05 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ MessageErrorException::MessageErrorException(int error, URL url)
 	: std::exception(),
 	m_current_error(error),
 	m_url(url)
-{
-}
+{}
 
 int				MessageErrorException::getError() const throw ()
 {
@@ -97,8 +96,6 @@ std::map <int, std::string>		init_mapError()  throw()
 
 	return error;
 }
-
-
 
 /* --- Init static map for error [status Code] = reason phrase ---------------- */
 

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 20:15:03 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:18:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,6 @@ void	RequestLine::clear()
 	method.clear();
 }
 
-
 void	StatusLine::clear()
 {
 	version.clear();
@@ -135,7 +134,6 @@ void		HeaderFields::clear()
 	m_headerFields.clear();
 }
 
-
 void		HeaderFields::set_headerFields(const HeaderFields::value_type & headerFields)
 {
 	m_headerFields = headerFields;
@@ -148,12 +146,10 @@ void	HeaderFields::set_headerFields(const std::string & headerField, const std::
 	m_headerFields[headerField] = value;
 }
 
-
 HeaderFields const		&HeaderFields::get_headerFields() const
 {
 	return *this;
 }
-
 
 std::string const		HeaderFields::get_value_headerFields(const std::string & key) const
 {
@@ -163,8 +159,6 @@ std::string const		HeaderFields::get_value_headerFields(const std::string & key)
 		return (std::string());
 	return (*found).second;
 }
-
-
 
 /* Message Methods static map  --------------------------------- */
 
@@ -184,13 +178,10 @@ std::map <std::string, int>		init_map_method()
 	return methods;
 }
 
-
 std::map <std::string, int>		MessageMethods::m_methods = init_map_method();
 
 
-
 /* Content Type  ------------------------------------------------ */
-
 
 std::map< std::string, std::string>		init_map_ContentType()
 {

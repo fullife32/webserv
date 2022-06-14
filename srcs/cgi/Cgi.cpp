@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/14 20:11:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:43:58 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ Cgi::Cgi
 	// env_map["REMOTE_IDENT"] = "";// ?
 	env_map["REMOTE_USER"] = ""; // ?
 	env_map["REDIRECT_STATUS"] = "200";
-	// env_map["REQUEST_METHOD"] = response_http.get_method();
-	env_map["REQUEST_METHOD"] = "POST"; // response_http.get_method(); // TODO 
+	env_map["REQUEST_METHOD"] = response_http.get_method();
 	env_map["REQUEST_URI"] = response_http.get_formatedPath();
 	char pathwd[PATH_MAX] ;
 	getcwd(pathwd, PATH_MAX);
@@ -113,6 +112,7 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 		throw Cgi::CgiError(strerror(errno));
 	else if (pid == 0) { // child process
 
+	//TODO DEBUG
 		std::cerr << "ENV:" << std::endl;
         for (int i = 0; _env[i]; ++i)
             std::cerr << _env[i] << std::endl;

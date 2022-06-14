@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/11 12:50:37 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 19:58:36 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:20:44 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 	Use for Request and Response
 */
 
-std::string		extract_line(std::string & str, size_t	size, size_t pos)
+std::string	extract_line(std::string & str, size_t	size, size_t pos)
 {
 	std::string		line(&str[pos], &str[size]);
 
@@ -27,7 +27,7 @@ std::string		extract_line(std::string & str, size_t	size, size_t pos)
 }
 
 
-size_t	convertStringToSize(const std::string & str)
+size_t		convertStringToSize(const std::string & str)
 {
 	std::stringstream	s;
 	size_t				size = 0;
@@ -37,12 +37,10 @@ size_t	convertStringToSize(const std::string & str)
 	return (size);
 }
 
-// std::string	convertStringToSize(size_t size)
-// {
-// 	std::stringstream	s;
-// 	size_t				size = 0;
+std::string	convertSizeToString(size_t size)
+{
+	std::stringstream	s;
 
-// 	s << str;
-// 	s >> size;
-// 	return (size);
-// }
+	s << size;
+	return (s.str());
+}

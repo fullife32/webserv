@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 19:39:41 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:40:54 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,8 @@ ResponseHTTP::ResponseHTTP(const ResponseHTTP & copy)
 	m_url(copy.m_url),
 	m_isAutoindex(copy.m_isAutoindex),
 	m_is_redirection(copy.m_is_redirection)
-	// m_body(copy.m_body)
 {
 	m_headerFields = copy.m_headerFields;
-	// m_header << copy.m_header;
-	// m_body << copy.m_body;
 }
 
 ResponseHTTP::~ResponseHTTP()
@@ -152,19 +149,15 @@ void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 
 void	ResponseHTTP::m_method_POST(const RequestHTTP & request) 
 {
-	std::cout << "in methode POST" << std::endl; // TODO DEBUG
-
 	if (request.hasBody() == false)
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 	size_t	contentLenght = convertStringToSize(request.get_value_headerFields(HF_CONTENT_LENGTH));
 	// if (contentLenght != request.getBodySize()) // TODO what to do
 	// 	throw MessageErrorException(100, m_url);
 	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty())
-		throw MessageErrorException(100); // TODO: check Content-Type jamais envoyé par firefox....
+		throw MessageErrorException(STATUS_BAD_REQUEST);
 	m_checkBodySize(request.getBodySize(), contentLenght);
 	m_formated_CGI_Response(request);
-
-	std::cout << "OK FOR POST " << std::endl; // TODO DEBUG
 }
 
 /*
@@ -272,11 +265,8 @@ void		ResponseHTTP::m_checkBodySize(size_t request_bodySize, size_t ContentLengh
 		throw MessageErrorException(STATUS_LENGHT_REQUIRED, m_url);
 		
 	size_t	maxBodySize = (m_server->getBodySize(m_url.serverName, m_url.formatedPath()));
-
-	// if (maxBodySize != 0 && request_bodySize > maxBodySize) // TODO what to do
-	// 	throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url);
 	// if (ContentLenght != request_bodySize)
-	// 	throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	// 	throw MessageErrorException(STATUS_BAD_REQUEST, m_url); // TODO a checker ?
 }
 
 /*
@@ -291,7 +281,7 @@ bool	ResponseHTTP::m_openFile_Error(const std::string & location)
 	{
 		m_body.open(location.data(), std::ifstream::binary);
 	}
-	catch(const std::exception& e)  //// TODO: What to do ? 
+	catch(const std::exception& e)
 	{
 		return false;
 	}
@@ -304,18 +294,9 @@ bool	ResponseHTTP::m_openFile_Error(const std::string & location)
 
 void	ResponseHTTP::m_openFile_Body(const std::string & location)
 {
-	try
-	{
-		m_body.open(location.data(), std::ifstream::binary);
-	}
-	catch(const std::exception& e)  //// TODO: What to do ? 
-	{
-		std::cerr << e.what() << '\n';
-		throw	MessageErrorException(100);
-	}
+	m_body.open(location.data(), std::ifstream::binary);
 	if (m_body.is_open() == false)
 		throw MessageErrorException(STATUS_NOT_FOUND, m_url);
-	std::cout <<" BODY IS OPEN" << location.data() << " " <<  m_body.is_open() << std::endl;
 	m_setOpenFileBodySize();
 }
 
@@ -326,7 +307,7 @@ void	ResponseHTTP::m_openFile_CGI()
 		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_url);
 }
 
-void	ResponseHTTP::m_setOpenFileBodySize() // TODO CHECK
+void	ResponseHTTP::m_setOpenFileBodySize()
 {
 	size_t	FileSize;
 
@@ -347,4 +328,3 @@ void	ResponseHTTP::m_setCGIBodySize()
 	rewind(m_body_CGI);
 	m_body_CGI_size = (FileSize == (size_t)-1 ? 0 : FileSize);
 }
-

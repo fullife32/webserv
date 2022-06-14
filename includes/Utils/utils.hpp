@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 18:58:49 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 13:54:35 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:27:30 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void			popFirst( std::string & str );
 
 std::string		extract_line(std::string & str, size_t	size, size_t pos = 0);
 std::string		getStringTime();
+
 size_t 			convertStringToSize(const std::string & str) ;
+std::string		convertSizeToString(size_t size);
 
 #endif
