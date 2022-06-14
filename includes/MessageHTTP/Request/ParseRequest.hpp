@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 20:03:03 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:34:36 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ class ParseRequest : public HeaderFields
 		bool				m_is_post_method;
 		bool				m_has_complete_header;
 		bool				m_has_complete_startLine;
+		
+		// TODO delete ?
+		bool				m_boundary_firstpart;
+		bool				m_boundary_lastpart;
+		std::string			m_boundary;  // TODO constructor et clear
 
 	public:
 
@@ -51,7 +56,12 @@ class ParseRequest : public HeaderFields
 
 	private:
 		void	m_append_body(const std::string & buffer);
-		void	m_prepare_POST_body() ;
+
+		// TODO DELETE ?
+		void	m_append_body_in_boundary();
+		void	m_parse_boundary_firstline(std::string line);
+		void	m_check_multipart_body();
+
 
 	/* parsing    ------------------------------------------------ */
 		bool	m_parse_header();
@@ -62,7 +72,7 @@ class ParseRequest : public HeaderFields
 		void	m_parse_url_query_string(std::string & url);
 		void	m_parse_url_filename(std::string & url);
 		void	m_parse_url_port(std::string & url);
-		void	m_prepare_body();
+		void	m_prepare_POST_body() ;
 
 
 
@@ -85,8 +95,9 @@ class ParseRequest : public HeaderFields
 			std::cout << "	filename: " << m_requestLine.url.filename << std::endl;
 			std::cout << "	extension: " << m_requestLine.url.fileExtension << std::endl;
 			std::cout << "	query: " << m_requestLine.url.query << std::endl;
-			std::cout << "	pathInfo: |"<< m_requestLine.url.pathInfo << std::endl;
+			std::cout << "	pathInfo: "<< m_requestLine.url.pathInfo << std::endl;
 			std::cout << "	fragment: " << m_requestLine.url.fragment << std::endl;
+			std::cout << "Boundary =" << m_boundary << std::endl;
 
 		std::map<std::string, std::string>::iterator	it;
 

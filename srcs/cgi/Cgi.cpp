@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/14 00:02:58 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:17:54 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ Cgi::Cgi
 	// build args
 	this->_argv = new char*[3];
 	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
+	arg0 = "/usr/bin/php-cgi";
 	// free(tmp);
 	this->_argv[0] = new char[arg0.length() + 1];
 	std::strcpy(this->_argv[0], arg0.c_str());

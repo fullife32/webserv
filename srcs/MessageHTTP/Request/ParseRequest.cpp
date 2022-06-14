@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 20:13:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:35:52 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ ParseRequest::ParseRequest(const ServerConf * server) :
 	m_max_body_size(0),
 	m_is_post_method(false),
 	m_has_complete_header(false),
-	m_has_complete_startLine(false)
-{}
+	m_has_complete_startLine(false),
+	m_boundary_firstpart(false),
+	m_boundary_lastpart(false)
+	{}
 
 
 ParseRequest::ParseRequest(const ParseRequest & copy) :
@@ -65,6 +67,9 @@ void	ParseRequest::clear()
 	m_is_post_method = false;
 	m_has_complete_header = false;
 	m_has_complete_startLine = false;
+	m_boundary_firstpart = false;
+	m_boundary_lastpart =false;
+	m_boundary.clear();
 }
 
 bool	ParseRequest::empty() const 
@@ -84,6 +89,7 @@ bool	ParseRequest::empty() const
 */
 void	ParseRequest::append(const std::string & buffer)
 {
+		// m_data.append(buffer);
 	if (m_has_complete_header == false)
 	{
 		m_header_size += buffer.size();
@@ -95,8 +101,19 @@ void	ParseRequest::append(const std::string & buffer)
 		}
 		m_header_size -= m_data.size();
 	}
-	if (m_is_post_method)
+	if (m_has_complete_header && m_is_post_method)
 	{
+		// if (m_boundary.empty() == false)
+		// {
+		// 	if (m_data.empty() == false)
+		// 	{
+		// 		m_append_body(m_data);
+		// 		m_data.clear();
+		// 	}
+		// 	else 
+		// 	m_append_body(buffer);
+		// 	// m_append_body_in_boundary();
+		// }
 		if (m_data.empty() == false)
 		{
 			m_append_body(m_data);
@@ -112,6 +129,7 @@ void	ParseRequest::append(const std::string & buffer)
 	}
 }
 
+
 void	ParseRequest::m_append_body(const std::string & buffer)
 {
 	if (buffer.empty() == false && fputs(buffer.data(), m_body) == EOF)
@@ -120,38 +138,67 @@ void	ParseRequest::m_append_body(const std::string & buffer)
 	m_check_max_body_size();
 }
 
-void	ParseRequest::m_prepare_body()
+void	ParseRequest::m_parse_boundary_firstline(std::string line)
 {
+	size_t		found = line.find(":");
 
-	// TODO //
-	// char line[1000];
+	std::cout << "line extract = " << line << std::endl;
+	if (found != std::string::npos)
+	{
+		std::string key(&line[0], &line[found]);
+		if (line[found + 1] == ' ')
+			found++;
+		std::string value(&line[found], &line[line.size()]);
+		set_headerFields(key, value);
+	}
+}
 
-	// std::string type = get_value_headerFields(HF_CONTENT_TYPE);
-	// if (type.find("multipart/form-data;") != std::string::npos)
-	// {
-	// 	std::string	boundary(&type[type.find('=') + 1], type[type.size()]);
-	// 	rewind(m_body);
+void	ParseRequest::m_append_body_in_boundary()
+{
+	std::cout << "IN BOUDARY" << std::endl;
 
-	// 	fgets(line,1000, m_body);
-	// 	while line = 
-
-
-	// 	size_t newLine =	 0;
-	// 		size_t sep_pos = 0;
-	// 		while (1) {
-	// 			size_t tmp = buffer.find("\r", newLine); //"\n\rj
-	// 			if (tmp == std::string::npos)
-	// 				break ;
-	// 			sep_pos = buffer.find(":", newLine);
-	// 			std::string const key = buffer.substr(newLine, sep_pos - newLine);
-	// 			std::string const value = buffer.substr(sep_pos + 2, tmp - (newLine + key.size() + 1));
-	// 			std::cout << "key: " << key << "\n";
-	// 			std::cout << "value: " << value << "\n";
-	// 			set_headerFields(key, value);
-	// 			newLine = tmp + 2;
-	// 		}
-	// }
+	size_t	found_contentType = 0;
+	size_t	found = m_data.find(m_boundary);
 	
+	if (found == std::string::npos)
+	{
+		std::cout << "NOT FOUND" << std::endl;
+		if (m_data.find('-') == std::string::npos)
+		{
+			if (fputs(m_data.data(), m_body) == EOF)
+				throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
+			m_data.clear();
+		}
+		std::cout << "Append OK" << std::endl;
+	}
+	else // boundary is find completely
+	{
+		std::cout << "FOUND" << std::endl;
+		found -= 3; // "---" set before bundary
+		if (m_boundary_firstpart == false && m_data.find(EMPTY_LINE) != std::string::npos) // check if empty line is in
+		{
+			extract_line(m_data, m_boundary.size() + sizeof(CRLF) + 2, found);
+			while (m_data.find(CRLF) != 0 && m_data.find(CRLF) != std::string::npos)
+			{
+				m_parse_boundary_firstline(extract_line(m_data, m_data.find(CRLF), found));
+				m_data.erase(0, 2);
+			}
+			m_data.erase(0, 2);
+			m_boundary_firstpart = true;
+			if (fputs(m_data.data(), m_body) == EOF)
+				throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
+			m_data.clear();
+		}
+		else
+		{
+			m_data.erase(found);
+			if (fputs(m_data.data(), m_body) == EOF)
+				throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
+			m_boundary_lastpart = true;
+		}
+	}
+	if (m_boundary_lastpart == true)
+		return ;
 }
 
 void	ParseRequest::m_prepare_POST_body()
@@ -161,6 +208,7 @@ void	ParseRequest::m_prepare_POST_body()
 	if (m_body == NULL)
 		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
 }
+
 /* -------------------------------------------------------------------------- */
 
 /*
@@ -291,7 +339,7 @@ void 			ParseRequest::m_parse_headerFields(const std::string & line)
 
 	separator = line.find(':');
 	if (separator == std::string::npos)
-		throw MessageErrorException(100, m_requestLine.url);
+		throw MessageErrorException(STATUS_BAD_REQUEST, m_requestLine.url);
 	key = std::string(&line[0], &line[separator]);
 	value = std::string(&line[separator + 1], &line[line.size()]);
 	if (value[0] == ' ')
@@ -315,6 +363,8 @@ bool			ParseRequest::m_parse_header()
 			m_has_complete_header = true;
 			m_data.erase(0, 2);
 			m_check_host_HeaderFields();
+			if (m_is_post_method == true) // TODO DELETE ?
+				m_check_multipart_body();
 			return true ;
 		}
 		if (m_has_complete_startLine == false)
@@ -383,5 +433,26 @@ void	ParseRequest::m_check_host_HeaderFields() // TODO clear
 	{
 		m_requestLine.url.port = m_requestLine.url.serverName.substr(found_port + 1);
 		m_requestLine.url.serverName.erase(found_port);
+	}
+}
+
+
+void	ParseRequest::m_check_multipart_body()
+{
+	return ; // TODO erase
+	size_t		sep;
+	std::string	multi_part;
+	std::string	content_type;
+
+	content_type = get_value_headerFields(HF_CONTENT_TYPE);
+	// std::cout << content_type << std::endl << std::endl;
+	if (content_type.find("multipart/form-data") != std::string::npos)
+	{
+		sep = content_type.find("boundary=");
+		std::cout << content_type[sep] << std::endl;
+		if (sep != std::string::npos){
+			m_boundary = std::string(&content_type[sep + 10], &content_type[content_type.size()]);
+			set_headerFields(HF_CONTENT_TYPE, m_boundary);
+		}
 	}
 }

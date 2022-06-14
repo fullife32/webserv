@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 20:13:11 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:37:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,8 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request)
 	if (request.hasBody() == false)
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 	size_t	contentLenght = convertStringToSize(request.get_value_headerFields(HF_CONTENT_LENGTH));
-	if (contentLenght != request.getBodySize())
-		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	// if (contentLenght != request.getBodySize()) // TODO what to do
+	// 	throw MessageErrorException(100, m_url);
 	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty())
 		throw MessageErrorException(100); // TODO: check Content-Type jamais envoyé par firefox....
 	m_checkBodySize(request.getBodySize(), contentLenght);
@@ -273,10 +273,10 @@ void		ResponseHTTP::m_checkBodySize(size_t request_bodySize, size_t ContentLengh
 		
 	size_t	maxBodySize = (m_server->getBodySize(m_url.serverName, m_url.formatedPath()));
 
-	if (maxBodySize != 0 && request_bodySize > maxBodySize)
-		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url);
-	if (ContentLenght != request_bodySize)
-		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	// if (maxBodySize != 0 && request_bodySize > maxBodySize) // TODO what to do
+	// 	throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_url);
+	// if (ContentLenght != request_bodySize)
+	// 	throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 }
 
 /*
@@ -293,7 +293,6 @@ bool	ResponseHTTP::m_openFile_Error(const std::string & location)
 	}
 	catch(const std::exception& e)  //// TODO: What to do ? 
 	{
-		std::cerr << e.what() << " DO NOTHING ? " << '\n';
 		return false;
 	}
 	if ( m_body.is_open() == false)
