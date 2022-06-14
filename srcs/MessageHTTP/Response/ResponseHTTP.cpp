@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 17:15:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 12:30:34 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,6 @@ void	ResponseHTTP::m_setCGIBodySize()
 	fseek(m_body_CGI, 0, SEEK_END);
 	FileSize = ftell(m_body_CGI);
 	fseek(m_body_CGI, 0, SEEK_SET);
-	setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
+	m_body_CGI_size = (FileSize == (size_t)-1 ? 0 : FileSize);
 }
 
