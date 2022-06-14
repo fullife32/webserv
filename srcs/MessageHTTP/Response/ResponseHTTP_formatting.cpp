@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 12:46:13 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/14 14:07:53 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@
 
 		buff[i] = '\0';
 		set_headerFields(HF_CONTENT_TYPE, buff + strlen(HF_CONTENT_TYPE) + 2);
-		setContentLength(m_body_CGI_size);
+		setContentLength(m_body_CGI_size + strlen(CRLF) * sizeof(int) * 2);
 
 		// DEBUG : ///////////////////////////////////////////////////////////////////
 		// FILE * request_body = request.getBodyForCGI();
