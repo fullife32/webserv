@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:36:26 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 14:50:15 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 16:13:17 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,12 @@ class HeaderFields
 	public:
 		typedef std::map<std::string, std::string> 	value_type;
 
-		void			clear();
-		void			set_headerFields(const std::string & headerField, const std::string & value);
-		void			set_headerFields(const value_type & headerFlieds);
+		void				clear();
+		void				set_headerFields(const std::string & headerField, const std::string & value);
+		void				set_headerFields(const value_type & headerFlieds);
 
-		std::string		get_value_headerFields(const std::string & key) const ;
-		value_type		get_headerFields() const ;
+		std::string const	get_value_headerFields(const std::string & key) const ;
+		HeaderFields const	&get_headerFields() const ;
 
 	protected:
 		value_type	m_headerFields;

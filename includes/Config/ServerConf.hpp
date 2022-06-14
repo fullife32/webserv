@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/12 21:38:30 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/13 17:33:24 by rotrojan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define IP_MASK "255.255.255.255"
 # define DEFAULT_PORT "8000"
 # define DEFAULT_BODY 1000000
-# define DEFAULT_CONFIG_PATH "html/one.conf" // TODO actualise path for main
+# define DEFAULT_CONFIG_PATH "test_config/simple.conf" // TODO actualise path for main
 
 enum e_config_error {
 	EMPTY_FILE,

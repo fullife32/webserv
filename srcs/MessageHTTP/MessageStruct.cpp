@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MessageStruct.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 17:59:20 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/13 18:55:15 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,13 +149,13 @@ void	HeaderFields::set_headerFields(const std::string & headerField, const std::
 }
 
 
-HeaderFields::value_type		HeaderFields::get_headerFields() const
+HeaderFields const		&HeaderFields::get_headerFields() const
 {
-	return m_headerFields;
+	return *this;
 }
 
 
-std::string		HeaderFields::get_value_headerFields(const std::string & key) const
+std::string const		HeaderFields::get_value_headerFields(const std::string & key) const
 {
 	HeaderFields::value_type::const_iterator found = m_headerFields.find(key);
 
