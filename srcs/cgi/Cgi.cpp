@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/14 15:32:10 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:27:37 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,39 +17,45 @@ Cgi::Cgi
  ServerConf const &server_conf) {
 	// build environment
 	std::map<std::string, std::string> env_map;
-	// env_map["AUTH_TYPE"] = ""; // ?
+	env_map["AUTH_TYPE"] = ""; // ?
+	// env_map["CONTENT_LENGTH"] = "16000";
 	env_map["CONTENT_LENGTH"] = header_fields.get_value_headerFields(HF_CONTENT_LENGTH);
-	// env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
-	env_map["CONTENT_TYPE"] = "image/jpeg";
+	env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
+	// env_map["CONTENT_TYPE"] = "image/jpeg";
+	env_map["DOCUMENT_ROOT"] = "html/two"; // TODO change
 	env_map["GATEWAY_INTERFACE"] = "CGI/1.1";
-	// env_map["PATH_INFO"] = response_http.get_pathInfo();
-	// env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path());
+	env_map["PATH_INFO"] = response_http.get_formatedPath();
+	env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + "/" + response_http.get_fileName();
 	// env_map["QUERY_STRING"] = response_http.get_queryString();
-	env_map["QUERY_STRING"] = "name=%22fileToUpload%22&fileToUpload=%22test.jpg%22";
-	// env_map["REMOTE_ADDR"] = server_conf.getIp();
-	// env_map["REMOTE_HOST"] = ""; // ?
+	env_map["QUERY_STRING"] = response_http.get_queryString();
+	env_map["REMOTE_ADDR"] = server_conf.getIp();
+	env_map["REMOTE_HOST"] = ""; // ?
 	// env_map["REMOTE_IDENT"] = "";// ?
-	// env_map["REMOTE_USER"] = ""; // ?
+	env_map["REMOTE_USER"] = ""; // ?
 	env_map["REDIRECT_STATUS"] = "200";
 	// env_map["REQUEST_METHOD"] = response_http.get_method();
-	env_map["REQUEST_METHOD"] = "POST";
+	env_map["REQUEST_METHOD"] = response_http.get_method();
+	env_map["REQUEST_URI"] = response_http.get_formatedPath();
 	char pathwd[PATH_MAX] ;
 	getcwd(pathwd, PATH_MAX);
-	std::string arg1 = std::string(pathwd)
-		+ "/" + "html/two/upload/upload.php";
+	env_map["SCRIPT_NAME"] = response_http.get_formatedPath();
 	// std::string arg1 = std::string(pathwd)
-		// + "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
-		// + response_http.get_fileName();
-	env_map["SCRIPT_FILENAME"] = arg1;
-	// env_map["SERVER_NAME"] = response_http.get_serverName();
-	// env_map["SERVER_PORT"] = server_conf.getPort();
-	// env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
-	// env_map["SERVER_SOFTWARE"] = "Webserv/1";
+		// + "/" + "html/two/upload/upload.php";
+	std::string arg1 = std::string(pathwd)
+		+ "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
+		+ response_http.get_fileName();
+	env_map["SCRIPT_FILENAME"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + "/" + response_http.get_fileName();
+	env_map["SERVER_NAME"] = response_http.get_serverName();
+	env_map["SERVER_PORT"] = server_conf.getPort();
+	env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
+	env_map["SERVER_SOFTWARE"] = "Webserv/1.0";
+	// env_map["UPLOAD_STORE"] = server_conf.getUploadPath(response_http.get_serverName(), response_http.get_path());
+	env_map["UPLOAD_STORE"] = "./";
 	this->_alloc_env(env_map);
 	// build args
 	this->_argv = new char*[3];
-	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
 	// free(tmp);
+	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
 	this->_argv[0] = new char[arg0.length() + 1];
 	std::strcpy(this->_argv[0], arg0.c_str());
 	this->_argv[1] = new char[arg1.length() + 1];
