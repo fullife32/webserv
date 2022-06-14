@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 19:37:50 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 19:39:41 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,8 +341,10 @@ void	ResponseHTTP::m_setCGIBodySize()
 	size_t	FileSize;
 
 	fseek(m_body_CGI, 0, SEEK_END);
+	fputs(CRLF, m_body_CGI);
+	fputs(CRLF, m_body_CGI);
 	FileSize = ftell(m_body_CGI);
-	fseek(m_body_CGI, 0, SEEK_SET);
-	setContentLength(FileSize == (size_t)-1 ? 0 : FileSize);
+	rewind(m_body_CGI);
+	m_body_CGI_size = (FileSize == (size_t)-1 ? 0 : FileSize);
 }
 

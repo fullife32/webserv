@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 19:57:10 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/14 14:07:53 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,19 @@
 			std::cerr << except.what() << std::endl;
 			throw MessageErrorException(500, m_url);
 		}
-		// sleep(1);
+		m_setCGIBodySize();
+
+		char buff[1000];
+		int i = 0;
+
+		do
+		{
+			buff[i] = fgetc(m_body_CGI);
+		} while (buff[i++] != '\n');
+
+		buff[i] = '\0';
+		set_headerFields(HF_CONTENT_TYPE, buff + strlen(HF_CONTENT_TYPE) + 2);
+		setContentLength(m_body_CGI_size + strlen(CRLF) * sizeof(int) * 2);
 
 		// DEBUG : ///////////////////////////////////////////////////////////////////
 		// FILE * request_body = request.getBodyForCGI();
@@ -83,7 +95,6 @@
 		// 		m_body_CGI = NULL;
 		// 	}
 		// else
-			m_setCGIBodySize();
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
 	}

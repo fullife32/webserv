@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/13 18:55:22 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/14 12:28:35 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		std::stringstream		m_header;
 		std::ifstream			m_body;
 		FILE *					m_body_CGI;
+		size_t					m_body_CGI_size;
 		size_t					m_length;
 		URL						m_url;
 		bool					m_isAutoindex;
