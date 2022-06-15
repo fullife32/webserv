@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 12:07:40 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 14:41:20 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	ParseRequest::clear()
 
 bool	ParseRequest::empty() const 
 {
-	return (m_header_size == 0 && m_body_size == 0);
+	return (m_header_size == 0 && m_data.empty());
 }
 
 /* -------------------------------------------------------------------------- */
@@ -82,12 +82,13 @@ bool	ParseRequest::empty() const
 		if it is a POST method retrieve the rest of the request in the body
 		otherwise if there is a body : request error
 */
-void	ParseRequest::append(const std::string & buffer, char *buff, size_t size)
+void	ParseRequest::append(const char *buffer, size_t size)
 {
 	size_t	size_processed = (size_t) -1;
+
 	if (m_has_complete_header == false)
 	{
-		size_processed = found_header_end(buff, size);
+		size_processed = found_header_end(buffer, size);
 		m_data.append(buffer);
 		m_header_size += size_processed;
 		if (m_parse_header() == false)
@@ -100,13 +101,13 @@ void	ParseRequest::append(const std::string & buffer, char *buff, size_t size)
 	{
 		if (size_processed != (size_t)-1)
 		{
-			m_save_body(buff, size_processed  + 4, size - size_processed - 4);
+			m_save_body(buffer, size_processed  + 4, size - size_processed - 4);
 			m_body_size += size - size_processed - 4;
 			m_data.clear();
 		}
 		else 
 		{
-			m_save_body(buff, 0, size);
+			m_save_body(buffer, 0, size);
 			m_body_size += size;
 		}
 	}
@@ -152,8 +153,6 @@ void 		ParseRequest::m_parse_RequestLine(const std::string & startline)
 
 void	ParseRequest::m_parse_url(std::string target)
 {
-	std::cout << target << std::endl;
-
 	m_parse_url_fragment(target);
 	m_parse_url_query_string(target);
 	m_parse_url_filename(target);

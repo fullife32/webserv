@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP_formatting.cpp                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 14:07:53 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 14:41:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@
 			try openFile from URL
 			formated Header : Status Line and Header Fields.
 	*/
-	void	ResponseHTTP::m_formated_Response()
+	void	ResponseHTTP::m_formated_Response(std::string & path)
 	{
-		std::string path = m_foundLocation();
 		if (m_is_redirection == true)
 		{
 			m_formated_StatusLine();
@@ -38,22 +37,20 @@
 			m_formated_HeaderFields();
 		}
 		else if (m_isAutoindex == true) {
-			m_formated_Autoindex(path); }
+			m_formated_Autoindex(path);
+		}
 	}
 
 
 	void	ResponseHTTP::m_formated_CGI_Response(const RequestHTTP & request)
 	{
-		std::cout << "this is a CGI request" << std::endl;
-
-		m_openFile_CGI();	// creation du fichier temporaire pour la reponse a envoyer au client
+		m_openFile_CGI();
 
 		try {
 			Cgi cgi(request.get_headerFields(), *this, *m_server);
 			FILE *file_in = request.getBodyForCGI();
 			int fd_in = file_in == NULL ? -1 : fileno(file_in);
 			int fd_out = fileno(this->m_body_CGI);
-			std::cout << fd_in << " " << fd_out << std::endl;
 			cgi.execute(fd_in, fd_out);
 		} catch (Cgi::CgiError &except) {
 			std::cerr << except.what() << std::endl;
@@ -72,29 +69,6 @@
 		buff[i] = '\0';
 		set_headerFields(HF_CONTENT_TYPE, buff + strlen(HF_CONTENT_TYPE) + 2);
 		setContentLength(m_body_CGI_size + strlen(CRLF) * sizeof(int) * 2);
-
-		// DEBUG : ///////////////////////////////////////////////////////////////////
-		// FILE * request_body = request.getBodyForCGI();
-		// if (request_body != NULL)
-		// {
-
-			// std::cout << "xxxxxxxxxxxxxxxx REQUEST BODY: xxxxxxxxxxxxxxxxx " << std::endl;
-			// char buffer[1000] = {0};
-			// while (!feof(request_body))
-			// {
-				// if (fgets (buffer,1000,request_body) == NULL) break;
-				// std::cout << buffer << std::endl;
-			// }
-		// }
-		// DEBUG : ///////////////////////////////////////////////////////////////////
-
-		// if (m_method == POST)
-		// 	{
-		// 	// save_POST(); // TODO
-		// 		fclose(m_body_CGI);
-		// 		m_body_CGI = NULL;
-		// 	}
-		// else
 		m_formated_StatusLine();
 		m_formated_HeaderFields();
 	}
@@ -111,10 +85,17 @@
 		m_header << CRLF;
 	}
 
-	void	ResponseHTTP::m_formated_Autoindex(std::string &path ) // TODO added by Eithan
+	void	ResponseHTTP::m_formated_Autoindex(std::string &path )
 	{
 		std::string			actualPath(m_url.path.begin() + 1, m_url.path.end());
 		std::stringstream	body;
+
+		int					found;
+		struct stat			s;
+		
+		found = stat(path.c_str(), &s);
+		if (found != 0 || !(s.st_mode & S_IFDIR))
+			throw MessageErrorException(STATUS_NOT_FOUND, m_url);
 
 		glob_t glob_result;
 		glob_result.gl_offs = 2;
@@ -177,7 +158,6 @@
 		m_formated_HeaderFields();
 
 		m_header << body.str();
-		std::cout << m_header.str() << std::endl;
 	}
 
 

@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/14 23:34:19 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:04:58 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Client::Client( int fd, sockaddr_storage cli, socklen_t size, Server &server )
 Client::Client( Client const &other )
 : Socket(other.m_fd),  m_server(other.m_server), m_toRemove(false), m_toChangeEvent(false), m_cli(other.m_cli), m_size(other.m_size), m_request(other.m_request), m_response(other.m_response) { 
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE + 1);
+
 }
 
 Client::~Client() { }
@@ -55,28 +56,29 @@ void			Client::setToChangeEvent() {
 		m_toChangeEvent = true;
 }
 
+bool		Client::endBuffer(size_t size)
+{
+	int end = strcmp(m_buffer + size - 4, EMPTY_LINE);
+
+	return (size < MESSAGE_BUFFER_SIZE && (end == 32 || end == 0));
+}
+
+
 void		Client::receive_data() {
 
 	int	size;
 
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0);
-
-	if (size == -1)
-	{
-		setToChangeEvent();
-		m_response.buildError(STATUS_INTERNAL_SERVER_ERROR, S_STATUS_INTERNAL_SERVER_ERROR, m_response.get_url());
-		return ;
-	}
-	if (size == 0 && m_request.empty())
+	if (size == -1 || (size == 0 && m_request.empty()))
 	{
 		setToRemove();
 		return ;
 	}
-	// TRY BUILD HEADER
-	try
+	
+	try // TRY BUILD HEADER
 	{
-		m_request.append(m_buffer, m_buffer, size);
+		m_request.append(m_buffer, size);
 	}
 	catch (MessageErrorException & e) {
 		m_response.buildError(e.getError(), e.getMappedError(), e.getUrl());
@@ -88,14 +90,11 @@ void		Client::receive_data() {
 		setToRemove();
 		return ;
 	}
-	
-	// IF END OR LAST BUFFER RECV
-	if (size == 0 || size < MESSAGE_BUFFER_SIZE)
+
+	if (size == 0 || endBuffer(size))
 	{
-		memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 		setToChangeEvent();
 		try {
-			m_request.debug_print(); // TODO debug
 			m_response.buildResponse(m_request);
 		}
 		catch (MessageErrorException & e) {

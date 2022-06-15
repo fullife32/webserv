@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 11:50:07 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 12:10:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "MessageHTTP.hpp"
 # include "Server.hpp"
 # include <glob.h>
+# include <sys/stat.h>
 
 class ResponseHTTP : public MessageMethods, public HeaderFields,  public ContentTypes, public ErrorMap
 {
@@ -90,7 +91,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 
 
 	/* formated Response   ------------------------------------------ */
-		void		m_formated_Response();
+		void		m_formated_Response(std::string & path);
 		void		m_formated_StatusLine();
 		void		m_formated_HeaderFields();
 		void		m_formated_Autoindex( std::string &path );

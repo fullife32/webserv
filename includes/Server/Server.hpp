@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/08 13:55:44 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 09:12:47 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ public:
 	static void	listenSocket( int const fd );
 
 	ServerConf const	&getConf() const;
-	// Server	&findServer()
 
 	class SocketFail : public std::exception {
 	private:

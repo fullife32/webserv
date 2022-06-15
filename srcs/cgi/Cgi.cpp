@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/15 12:03:42 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:00:17 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,45 +17,41 @@ Cgi::Cgi
  ServerConf const &server_conf) {
 	// build environment
 	std::map<std::string, std::string> env_map;
-	env_map["AUTH_TYPE"] = ""; // ?
-	// env_map["CONTENT_LENGTH"] = "16000";
-	env_map["CONTENT_LENGTH"] = header_fields.get_value_headerFields(HF_CONTENT_LENGTH);
-	env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
-	// env_map["CONTENT_TYPE"] = "image/jpeg";
-	env_map["DOCUMENT_ROOT"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()); // TODO change
-	env_map["GATEWAY_INTERFACE"] = "CGI/1.1";
-	env_map["PATH_INFO"] = response_http.get_formatedPath();
-	env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + response_http.get_fileName();
-	// env_map["QUERY_STRING"] = response_http.get_queryString();
-	env_map["QUERY_STRING"] = response_http.get_queryString();
-	env_map["REMOTE_ADDR"] = server_conf.getIp();
-	env_map["REMOTE_HOST"] = ""; // ?
-	// env_map["REMOTE_IDENT"] = "";// ?
-	env_map["REMOTE_USER"] = ""; // ?
-	env_map["REDIRECT_STATUS"] = "200";
-	env_map["REQUEST_METHOD"] = response_http.get_method();
-	env_map["REQUEST_URI"] = response_http.get_formatedPath();
 	char pathwd[PATH_MAX] ;
 	getcwd(pathwd, PATH_MAX);
-	env_map["SCRIPT_NAME"] = response_http.get_formatedPath();
-	// std::string arg1 = std::string(pathwd)
-		// + "/" + "html/two/upload/upload.php";
+
+	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
 	std::string arg1 = std::string(pathwd)
 		+ "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
 		+ response_http.get_fileName();
+
+	env_map["AUTH_TYPE"] = "";
+	env_map["CLIENT_MAX_BODY_SIZE"] = convertSizeToString(server_conf.getBodySize(response_http.get_serverName(), response_http.get_path()));
+	env_map["CONTENT_LENGTH"] = header_fields.get_value_headerFields(HF_CONTENT_LENGTH);
+	env_map["CONTENT_TYPE"] = header_fields.get_value_headerFields(HF_CONTENT_TYPE);
+	env_map["DOCUMENT_ROOT"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path());
+	env_map["GATEWAY_INTERFACE"] = "CGI/1.1";
+	env_map["PATH_INFO"] = response_http.get_formatedPath();
+	env_map["PATH_TRANSLATED"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + response_http.get_fileName();
+	env_map["QUERY_STRING"] = response_http.get_queryString();
+	env_map["REDIRECT_STATUS"] = "200";
+	env_map["REMOTE_ADDR"] = server_conf.getIp();
+	env_map["REMOTE_HOST"] = "";
+	env_map["REMOTE_IDENT"] = "";
+	env_map["REMOTE_USER"] = "";
+	env_map["REQUEST_METHOD"] = response_http.get_method();
+	env_map["REQUEST_URI"] = response_http.get_formatedPath();
 	env_map["SCRIPT_FILENAME"] = server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path()) + response_http.get_fileName();
+	env_map["SCRIPT_NAME"] = response_http.get_formatedPath();
 	env_map["SERVER_NAME"] = response_http.get_serverName();
-	env_map["SERVER_PORT"] = "8000"; // std::string(server_conf.getPort()); // TODO
+	env_map["SERVER_PORT"] = response_http.get_port();
 	env_map["SERVER_PROTOCOL"] = "HTTP/1.1";
 	env_map["SERVER_SOFTWARE"] = "Webserv/1.0";
-	// env_map["UPLOAD_STORE"] = server_conf.getUploadPath(response_http.get_serverName(), response_http.get_path());
-	env_map["UPLOAD_STORE"] = "./";
+	env_map["UPLOAD_STORE"] = server_conf.getUploadPath(response_http.get_serverName(), response_http.get_path());
+
 	this->_alloc_env(env_map);
 	// build args
 	this->_argv = new char*[3];
-	// free(tmp);
-	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
-	//arg0 = "/usr/bin/php-cgi";
 	this->_argv[0] = new char[arg0.length() + 1];
 	std::strcpy(this->_argv[0], arg0.c_str());
 	this->_argv[1] = new char[arg1.length() + 1];
@@ -104,37 +100,11 @@ void Cgi::_alloc_env(std::map<std::string, std::string> &env_map) {
 
 void Cgi::execute(int const fd_in, int const fd_out) {
 
-	for (int i = 0; this->_argv[i] != NULL; i++) {
-		std::cout << "argv[" << i << "] = " << this->_argv[i] << std::endl;
-	}
 	pid_t pid = fork();
 	if (pid == -1)
 		throw Cgi::CgiError(strerror(errno));
 	else if (pid == 0) { // child process
 
-	//TODO DEBUG
-		std::cerr << "ENV:" << std::endl;
-        for (int i = 0; _env[i]; ++i)
-            std::cerr << _env[i] << std::endl;
-        std::cerr << "ARGS:" << std::endl;
-        for (int i = 0; _argv[i]; ++i)
-            std::cerr << _argv[i] << std::endl;
-		std::cerr << std::endl;
-        std::cerr << "BEGIN" << std::endl;
-        // char buf[1000] = {0};
-        // while (read(fd_in, buf, 1000) > 0)
-		// {
-        //     std::cerr << buf << std::endl;
-		// 	memset(buf, 0, 1000);
-		// }
-        std::cerr << "END" << std::endl;
-        std::cerr << std::endl;
-
-
-
-		std::cerr << "child" << std::endl;
-		// int fdTest;
-		// fdTest = open("html/two/delete/image.jpeg", O_RDONLY);
 		if (fd_in != -1) {
 			if (dup2(fd_in, STDIN_FILENO) == -1)
 				throw Cgi::CgiError(strerror(errno));
@@ -144,21 +114,16 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 		execve(this->_argv[0], this->_argv, this->_env);
 		exit(errno);
 	} else { // parent process
-// // response_http.m_body -> open -> write -> 
 		int	wstatus;
 
 		waitpid(pid, &wstatus, 0);
-		usleep(100000);
-		// sleep(1);
 
-		std::cout << "parent" << std::endl;
-		std::cout << "EXIT STATUS: " << WEXITSTATUS(wstatus) << std::endl;
 		if (WIFEXITED(wstatus) == false)
 			throw MessageErrorException(STATUS_GATEWAY_TIMEOUT);
 		else if (WEXITSTATUS(wstatus) == 2 || WEXITSTATUS(wstatus) == 255)
 			throw MessageErrorException(STATUS_NOT_FOUND);
-		else if (WEXITSTATUS(wstatus) != 0) // TODO what number ??
-			throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR); // TODO change it with conflict ?
+		else if (WEXITSTATUS(wstatus) != 0) 
+			throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR);
 	}
 }
 

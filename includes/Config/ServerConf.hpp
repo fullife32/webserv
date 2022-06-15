@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/13 17:33:24 by rotrojan         ###   ########.fr       */
+/*   Updated: 2022/06/15 09:05:53 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,14 @@ enum e_config_error {
 typedef	std::map<std::string,void(*)(std::vector<std::string>&,s_base&)> parseFunction_t;
 
 class ServerConf {
-	std::pair<std::vector<std::string>, s_server>	m_main; // TODO: if server name here send this or search map or this by default
+	std::pair<std::vector<std::string>, s_server>	m_main;
 	std::map<std::vector<std::string>, s_server>	m_subs;
 
 public:
 	ServerConf( std::vector<std::string> server_name, s_server serverConf );
 	ServerConf( ServerConf const &other );
 	~ServerConf();
-void	debug_print(); // TODO: to dell
+// void	debug_print();
 
 
 private:
@@ -84,7 +84,7 @@ public:
 	static void	initLocationConf( struct s_location &config );
 
 	static bool	insertInSub(s_server &newServer, std::vector<ServerConf> &confs);
-	static void	replaceConfig(s_server &server, s_location &location); // TODO really usefull ???
+	static void	replaceConfig(s_server &server, s_location &location);
 	static void	mandatoryCheck( struct s_server &config);
 	static bool	isEnding( std::string &lastToken );
 	static void	parseServer( std::ifstream	&ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct );

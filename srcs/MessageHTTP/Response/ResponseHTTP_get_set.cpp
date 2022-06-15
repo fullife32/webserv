@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 12:07:14 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 14:59:13 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 /* -------------------------------------------------------------------------- */
 /*                     Get Set                                               */
 /* -------------------------------------------------------------------------- */
+
 
 /*
 	Prepare le buffer pour envoi a send()
@@ -40,7 +41,7 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 	else if (m_body.good())
 	{
 		len = strlen(buffer);
-		len += m_body.readsome(buffer + len, MESSAGE_BUFFER_SIZE - len);// TODO puts
+		len += m_body.readsome(buffer + len, MESSAGE_BUFFER_SIZE - len);
 		return (len);
 	}
 	len = strlen(buffer);
