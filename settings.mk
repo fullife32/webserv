@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    settings.mk                                        :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rotrojan <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/10/21 21:06:11 by rotrojan          #+#    #+#              #
-#    Updated: 2022/05/17 16:19:54 by rotrojan         ###   ########.fr        #
+#    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
+#    Updated: 2022/06/15 15:53:10 by eassouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,12 +15,27 @@ NAME = webserv
 
 # The list of the all the sources, because $(wildcard *.c) is too dangerous
 SRCS =	main.cpp		\
-		Animal.cpp		\
-		Dog.cpp			\
-		Cat.cpp			\
-		WrongCat.cpp	\
-		WrongAnimal.cpp	\
-		Brain.cpp		\
+		ServerConf.cpp \
+		ParseConf.cpp \
+		GetConf.cpp \
+		ParseRequest.cpp \
+		MessageStruct.cpp \
+		RequestHTTP.cpp \
+		ResponseHTTP.cpp \
+		ResponseHTTP_get_set.cpp \
+		ResponseHTTP_formatting.cpp \
+		Split.cpp \
+		string_usefull.cpp \
+		ErrorMessage.cpp \
+		DateFormat.cpp \
+		Print.cpp \
+		Socket.cpp \
+		Server.cpp \
+		Multiplex.cpp \
+		Client.cpp \
+		Cgi.cpp
+
+# main_testRequest.cpp		\
 
 # The file where make will look for all the sources (in addition to the root
 # directory of the Makefile)
@@ -33,7 +48,7 @@ LIBS =
 OBJS_DIR = .objs
 
 # The file where make will look for all the header files
-INCLUDES_DIR = includes
+INC_DIR = includes
 
 # The C++ compiler
 CXX = clang++
