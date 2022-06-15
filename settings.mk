@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    settings.mk                                        :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
+#    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/13 16:11:35 by rotrojan         ###   ########.fr        #
+#    Updated: 2022/06/15 15:53:10 by eassouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,7 @@ INC_DIR = includes
 CXX = clang++
 
 # The C++ compilation flags
-CXXFLAGS = -Wall -Wextra -std=c++98 -pedantic
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
 
 # The characters and the length of the progress bar will adjust automatically
 PROGRESS_BAR = -------------------------------------------------------------------
