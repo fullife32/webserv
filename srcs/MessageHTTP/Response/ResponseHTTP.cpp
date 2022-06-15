@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 23:40:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:28:45 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,10 +140,12 @@ void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 {
 	if (request.hasBody())
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	
+	std::string	path = m_foundLocation();
 	if (request.hasQueryString() || m_url.fileExtension == "php")
 		m_formated_CGI_Response(request);
 	else		
-		m_formated_Response();
+		m_formated_Response(path);
 
 }
 
@@ -151,9 +153,9 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request)
 {
 	if (request.hasBody() == false)
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
+	if (m_server->isMethodAllowed(m_url.serverName, m_url.path, m_method) == false)
+		throw MessageErrorException(STATUS_METHOD_NOT_ALLOWED, m_url);
 	size_t	contentLenght = convertStringToSize(request.get_value_headerFields(HF_CONTENT_LENGTH));
-	// if (contentLenght != request.getBodySize()) // TODO what to do
-	// 	throw MessageErrorException(100, m_url);
 	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty())
 		throw MessageErrorException(STATUS_BAD_REQUEST);
 	m_checkBodySize(request.getBodySize(), contentLenght);
@@ -248,6 +250,13 @@ std::string			ResponseHTTP::m_foundLocation()
 			index = m_server->getIndex(m_url.serverName, m_url.path);
 			if (index.empty())
 					throw MessageErrorException(STATUS_FORBIDDEN, m_url);
+			size_t found_extension = index.find_last_of('.');
+			size_t found_last = index.find_last_of('/');
+            if (found_last != std::string::npos && found_extension != std::string::npos)
+            {
+				m_url.fileExtension = std::string(&index[found_extension + 1], &index[index.size()]);
+           		m_url.filename = std::string(&index[found_last + 1], &index[index.size()]);
+		    }
 			realPath = index;
 		}
 		else 

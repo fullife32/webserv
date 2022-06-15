@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 14:07:53 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:25:54 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@
 			try openFile from URL
 			formated Header : Status Line and Header Fields.
 	*/
-	void	ResponseHTTP::m_formated_Response()
+	void	ResponseHTTP::m_formated_Response(std::string & path)
 	{
-		std::string path = m_foundLocation();
 		if (m_is_redirection == true)
 		{
 			m_formated_StatusLine();
@@ -38,7 +37,8 @@
 			m_formated_HeaderFields();
 		}
 		else if (m_isAutoindex == true) {
-			m_formated_Autoindex(path); }
+			m_formated_Autoindex(path);
+		}
 	}
 
 
@@ -115,6 +115,13 @@
 	{
 		std::string			actualPath(m_url.path.begin() + 1, m_url.path.end());
 		std::stringstream	body;
+
+		int					found;
+		struct stat			s;
+		
+		found = stat(path.c_str(), &s);
+		if (found != 0 || !(s.st_mode & S_IFDIR))
+			throw MessageErrorException(STATUS_NOT_FOUND, m_url);
 
 		glob_t glob_result;
 		glob_result.gl_offs = 2;

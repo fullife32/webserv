@@ -22,14 +22,6 @@ Server::Server( Server const &other )
 
 Server::~Server() {}
 
-// Server &	Server::operator=( Server const &other ) {
-// 	if (this != &other)
-// 	{
-// 		m_conf = other.m_conf;
-// 	}
-// }
-
-
 /* --- Public functions --- */
 
 int	Server::createSocket() {

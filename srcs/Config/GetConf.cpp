@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 09:05:03 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:11:18 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,6 @@ std::string	ServerConf::getUploadPath( const std::string &server_name, const std
 			baseStruct = getServerByName(server_name);
 	}
 	if (baseStruct.upload_pass.empty())
-		return baseStruct.root + "/";
-	return baseStruct.upload_pass + "/";
+		return "./";
+	return "./" + baseStruct.upload_pass + "/";
 }
