@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 16:32:50 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 17:56:04 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class ParseRequest : public HeaderFields
 		void	append(const char *buffer, size_t size);
 		bool	empty() const ;
 		void	clear() ;
-		bool	is_end();
+		bool	is_end() const ;
 
 
 	private:

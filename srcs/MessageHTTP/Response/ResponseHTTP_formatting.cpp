@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 15:26:31 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 17:57:03 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@
 		body << "<html lang=\"en\" style= " << background_color << ">\n";
 		body << "<head>" << CRLF;
 		body << "<meta charset=\"UTF-8\">" << CRLF;
-		// body << "<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">" << CRLF;
 		body << "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">" << CRLF;
 		body << "<title>" << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << "</title>" << CRLF;
 		body << "</head>" << CRLF;

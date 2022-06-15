@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 16:48:41 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 18:40:00 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,6 @@ ParseRequest::~ParseRequest()
 
 /* -------------------------------------------------------------------------- */
 
-bool	ParseRequest::is_end()
-{
-	size_t contentlength = convertStringToSize(get_value_headerFields("Content-Length"));
-	return (m_body_size == contentlength);
-}
 
 void	ParseRequest::clear()
 {
@@ -96,7 +91,7 @@ void	ParseRequest::append(const char *buffer, size_t size)
 	{
 		size_processed = found_header_end(buffer, size);
 		m_data.append(buffer);
-		m_header_size += size_processed;
+		m_header_size += (size_processed == (size_t)-1 ? m_data.size() : size_processed);
 		if (m_parse_header() == false)
 		{
 			m_check_max_header_size();
@@ -313,6 +308,12 @@ void	ParseRequest::m_prepare_POST_body()
 }
 
 /* -------------------------------------------------------------------------- */
+
+bool	ParseRequest::is_end() const 
+{
+	size_t contentlength = convertStringToSize(get_value_headerFields(HF_CONTENT_LENGTH));
+	return (m_body_size == contentlength);
+}
 
 void	ParseRequest::m_check_max_header_size() const
 {

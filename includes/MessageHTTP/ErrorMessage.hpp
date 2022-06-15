@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 10:38:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/07 16:39:22 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 17:55:29 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,9 +132,7 @@ class MessageErrorException : public std::exception, public ErrorMap
 		URL				getUrl() const throw () ;
 };
 
-
 std::map <int, std::string>		init_mapError()  throw() ;
-
 
 #endif
 
