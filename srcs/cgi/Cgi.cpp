@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/15 15:00:17 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:47:22 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 	if (pid == -1)
 		throw Cgi::CgiError(strerror(errno));
 	else if (pid == 0) { // child process
-
+		close(2);
 		if (fd_in != -1) {
 			if (dup2(fd_in, STDIN_FILENO) == -1)
 				throw Cgi::CgiError(strerror(errno));
