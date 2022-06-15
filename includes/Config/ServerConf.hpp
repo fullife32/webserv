@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/10 19:11:42 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:22:19 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define IP_MASK "255.255.255.255"
 # define DEFAULT_PORT "8000"
 # define DEFAULT_BODY 1000000
-# define DEFAULT_CONFIG_PATH "test_config/simple.conf" // TODO actualise path for main
+# define DEFAULT_CONFIG_PATH "html/one.conf"
 
 enum e_config_error {
 	EMPTY_FILE,
@@ -62,14 +62,14 @@ enum e_config_error {
 typedef	std::map<std::string,void(*)(std::vector<std::string>&,s_base&)> parseFunction_t;
 
 class ServerConf {
-	std::pair<std::vector<std::string>, s_server>	m_main; // TODO: if server name here send this or search map or this by default
+	std::pair<std::vector<std::string>, s_server>	m_main;
 	std::map<std::vector<std::string>, s_server>	m_subs;
 
 public:
 	ServerConf( std::vector<std::string> server_name, s_server serverConf );
 	ServerConf( ServerConf const &other );
 	~ServerConf();
-void	debug_print(); // TODO: to dell
+// void	debug_print();
 
 
 private:
@@ -77,14 +77,14 @@ private:
 	ServerConf &operator=( ServerConf const &other );
 
 public:
-	static void showConf(std::vector<ServerConf> &confs); // TODO DEBUG
-	static void	getConfTest(std::vector<ServerConf> &confs); // TODO DEBUG
+	static void showConf(std::vector<ServerConf> &confs); 
+	static void	getConfTest(std::vector<ServerConf> &confs);
 
 	static void parseLocation( std::ifstream &ifs, struct s_location &location, parseFunction_t &locationFnct );
 	static void	initLocationConf( struct s_location &config );
 
 	static bool	insertInSub(s_server &newServer, std::vector<ServerConf> &confs);
-	static void	replaceConfig(s_server &server, s_location &location); // TODO really usefull ???
+	static void	replaceConfig(s_server &server, s_location &location);
 	static void	mandatoryCheck( struct s_server &config);
 	static bool	isEnding( std::string &lastToken );
 	static void	parseServer( std::ifstream	&ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct );

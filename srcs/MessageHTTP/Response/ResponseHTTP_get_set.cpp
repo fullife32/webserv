@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:26:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 14:59:13 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 /*                     Get Set                                               */
 /* -------------------------------------------------------------------------- */
 
+
 /*
 	Prepare le buffer pour envoi a send()
 		envoi d'abord le header puis le body de la page
@@ -25,25 +26,23 @@
 */
 size_t	ResponseHTTP::getNextChunk(char * buffer)
 {
-	size_t	len;
+	size_t	len = 0;
 
 	m_header.get(buffer, MESSAGE_BUFFER_SIZE + 1, 0);
 	if (m_header.gcount() == MESSAGE_BUFFER_SIZE)
 		return MESSAGE_BUFFER_SIZE;
-	if (m_body.is_open())
-	{
-		len = strlen(buffer);
-		m_body.get(buffer + len, MESSAGE_BUFFER_SIZE -len + 1, 0);
-		return (strlen(buffer));
-	}
-	else if (m_body_CGI != NULL)
+	if (m_body_CGI != NULL)
 	{
 		len = strlen(buffer);
 		if (fgets(buffer + len, MESSAGE_BUFFER_SIZE - len, m_body_CGI) == NULL)
 			clear(); 
-		// 	TODO// len + 1 ? checker car fstream prends +1" 
-		// check car  Reading stops after an EOF or a newline.""
 		return (strlen(buffer));
+	}
+	else if (m_body.good())
+	{
+		len = strlen(buffer);
+		len += m_body.readsome(buffer + len, MESSAGE_BUFFER_SIZE - len);
+		return (len);
 	}
 	len = strlen(buffer);
 	if (len == 0)
@@ -51,6 +50,10 @@ size_t	ResponseHTTP::getNextChunk(char * buffer)
 	return (len);
 }
 
+bool	ResponseHTTP::need_to_read() const
+{
+	return (m_body.good());
+}
 
 void	ResponseHTTP::setContentType(std::string const & extension)
 {
@@ -77,9 +80,11 @@ std::string ResponseHTTP::get_pathInfo() const
 	return m_url.pathInfo;
 }
 
-int			ResponseHTTP::get_method() const
+std::string		ResponseHTTP::get_method() const
 {
-	return m_method;
+	std::string methods[3] = {METHOD_GET, METHOD_POST, METHOD_DELETE};
+
+	return methods[m_method];
 }
 
 std::string ResponseHTTP::get_serverName() const
@@ -87,6 +92,10 @@ std::string ResponseHTTP::get_serverName() const
 	return m_url.serverName;
 }
 
+std::string ResponseHTTP::get_formatedPath() const
+{
+	return m_url.formatedPath();
+}
 
 std::string ResponseHTTP::get_fileName() const
 {
@@ -96,6 +105,11 @@ std::string ResponseHTTP::get_fileName() const
 std::string ResponseHTTP::get_path() const
 {
 	return m_url.path;
+}
+
+std::string ResponseHTTP::get_port() const
+{
+	return m_url.port ;
 }
 
 /*

@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/01 17:33:00 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/10 19:17:27 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:11:18 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ const s_server	&ServerConf::getServerByName( const std::string &server_name ) co
 	for (std::map<std::vector<std::string>, s_server>::const_iterator it = m_subs.begin(); it != m_subs.end(); ++it) {
 		std::vector<std::string>::const_iterator itSub = std::find((*it).first.begin(), (*it).first.end(), server_name);
 
-		if (itSub != (*it).first.end()) // TODO be sure that it doesn't go here if not correct
+		if (itSub != (*it).first.end())
 			return (*it).second;
 	}
 	return m_main.second;
@@ -58,7 +58,7 @@ std::string	ServerConf::getLocationPath( const std::string &server_name, const s
 	path = getServerByName(server_name).root;
 	baseStruct = getLocationByName(server_name, location, yes, rest);
 	if (yes == true && baseStruct.root.empty() == false)
-		path = baseStruct.root + rest; //TODO "/" between root and rest ?
+		path = baseStruct.root + rest;
 	else
 		path += location;
 	return path  + "/";
@@ -93,7 +93,7 @@ std::string ServerConf::getCgiPath( const std::string &server_name, const std::s
 	std::string	rest;
 	bool		yes;
 
-	const s_location &locationStruct = (const s_location&)getLocationByName(server_name, location, yes, rest); // TODO how to redirect to the correct php file ?
+	const s_location &locationStruct = (const s_location&)getLocationByName(server_name, location, yes, rest);
 
 	if (yes == false)
 		return std::string();
@@ -140,8 +140,8 @@ size_t	ServerConf::isRedirecting( const std::string &server_name, const std::str
 	else
 		baseStruct = getLocationByName(server_name, location, yes, rest);
 	if (baseStruct.redirect.first != 0) {
-		url = baseStruct.redirect.second; // TODO construct path if absolute ?
-		return baseStruct.redirect.first; // TODO redirect if rest not empty ?
+		url = baseStruct.redirect.second;
+		return baseStruct.redirect.first;
 	}
 	url = std::string();
 	return 0;
@@ -158,7 +158,7 @@ bool	ServerConf::isAutoindexOn( const std::string &server_name, const std::strin
 	}
 	baseStruct = getLocationByName(server_name, location, yes, rest);
 	if (yes == false)
-		return false; // TODO server autoindex by default ?
+		return false;
 	return baseStruct.autoindex;
 }
 
@@ -179,14 +179,10 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 	std::string	rest;
 	bool		yes = true;
 
-	std::cout << location << "?" << (location == "/") << std::endl; // TODO debug
 	if (location == "/")
 		baseStruct = getServerByName(server_name);
 	else
 		baseStruct = getLocationByName(server_name, location, yes, rest);
- 	std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
-	std::cout << "rest"  << rest << std::endl;
-	std::cout << "YES = " << yes << std::endl; 
 	if (yes == false)
 		return std::string();
 	else if ((rest.empty() || rest == "/") && baseStruct.index.empty() == false)
@@ -194,8 +190,6 @@ std::string	ServerConf::getIndex( const std::string &server_name, const std::str
 		 return getLocationPath(server_name, location) + baseStruct.index;
 
 	}
- 	std::cout << "baseStruct Index : " <<  baseStruct.index << std::endl;
-
 	return std::string();
 }
 
@@ -212,6 +206,6 @@ std::string	ServerConf::getUploadPath( const std::string &server_name, const std
 			baseStruct = getServerByName(server_name);
 	}
 	if (baseStruct.upload_pass.empty())
-		return baseStruct.root + "/";
-	return baseStruct.upload_pass + "/";
+		return "./";
+	return "./" + baseStruct.upload_pass + "/";
 }

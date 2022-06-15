@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 15:37:45 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:30:04 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/14 23:18:50 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,9 @@ void	HTTPversion::formatedVersion(const std::string & version)
 
 bool	HTTPversion::isSupportedVersion()
 {
-	return true; // TODO:FOR DEBUG 
-	if (major_version != 1 || minor_version != 1)
-		return false;
-	return true;
+	if (major_version == 1 && (minor_version == 0 || minor_version == 1))
+		return true;
+	return false;
 }
 
 void	HTTPversion::clear()
@@ -66,6 +65,7 @@ void	HTTPversion::clear()
 URL::URL(const URL & copy)
 {
 	serverName = copy.serverName;
+	port = copy.port;
 	path = copy.path;
 	filename = copy.filename;
 	fileExtension = copy.fileExtension;
@@ -79,6 +79,7 @@ URL & URL::operator=(const URL & other)
 	if (this != &other)
 	{
 		serverName = other.serverName;
+		port = other.port;
 		path = other.path;
 		filename = other.filename;
 		fileExtension = other.fileExtension;
@@ -119,7 +120,6 @@ void	RequestLine::clear()
 	method.clear();
 }
 
-
 void	StatusLine::clear()
 {
 	version.clear();
@@ -134,7 +134,6 @@ void		HeaderFields::clear()
 	m_headerFields.clear();
 }
 
-
 void		HeaderFields::set_headerFields(const HeaderFields::value_type & headerFields)
 {
 	m_headerFields = headerFields;
@@ -147,14 +146,12 @@ void	HeaderFields::set_headerFields(const std::string & headerField, const std::
 	m_headerFields[headerField] = value;
 }
 
-
-HeaderFields::value_type		HeaderFields::get_headerFields() const
+HeaderFields const		&HeaderFields::get_headerFields() const
 {
-	return m_headerFields;
+	return *this;
 }
 
-
-std::string		HeaderFields::get_value_headerFields(const std::string & key) const
+std::string const		HeaderFields::get_value_headerFields(const std::string & key) const
 {
 	HeaderFields::value_type::const_iterator found = m_headerFields.find(key);
 
@@ -162,8 +159,6 @@ std::string		HeaderFields::get_value_headerFields(const std::string & key) const
 		return (std::string());
 	return (*found).second;
 }
-
-
 
 /* Message Methods static map  --------------------------------- */
 
@@ -183,13 +178,10 @@ std::map <std::string, int>		init_map_method()
 	return methods;
 }
 
-
 std::map <std::string, int>		MessageMethods::m_methods = init_map_method();
 
 
-
 /* Content Type  ------------------------------------------------ */
-
 
 std::map< std::string, std::string>		init_map_ContentType()
 {
@@ -206,9 +198,14 @@ std::map< std::string, std::string>		init_map_ContentType()
 	map_contentType["ico"] = "image/x-icon";
 	map_contentType["jpeg"] = "image/jpeg";
 	map_contentType["jpg"] = "image/jpeg";
+	map_contentType["js"] = "application/javascript";
+	map_contentType["mp3"] = "audio/mp3";
 	map_contentType["mpeg"] = "video/mpeg";
 	map_contentType["png"] = "image/png";
 	map_contentType["svg"] = "image/svg+xml";
+	map_contentType["txt"] = "text/txt";
+	map_contentType["cpp"] = "text/cpp";
+	map_contentType["hpp"] = "text/hpp";
 	map_contentType["php"] = "text/php";
 
 	return (map_contentType);
@@ -222,6 +219,5 @@ std::string ContentTypes::get_contentType(const std::string & requestContentType
 		return found->second;
 	return (std::string());
 }
-
 
 std::map< std::string, std::string> ContentTypes::m_listContentType = init_map_ContentType();

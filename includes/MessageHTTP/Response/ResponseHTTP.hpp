@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 14:05:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 12:10:53 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "MessageHTTP.hpp"
 # include "Server.hpp"
 # include <glob.h>
+# include <sys/stat.h>
 
 class ResponseHTTP : public MessageMethods, public HeaderFields,  public ContentTypes, public ErrorMap
 {
@@ -38,12 +39,13 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		const ServerConf *		m_server;
 		int						m_method;
 		std::stringstream		m_header;
-		std::fstream			m_body;
+		std::ifstream			m_body;
 		FILE *					m_body_CGI;
+		size_t					m_body_CGI_size;
 		size_t					m_length;
 		URL						m_url;
 		bool					m_isAutoindex;
-
+		bool					m_is_redirection;
 
 	public:
 
@@ -64,10 +66,13 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		const URL & get_url() const ;
 		std::string get_queryString() const ;
 		std::string get_pathInfo() const ;
-		int			get_method() const ;
+		std::string	get_method() const ;
 		std::string get_serverName() const ;
 		std::string get_fileName() const ;
 		std::string get_path() const ;
+		std::string get_port() const ;
+		std::string	get_formatedPath() const;
+		bool		need_to_read() const ;
 
 	/* set		    ------------------------------------------------ */
 		void		setRequestMethod(int method);
@@ -80,27 +85,25 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		void		buildResponse(const RequestHTTP & request);
 
 	private:
-
-		void	m_set_minimalHeaderFields();
-		void	m_setOpenFileBodySize();
-		void	m_setCGIBodySize();
+		void		m_set_minimalHeaderFields();
+		void		m_setOpenFileBodySize();
+		void		m_setCGIBodySize();
 
 
 	/* formated Response   ------------------------------------------ */
-		void	m_formated_Response();
-		void	m_formated_StatusLine();
-		void	m_formated_HeaderFields();
-		void	m_formated_Autoindex( std::string &path );
-		void	m_formated_CGI_Response(const RequestHTTP & request);
-
-		void	m_formated_Error(const URL & url);
-		void	m_formated_ErrorBody(std::stringstream & body);
-
-		void	m_build_autoIndex(std::string location);
-
-		void	m_openFile_CGI();
-		void	m_openFile_Body(const std::string & location);
-		bool	m_openFile_Error(const std::string & location);
+		void		m_formated_Response(std::string & path);
+		void		m_formated_StatusLine();
+		void		m_formated_HeaderFields();
+		void		m_formated_Autoindex( std::string &path );
+		void		m_formated_CGI_Response(const RequestHTTP & request);
+		void		m_formated_Error(const URL & url);
+		void		m_formated_ErrorBody(std::stringstream & body);
+		void		m_build_autoIndex(std::string location);
+		void		m_openFile_CGI();
+		void		m_openFile_Body(const std::string & location);
+		bool		m_openFile_Error(const std::string & location);
+		void		m_checkBodySize(size_t ContentLenght);
+		std::string	m_foundLocation();
 
 
 	/* Methods    ------------------------------------------------ */
@@ -109,21 +112,6 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		void	m_method_POST(const RequestHTTP & request);
 		void	m_method_DELETE(const RequestHTTP & request);
 
-		std::string	m_foundLocation();
-		void		m_checkBodySize(size_t request_bodySize, size_t ContentLenght);
-
-	// DEBUG
-	public:
-		virtual void	debug_print()
-		{
-			std::cout << " RESPONSE DEBUG PRINT ************************************" << std::endl;
-			std::cout << "REQUESTLINE: " <<  std::endl;
-			std::cout << "	status code: " << m_statusLine.statusCode << " " << m_statusLine.reasonPhrase << std::endl;
-			std::cout << "	version: " << m_statusLine.version.name <<  m_statusLine.version.major_version << "." <<  m_statusLine.version.minor_version << std::endl;
-			std::cout << std::endl;		
-		}
-
-
-}; // end class RequestHTTP
+};
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 18:18:34 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/07 15:51:52 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 09:07:19 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ void	ServerConf::parseCgi( std::vector<std::string> &tokens, struct s_base &bloc
 	else if (tokens.size() > 3)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
 	if (tokens[1][0] != '.' || (tokens[1][0] == '.' && tokens[1].size() == 1))
-		throw ServerConf::ConfFail(WRONG_EXT_FORMAT, tokens[1]); // TODO accept only absolute path ?
+		throw ServerConf::ConfFail(WRONG_EXT_FORMAT, tokens[1]);
 	blockLoc.cgi.insert(make_pair(tokens[1], tokens[2]));
 }
 
@@ -149,7 +149,7 @@ void	ServerConf::parseClientMaxBodySize( std::vector<std::string> &tokens, struc
 	block.client_max_body_size = n;
 }
 
-void	ServerConf::parseRedirect( std::vector<std::string> &tokens, struct s_base &block ) { // TODO: redirect if go to folder or server that redirect ?
+void	ServerConf::parseRedirect( std::vector<std::string> &tokens, struct s_base &block ) {
 	if (tokens.size() < 3)
 		throw ServerConf::ConfFail(NOT_ENOUGH_ARGUMENTS, tokens[0]);
 	if (tokens.size() > 3)
@@ -194,7 +194,5 @@ void	ServerConf::parseIndex( std::vector<std::string> &tokens, struct s_base &bl
 void	ServerConf::parseUploadPass( std::vector<std::string> &tokens, struct s_base &block ) {
 	if (tokens.size() > 2)
 		throw ServerConf::ConfFail(TOO_MANY_ARGUMENTS, tokens[0]);
-	else if (tokens[1][0] != '/')
-		throw ServerConf::ConfFail(WRONG_PATH_FORMAT, tokens[1]);
 	block.upload_pass = tokens[1];
 }

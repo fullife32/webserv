@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/10 19:32:44 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:15:01 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,7 +224,7 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 				initServerConf(serverTmp);
 				parseServer(ifs, serverTmp, serverFnct, locationFnct);
 				mandatoryCheck(serverTmp);
-				if (insertInSub(serverTmp, confs) == false) // TODO: accept no server_name if main
+				if (insertInSub(serverTmp, confs) == false)
 					confs.push_back(ServerConf(serverTmp.server_name, serverTmp));
 			}
 		}
@@ -243,7 +243,6 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 		std::cerr << "No server block found in file" << std::endl;
 		return 1;
 	}
-	// showConf(confs); // TODO DEBUG
 	return 0;
 }
 
@@ -287,7 +286,7 @@ void	ServerConf::mandatoryCheck( struct s_server &config ) {
 	if (config.root.empty())
 		config.root = "html";
 	if (config.index.empty())
-		config.index = "index.html"; // TODO return index.html by default if found in location ??
+		config.index = "index.html";
 	for (std::map<std::string,s_location>::iterator it = config.location.begin(); it != config.location.end(); ++it) {
 		if ((*it).second.method.empty()) {
 			(*it).second.method.push_back("GET");
@@ -302,13 +301,12 @@ bool	ServerConf::isEnding( std::string &lastToken ) {
 }
 
 void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseFunction_t &serverFnct, parseFunction_t &locationFnct ) {
-	while (ifs.good()) { // TODO: secure every read loop
+	while (ifs.good()) {
 		char						buf[CONFIG_BUFFER_SIZE];
 		std::vector<std::string>	tokens;
 
-		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n'); // TODO: move in function check arg ??
+		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
-		// printVector(tokens); //
 		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
 			continue;
 		else if (tokens.empty() && ifs.eof())
@@ -379,7 +377,6 @@ void ServerConf::parseLocation( std::ifstream &ifs, struct s_location &location,
 
 		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
-		// printVector(tokens); //
 		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
 			continue;
 		else if (tokens.empty() && ifs.eof())
