@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/15 15:47:22 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 16:03:24 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,20 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 	else if (pid == 0) { // child process
 		close(2);
 		if (fd_in != -1) {
-			if (dup2(fd_in, STDIN_FILENO) == -1)
-				throw Cgi::CgiError(strerror(errno));
+			if (dup2(fd_in, STDIN_FILENO) == -1) {
+				close(fd_in);
+				close(fd_out);
+				exit(errno);
+			}
 		}
-		if (dup2(fd_out, STDOUT_FILENO) == -1)
-			throw Cgi::CgiError(strerror(errno));
+		if (dup2(fd_out, STDOUT_FILENO) == -1) {
+			close(fd_in);
+			close(fd_out);
+			exit(errno);
+		}
 		execve(this->_argv[0], this->_argv, this->_env);
+		close(0);
+		close(1);
 		exit(errno);
 	} else { // parent process
 		int	wstatus;
