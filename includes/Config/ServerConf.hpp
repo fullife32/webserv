@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 15:22:19 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:08:02 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ public:
 	ServerConf( std::vector<std::string> server_name, s_server serverConf );
 	ServerConf( ServerConf const &other );
 	~ServerConf();
-// void	debug_print();
-
 
 private:
 	ServerConf();
@@ -112,7 +110,6 @@ public:
 	static void	parseIndex( std::vector<std::string> &tokens, struct s_base &block );
 	static void	parseUploadPass( std::vector<std::string> &tokens, struct s_base &block );
 
-	// Getter functions
 private:
 	const s_server	&getServerByName( const std::string &server_name ) const;
 	const s_base	&getLocationByName( const std::string &server_name, const std::string &location_name, bool &yes, std::string &rest ) const;

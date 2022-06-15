@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 15:15:01 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:04:06 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ ServerConf::ServerConf( ServerConf const &other )
 
 ServerConf::~ServerConf() { }
 
-// DEBUG
+// TODO DEBUG functions
 template <class T>
 void	printVector(const std::vector<T> & vec)
 {

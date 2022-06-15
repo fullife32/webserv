@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 15:15:06 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:03:20 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,8 @@ int	main(int ac, char **av) {
 			Server::bindSocket(fd, *it);
 			Server::listenSocket(fd);
 			servers.insert(std::make_pair(fd, Server(fd, (*it))));
-			// TODO DEBUG
 			Server	tmp = servers.rbegin()->second;
-			std::cout << tmp.getFd() << ": server started on " << tmp.getConf().getIp() << ":" << tmp.getConf().getPort() << std::endl;
-			//
+			std::cout << tmp.getFd() << ": server started on " << tmp.getConf().getIp() << ":" << tmp.getConf().getPort() << std::endl; // TODO print server started
 		} catch (std::exception const &except) {
 			if (fd != -1)
 				close(fd);

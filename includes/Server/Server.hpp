@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 16:49:27 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/15 09:12:47 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:02:53 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ public:
 	
 	static int	createSocket();
 	static void	setOpts( int const fd );
-	static void	bindSocket( int const fd, ServerConf const &conf ); // Careful 255.255.255.255
+	static void	bindSocket( int const fd, ServerConf const &conf );
 	static void	listenSocket( int const fd );
 
 	ServerConf const	&getConf() const;

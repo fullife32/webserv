@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Multiplex.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 15:26:51 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:05:08 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,8 @@ void	Multiplex::addServersToPoll( std::map<int, Server> &servers ) const {
 void	Multiplex::handleServer( int i, std::map<int, Server> &servers, std::map<int, Client> &clients ) {
 	std::map<int, Server>::iterator it = servers.find(m_events[i].data.fd);
 	if (it != servers.end()) {
-		if (!(m_events[i].events & EPOLLIN)) // secure client too
-			std::cerr << "Ghost event in server: " << it->second.getFd() << std::endl; // return error ?
+		if (!(m_events[i].events & EPOLLIN))
+			std::cerr << "Ghost event in server: " << it->second.getFd() << std::endl;
 		else {
 			int	fd = -1;
 			try {
@@ -108,9 +108,7 @@ void	Multiplex::handleServer( int i, std::map<int, Server> &servers, std::map<in
 				Client	tmpClient(Client::acceptClient(it->second.getFd(), it->second));
 				addClientToPoll(tmpClient);
 				clients.insert(std::make_pair(tmpClient.getFd(), tmpClient));
-				// Debug
-				std::cout << clients.rbegin()->second.getFd() << ": Client connected" << std::endl;
-				//
+				std::cout << clients.rbegin()->second.getFd() << ": Client connected" << std::endl; // TODO print client connected
 			} catch(Multiplex::PlexFail &except) {
 				if (fd != -1)
 					close(fd);
@@ -194,7 +192,7 @@ void	Multiplex::changeClientEvent( Client &client, int newEvent ) const {
 void	Multiplex::deleteClient( std::map<int, Client> &clients, std::map<int, Client>::iterator &it ) {
 	if (epoll_ctl(m_fd, EPOLL_CTL_DEL, it->first, NULL) == -1)
 		throw Multiplex::PlexFail(PLEX_DEL_FAIL);
-	std::cout << it->second.getFd() << ": Client disconnected" << std::endl;
+	std::cout << it->second.getFd() << ": Client disconnected" << std::endl; // TODO print client disconnect
 	it->second.closeSocket();
 	clients.erase(it);
 }

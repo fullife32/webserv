@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Split.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:49:59 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/12 11:45:37 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 19:05:27 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ std::vector<std::string> 		splitString(const std::string & str, const std::strin
 		begin = found;
 		found = str.find(separator, found);
 	}
-	if (begin != str.size())		// split the end of str OR if separator never found
+	if (begin != str.size())
 		split.push_back(std::string(&str[begin], &str[str.size()]));
 	return split;
 }
