@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 14:41:20 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 16:48:41 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,12 @@ ParseRequest::~ParseRequest()
 }
 
 /* -------------------------------------------------------------------------- */
+
+bool	ParseRequest::is_end()
+{
+	size_t contentlength = convertStringToSize(get_value_headerFields("Content-Length"));
+	return (m_body_size == contentlength);
+}
 
 void	ParseRequest::clear()
 {
@@ -103,12 +109,15 @@ void	ParseRequest::append(const char *buffer, size_t size)
 		{
 			m_save_body(buffer, size_processed  + 4, size - size_processed - 4);
 			m_body_size += size - size_processed - 4;
+			m_check_max_body_size();
 			m_data.clear();
+
 		}
 		else 
 		{
 			m_save_body(buffer, 0, size);
 			m_body_size += size;
+			m_check_max_body_size();
 		}
 	}
 	else 
@@ -147,7 +156,7 @@ void 		ParseRequest::m_parse_RequestLine(const std::string & startline)
 	{
 		m_is_post_method = true ;
 		m_prepare_POST_body();
-		m_body_size = m_server->getBodySize(m_requestLine.url.serverName, m_requestLine.url.path);
+		m_max_body_size = m_server->getBodySize(m_requestLine.url.serverName, m_requestLine.url.path);
 	}
 }
 

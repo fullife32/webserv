@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 15:04:58 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 16:50:05 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ void			Client::setToChangeEvent() {
 
 bool		Client::endBuffer(size_t size)
 {
+	if (m_request.is_end() == true)
+		return true;
 	int end = strcmp(m_buffer + size - 4, EMPTY_LINE);
 
 	return (size < MESSAGE_BUFFER_SIZE && (end == 32 || end == 0));
@@ -70,6 +72,7 @@ void		Client::receive_data() {
 
 	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 	size = recv(m_fd, m_buffer, MESSAGE_BUFFER_SIZE, 0);
+
 	if (size == -1 || (size == 0 && m_request.empty()))
 	{
 		setToRemove();
