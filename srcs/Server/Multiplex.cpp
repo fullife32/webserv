@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 13:35:12 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:26:51 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,11 +151,6 @@ void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
 		else if (m_events[i].events & EPOLLOUT)
 		{
 			currentClient->second.send_data();
-		}
-		else 
-		{
-			std::cout << "COUCOU COUCOU" << std::endl;
-			std::cout << m_events[i].events << std::endl;
 		}
 		m_checkClientChangeEvent(currentClient, clients);
 	}
