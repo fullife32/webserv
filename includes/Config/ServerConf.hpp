@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 11:14:39 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 09:05:53 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:15:19 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ private:
 	ServerConf &operator=( ServerConf const &other );
 
 public:
-	static void showConf(std::vector<ServerConf> &confs); // TODO DEBUG
-	static void	getConfTest(std::vector<ServerConf> &confs); // TODO DEBUG
+	static void showConf(std::vector<ServerConf> &confs); 
+	static void	getConfTest(std::vector<ServerConf> &confs);
 
 	static void parseLocation( std::ifstream &ifs, struct s_location &location, parseFunction_t &locationFnct );
 	static void	initLocationConf( struct s_location &config );

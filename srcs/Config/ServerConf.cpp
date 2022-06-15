@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ServerConf.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/23 16:25:48 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 09:08:40 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:15:01 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,7 +243,6 @@ int		ServerConf::startParse( const std::string &filePath, std::vector<ServerConf
 		std::cerr << "No server block found in file" << std::endl;
 		return 1;
 	}
-	// showConf(confs); // TODO DEBUG
 	return 0;
 }
 
@@ -308,7 +307,6 @@ void	ServerConf::parseServer( std::ifstream &ifs, struct s_server &block, parseF
 
 		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
-		// printVector(tokens); // TODO DEBUG
 		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
 			continue;
 		else if (tokens.empty() && ifs.eof())
@@ -379,7 +377,6 @@ void ServerConf::parseLocation( std::ifstream &ifs, struct s_location &location,
 
 		ifs.getline(buf, CONFIG_BUFFER_SIZE, '\n');
 		tokens = splitStringtoTokens(buf, " \t");
-		// printVector(tokens); // TODO DEBUG
 		if ((tokens.empty() || tokens[0] == "#") && !ifs.eof())
 			continue;
 		else if (tokens.empty() && ifs.eof())

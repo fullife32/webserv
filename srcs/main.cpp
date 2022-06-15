@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 19:34:41 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 15:02:45 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:15:06 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ int	main(int ac, char **av) {
 
 	if (ServerConf::startParse(path, confs) == 1)
 		return 1;
-
-	// ServerConf::getConfTest(confs); // TODO DEBUG
 
 	std::map<int, Server>	servers;
 
