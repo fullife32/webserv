@@ -6,7 +6,7 @@
 #    By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 17:53:19 by rotrojan          #+#    #+#              #
-#    Updated: 2022/05/22 15:31:39 by lvirgini         ###   ########.fr        #
+#    Updated: 2022/06/15 10:06:45 by rotrojan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ LITTLE_VIOLIN = $(ESC_SEQ)38;5;97m
 GREEN = $(ESC_SEQ)32m
 BOLD = $(ESC_SEQ)1m
 MOVE_UP = $(ESC_SEQ)1A
+MOVE_DOWN = $(ESC_SEQ)1B
 ERASE = \r$(ESC_SEQ)K
 ERASE_ALL = $(ESC_SEQ)M
 ESC_STOP = $(ESC_SEQ)0m
@@ -103,10 +104,11 @@ endif
 		fi; \
 		printf '$(BOLD)$(LITTLE_VIOLIN)compiling sources$(ESC_STOP)\n'; \
 	fi; $(eval COMPILING_PRINTED = 1)
-	@printf '%s\n' $@
+	@printf '$(ERASE)%s\n' $@
 	@$(DRAW_PROGRESS_BAR)
 	@$(CXX) $(CXXFLAGS) $(INCLUDES_DIR:%=-I %) -c $< -o $@
 	@printf '$(ERASE)$(MOVE_UP)$(GREEN)%s$(ESC_STOP)\n' $@
+	@$(DRAW_PROGRESS_BAR)
 	@if [ '$(NUM_FILE_BEING_COMPILED)' -eq '$(NB_FILES_TO_COMPILE)' ]; then \
 		$(DRAW_PROGRESS_BAR); \
 		printf '\n'; \
