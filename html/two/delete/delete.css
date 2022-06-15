@@ -5,9 +5,8 @@ html {
 }
 
 body {
-    background-color: #3b3b3b;
+    background-color: #c587eb;
     margin: 0;
-    background-image: url(BG.png);
 }
 
 header {
@@ -21,9 +20,9 @@ nav ul {
     justify-content: space-around;
     text-align: justify;
     list-style: none;
-    background-color: #00000075;
+    background-color: #0000003f;
     border-bottom: 2px solid white;
-    padding: 15px;
+    padding: 35px;
     margin-top: 0;
     box-shadow: 0px 1px 20px #00000050;
 }
@@ -31,7 +30,7 @@ nav ul {
 nav a {
 	text-decoration: none;
 	color: white;
-	font-size: small;
+	font-size: large;
 	padding: 5px;
 	padding-left: 15px;
 	padding-right: 15px;
@@ -39,7 +38,7 @@ nav a {
 
 nav a:hover {
 	background-color: #ffffff15;
-	border-radius: 25px 0px 25px 0px;
+	border-radius: 5px 5px 5px 5px;
 	transition: color 0.5s ease;
 	transition: background 0.6s ease;
 }
@@ -64,17 +63,16 @@ nav #Logonavbar:hover {
 nav:hover ul {
 	border-bottom-color: #FF9300;
 	transition: border 0.2s ease;
-	background-color: #00000055;
 }
 
 nav:hover a {
-	color: #FF9300;
+	color: white;
 	text-shadow: 0px 0px 0.5px;
 	transition: 0.2s ease;
 }
 
 nav a:hover {
-	color: white;
+	color: #FF9300;
 }
 
 #Accueil {
@@ -84,65 +82,6 @@ nav a:hover {
     align-items: center;
     width: 100%;
     height: 40em;
-    border-bottom: #FF9300 solid 15px;
-}
-
-#Agence {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	align-content: space-around;
-	text-align: center;
-	width: 100%;
-	height: 45em;
-	background-image: url(Nature1.jpg);
-	border-bottom: #FF9300 solid 15px;
-}
-
-#Agence h1{
-	animation: AnimBienvenue 1s;
-	animation-fill-mode: backwards;
-	font-size: 3em;
-}
-
-#Agence p{
-	animation: AnimBienvenue 1s;
-	animation-fill-mode: backwards;
-	animation-delay: 1s;
-}
-
-#Idees {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	align-content: space-around;
-	text-align: center;
-	width: 100%;
-	height: 45em;
-	background-image: url(Nature6.jpg);
-	border-bottom: #FF9300 solid 15px;
-}
-
-#Idees h1{
-	animation: AnimBienvenue 1s;
-	animation-fill-mode: backwards;
-	font-size: 3em;
-}
-
-#Idees p{
-	animation: AnimBienvenue 1s;
-	animation-fill-mode: backwards;
-	animation-delay: 1s;
-}
-
-#Footer {
-	display: flex;
-	justify-content: center;
-	flex-direction: column;
-	align-content: center;
-	background-image: url(Nature3.jpg);
-	width: 100%;
-	height: 10em;
 }
 
 #Bienvenue {
@@ -161,9 +100,9 @@ nav a:hover {
 
 #Bienvenueh2 {
 	animation: AnimBienvenue 1s;
-	animation-delay: 1.4s;
+	animation-delay: 1.2s;
 	animation-fill-mode: backwards;
-	font-size: 3.8em;
+	font-size: 3.5em;
 	color: #FF9300;
 }
 
@@ -183,41 +122,41 @@ nav a:hover {
 #Bienvenue #W{
 	-webkit-animation: AnimBienvenue 1s;
 	animation : AnimBienvenue 1s;
-	animation-delay: 0.2s;
+	animation-delay: 0.8s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #E{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.4s;
+	animation-delay: 0.6s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #B{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.6s;
+	animation-delay: 0.4s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #S{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 0.8s;
+	animation-delay: 0.2s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #E2{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 1s;
+	animation-delay: 0.4s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #R{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 1.2s;
+	animation-delay: 0.6s;
 	animation-fill-mode: backwards;}
 
 #Bienvenue #V{
 	-webkit-animation: AnimBienvenue 1s;
 	animation: AnimBienvenue 1s;
-	animation-delay: 1.4s;
+	animation-delay: 0.8s;
 	animation-fill-mode: backwards;}
