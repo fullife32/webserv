@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 23:40:54 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:50:59 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void	ResponseHTTP::m_method_POST(const RequestHTTP & request)
 	// 	throw MessageErrorException(100, m_url);
 	if (request.get_value_headerFields(HF_CONTENT_TYPE).empty())
 		throw MessageErrorException(STATUS_BAD_REQUEST);
-	m_checkBodySize(request.getBodySize(), contentLenght);
+	m_checkBodySize(contentLenght);
 	m_formated_CGI_Response(request);
 }
 
@@ -259,14 +259,10 @@ std::string			ResponseHTTP::m_foundLocation()
 }
 
 
-void		ResponseHTTP::m_checkBodySize(size_t request_bodySize, size_t ContentLenght)
+void		ResponseHTTP::m_checkBodySize(size_t ContentLenght)
 {
 	if (ContentLenght == 0)
 		throw MessageErrorException(STATUS_LENGHT_REQUIRED, m_url);
-		
-	size_t	maxBodySize = (m_server->getBodySize(m_url.serverName, m_url.formatedPath()));
-	// if (ContentLenght != request_bodySize)
-	// 	throw MessageErrorException(STATUS_BAD_REQUEST, m_url); // TODO a checker ?
 }
 
 /*

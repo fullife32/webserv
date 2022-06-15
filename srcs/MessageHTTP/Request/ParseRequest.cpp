@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:48:48 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 23:47:14 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 12:07:40 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,32 +84,30 @@ bool	ParseRequest::empty() const
 */
 void	ParseRequest::append(const std::string & buffer, char *buff, size_t size)
 {
+	size_t	size_processed = (size_t) -1;
 	if (m_has_complete_header == false)
 	{
-		m_header_size += buffer.size();
+		size_processed = found_header_end(buff, size);
 		m_data.append(buffer);
+		m_header_size += size_processed;
 		if (m_parse_header() == false)
 		{
 			m_check_max_header_size();
 			return ;
 		}
-		m_header_size -= m_data.size();
 	}
 	if (m_has_complete_header && m_is_post_method)
 	{
-		if (m_data.empty() == false)
+		if (size_processed != (size_t)-1)
 		{
-			// std::cout << "BUFFER +================= " << buff + m_header_size << std::endl;
-			// fwrite(buff, sizeof(char), size - m_header_size, m_body);
-			m_append_body(m_data);
+			m_save_body(buff, size_processed  + 4, size - size_processed - 4);
+			m_body_size += size - size_processed - 4;
 			m_data.clear();
 		}
 		else 
 		{
-			// // fwrite(buff, sizeof(char), size, m_body);
-			// if (fputs(buff + m_header_size, m_body) == EOF)
-			// 	throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
-			m_append_body(buffer);
+			m_save_body(buff, 0, size);
+			m_body_size += size;
 		}
 	}
 	else 
@@ -117,23 +115,6 @@ void	ParseRequest::append(const std::string & buffer, char *buff, size_t size)
 		if (m_data.empty() == false)
 			throw MessageErrorException(STATUS_BAD_REQUEST);
 	}
-}
-
-
-void	ParseRequest::m_append_body(const std::string & buffer)
-{
-	if (buffer.empty() == false && fputs(buffer.data(), m_body) == EOF)
-		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
-	m_body_size += buffer.size();
-	m_check_max_body_size();
-}
-
-void	ParseRequest::m_prepare_POST_body()
-{
-	m_body = tmpfile();
-
-	if (m_body == NULL)
-		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -308,6 +289,21 @@ bool			ParseRequest::m_parse_header()
 	return false ;
 }
 
+void	ParseRequest::m_save_body(const char * buffer, size_t begin, size_t size)
+{
+	for (size_t i = 0; i < size; i++)
+		fputc(buffer[begin + i], m_body);
+}
+
+
+void	ParseRequest::m_prepare_POST_body()
+{
+	m_body = tmpfile();
+
+	if (m_body == NULL)
+		throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR, m_requestLine.url);
+}
+
 /* -------------------------------------------------------------------------- */
 
 void	ParseRequest::m_check_max_header_size() const
@@ -320,6 +316,16 @@ void	ParseRequest::m_check_max_body_size() const
 {
 	if (m_max_body_size != 0 && m_body_size > m_max_body_size)
 		throw MessageErrorException(STATUS_PAYLOAD_TOO_LARGE, m_requestLine.url);
+}
+
+size_t	ParseRequest::found_header_end(const char * buff, size_t size) const 
+{
+	for (size_t i = 0; i < (size - 4); i++)
+	{
+		if (buff[i] == '\r' && buff[i + 1] == '\n' && buff[i + 2] == '\r' && buff[i + 3] == '\n')
+			return i;
+	}
+	return (size_t) -1;
 }
 
 /*

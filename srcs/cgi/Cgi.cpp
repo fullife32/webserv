@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/14 23:43:58 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 12:03:42 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,15 +149,16 @@ void Cgi::execute(int const fd_in, int const fd_out) {
 
 		waitpid(pid, &wstatus, 0);
 		usleep(100000);
+		// sleep(1);
 
 		std::cout << "parent" << std::endl;
 		std::cout << "EXIT STATUS: " << WEXITSTATUS(wstatus) << std::endl;
-		if (WIFEXITED(wstatus) == 0)
+		if (WIFEXITED(wstatus) == false)
 			throw MessageErrorException(STATUS_GATEWAY_TIMEOUT);
 		else if (WEXITSTATUS(wstatus) == 2 || WEXITSTATUS(wstatus) == 255)
 			throw MessageErrorException(STATUS_NOT_FOUND);
-		else if (WEXITSTATUS(wstatus) == 127) // TODO what number ??
-			throw MessageErrorException(STATUS_CONFLICT); // TODO change it with conflict ?
+		else if (WEXITSTATUS(wstatus) != 0) // TODO what number ??
+			throw MessageErrorException(STATUS_INTERNAL_SERVER_ERROR); // TODO change it with conflict ?
 	}
 }
 

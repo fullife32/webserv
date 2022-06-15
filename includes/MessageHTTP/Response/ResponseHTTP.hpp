@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 23:39:36 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:50:07 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		void		m_openFile_CGI();
 		void		m_openFile_Body(const std::string & location);
 		bool		m_openFile_Error(const std::string & location);
-		void		m_checkBodySize(size_t request_bodySize, size_t ContentLenght);
+		void		m_checkBodySize(size_t ContentLenght);
 		std::string	m_foundLocation();
 
 

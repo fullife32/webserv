@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/16 15:30:05 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/14 22:56:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 11:45:46 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ class ParseRequest : public HeaderFields
 
 	private:
 		void	m_append_body(const std::string & buffer);
+		void	m_save_body(const char * buffer, size_t begin, size_t size);
+
 
 	/* parsing    ------------------------------------------------ */
 		bool	m_parse_header();
@@ -65,6 +67,8 @@ class ParseRequest : public HeaderFields
 		void	m_check_max_header_size() const ;
 		void	m_check_max_body_size() const ;
 		void	m_check_host_HeaderFields();
+		size_t	found_header_end(const char * buff, size_t size) const ;
+
 		
 	// TODO debug
 	public:
