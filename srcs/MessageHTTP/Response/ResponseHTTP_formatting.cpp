@@ -6,7 +6,7 @@
 /*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 13:51:21 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 14:41:53 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/15 15:26:31 by lvirgini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,8 +164,6 @@
 	void	ResponseHTTP::m_formated_ErrorBody(std::stringstream & body)
 	{
 		std::string	background_color;
-
-		std::cout << "Formated Error Body" << std::endl;
 
 		if (m_statusLine.statusCode >= 300 && m_statusLine.statusCode < 400)
 			background_color = "\"background-color: bisque;";
