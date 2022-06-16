@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP_get_set.cpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:51:17 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 14:59:13 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/16 14:02:06 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,11 @@ const URL & ResponseHTTP::get_url() const
 std::string ResponseHTTP::get_queryString() const
 {
 	return m_url.query;
+}
+
+std::string ResponseHTTP::get_extension() const
+{
+	return "." + m_url.fileExtension;
 }
 
 std::string ResponseHTTP::get_pathInfo() const

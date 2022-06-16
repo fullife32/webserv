@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 17:21:11 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 18:40:30 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/16 13:33:32 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,6 @@ void		Client::send_data() {
 		return;
 	}
 	sendSize = send(m_fd, m_buffer, bufferSize, MSG_NOSIGNAL);
-	memset(m_buffer, 0, MESSAGE_BUFFER_SIZE);
 	if (sendSize == (size_t)-1 || sendSize == 0 || ((bufferSize < MESSAGE_BUFFER_SIZE) && m_response.need_to_read() == false))
 		setToRemove();
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/19 11:34:27 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 12:09:21 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/16 14:00:18 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ void	ResponseHTTP::m_method_GET(const RequestHTTP & request)
 		throw MessageErrorException(STATUS_BAD_REQUEST, m_url);
 	
 	std::string	path = m_foundLocation();
-	if (request.hasQueryString() || m_url.fileExtension == "php")
+	if (request.hasQueryString() || m_url.fileExtension == "php" ||  m_url.fileExtension == "py")
 		m_formated_CGI_Response(request);
 	else		
 		m_formated_Response(path);

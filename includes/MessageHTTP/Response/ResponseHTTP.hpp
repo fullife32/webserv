@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ResponseHTTP.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lvirgini <lvirgini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/13 14:42:44 by lvirgini          #+#    #+#             */
-/*   Updated: 2022/06/15 12:10:53 by lvirgini         ###   ########.fr       */
+/*   Updated: 2022/06/16 12:15:09 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ class ResponseHTTP : public MessageMethods, public HeaderFields,  public Content
 		FILE *		getBodyForCGI() const ;
 		const URL & get_url() const ;
 		std::string get_queryString() const ;
+		std::string get_extension() const ;
 		std::string get_pathInfo() const ;
 		std::string	get_method() const ;
 		std::string get_serverName() const ;

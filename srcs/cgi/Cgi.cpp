@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:16:17 by rotrojan          #+#    #+#             */
-/*   Updated: 2022/06/15 19:03:38 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/16 14:01:26 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ Cgi::Cgi
 	char pathwd[PATH_MAX] ;
 	getcwd(pathwd, PATH_MAX);
 
-	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), ".php");
+	std::string arg0 = server_conf.getCgiPath(response_http.get_serverName(), response_http.get_path(), response_http.get_extension());
 	std::string arg1 = std::string(pathwd)
 		+ "/" + server_conf.getLocationPath(response_http.get_serverName(), response_http.get_path())
 		+ response_http.get_fileName();

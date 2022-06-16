@@ -6,7 +6,7 @@
 /*   By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 15:36:30 by eassouli          #+#    #+#             */
-/*   Updated: 2022/06/15 19:05:08 by eassouli         ###   ########.fr       */
+/*   Updated: 2022/06/16 13:34:01 by eassouli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,9 +143,7 @@ void	Multiplex::handleClients( int i, std::map<int, Client> &clients ) {
 		if (m_events[i].events & EPOLLIN)
 		{
 			currentClient->second.receive_data();
-			
 		}
-
 		else if (m_events[i].events & EPOLLOUT)
 		{
 			currentClient->second.send_data();
