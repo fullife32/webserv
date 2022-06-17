@@ -19,15 +19,21 @@
             </ul>
         </nav>
   </header>
-
-  <a href="http://localhost:8000/cgi-bin/info.php">Info PHP</a>
-  <a href="http://localhost:8000/cgi-bin/hello_get.py">Hello Py</a>
-  <form action = "http://localhost:8000/cgi-bin/hello_name.py" method = "get">
-    First Name: <input type = "text" name = "first_name">  <br />
-
-    Last Name: <input type = "text" name = "last_name" />
-    <input type = "submit" value = "Submit" />
-  </form>
+  <div id="page">
+    <section id="php">
+      <a href="http://localhost:8000/cgi-bin/info.php">Info PHP</a>
+    </section>
+    <div id="line"></div>
+    <section id="py">
+      <a href="http://localhost:8000/cgi-bin/hello_get.py">Hello Py</a>  
+      <form action = "http://localhost:8000/cgi-bin/hello_name.py" method = "get">
+        First Name: <input type = "text" name = "first_name">  <br />
+        
+        Last Name: <input type = "text" name = "last_name" />  <br />
+        <input id="submit" type = "submit" value = "Submit" class="button"/>
+      </form>
+    </section>
+  </div>
 
 </body>
 </html>
