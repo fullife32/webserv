@@ -6,7 +6,7 @@
 #    By: eassouli <eassouli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/17 16:36:27 by lvirgini          #+#    #+#              #
-#    Updated: 2022/06/15 15:53:10 by eassouli         ###   ########.fr        #
+#    Updated: 2022/06/19 12:45:47 by eassouli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ OBJS_DIR = .objs
 INC_DIR = includes
 
 # The C++ compiler
-CXX = clang++
+CXX = c++
 
 # The C++ compilation flags
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -pedantic
