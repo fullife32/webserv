@@ -7,11 +7,11 @@ For example, by a mouse click or by tapping the screen in a web browser.
 HTTP was developed to facilitate hypertext and the World Wide Web
 ## Authors
 #
-<a href="https://github.com/fullife32">Eithan Assouline</a>
+<a href="https://github.com/fullife32">eassouli</a>
 
-<a href="https://github.com/rotrojan">Romain Trojani Bigot</a>
+<a href="https://github.com/rotrojan">Rotrojan</a>
 
-<a href="https://github.com/lvirgini">Virginie Lakhdari</a>
+<a href="https://github.com/lvirgini">lvirgini</a>
 
 ## Usage
 #
